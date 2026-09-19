@@ -1,4 +1,5 @@
 """P3 e2e setup: make the repo root importable and force mock mode unless a test opts out."""
+
 import os
 import sys
 from pathlib import Path

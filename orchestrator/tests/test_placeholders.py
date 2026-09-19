@@ -3,26 +3,9 @@
 import pytest
 
 
-@pytest.mark.skip(reason="TODO(roadmap Step 1, P3): coordinator")
-def test_out_of_scope_ticker_costs_zero_llm_calls():
-    """check_scope runs first; a rejected company produces a clear refusal, not
-    an analysis."""
-
-
 @pytest.mark.skip(reason="TODO(roadmap Step 3, P3): parallel execution")
 def test_financial_and_business_agents_run_concurrently():
     """Wall-clock must be the max of the two, not the sum."""
-
-
-@pytest.mark.skip(reason="TODO(roadmap Step 1, P3): mcp client")
-def test_mock_mode_speaks_real_mcp_not_a_shortcut():
-    """The in-memory transport still goes through tool dispatch and argument
-    validation, so the boundary is exercised in both modes."""
-
-
-@pytest.mark.skip(reason="TODO(roadmap Step 1, P3): mcp client")
-def test_invalid_tool_arguments_fail_in_p3_with_a_clear_message():
-    """Validated against the contract request model before the call is made."""
 
 
 @pytest.mark.skip(reason="TODO(roadmap Step 5, P3): retry loop")

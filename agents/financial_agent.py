@@ -18,7 +18,8 @@ the reported numbers describe the business. Specifically:
 The arithmetic is already done - calc/ computed every metric before this agent
 ran. Its job is to say which of those numbers matter and why.
 
-TODO(roadmap Step 1, P3).
+All machinery (prompt assembly, evidence and fact-id enforcement, retry) lives
+in agents/base.py; this class only declares identity and tools.
 """
 
 from __future__ import annotations
@@ -38,6 +39,3 @@ class FinancialAgent(Agent):
         "search_filing",
         "resolve_fact",
     )
-
-    def run(self, context: dict):
-        raise NotImplementedError("TODO(roadmap Step 1, P3)")
