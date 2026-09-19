@@ -3,7 +3,7 @@
 Update whenever a capability moves from mock to real, or when blocked.
 A PR that changes behaviour must update this file.
 
-**Step:** 2 built (offline-verified, UI included). **Next:** Step 3 (Business Agent, parallel execution, live SSE lanes, stdio in live mode).
+**Step:** 3 built offline (Business Agent, parallel pair, live SSE lanes). **Blocked from finishing Step 3's live checkpoint** by P1's MCP server, live data and an API key. **Next:** Step 4 (Valuation Agent) once `calculate_valuation` exists; see [TO_BE_FIXED.md](TO_BE_FIXED.md).
 **Blockers:** the real mock MCP server (P1) - see
 [the request](../requests/2026-09-19-p3-to-p1-mock-mcp-server.md) - and where the report's inputs and the auditor's Factsheet come
 from - see [the report-inputs request](../requests/2026-09-19-p3-report-inputs.md). Everything up to that seam is tested against a
@@ -18,12 +18,14 @@ P3-owned MCP test double (`tests/e2e/support/fake_mcp.py`).
 | MCP client (stdio) | **built, tested** | spawns any server command; tested against the test double as a subprocess |
 | `agents/base.py` | **built, tested** | shared rules + role prompt, untrusted-text fence, verbatim-quote enforcement, fact_id -> ValueObject, retry once then fail loudly, `to_claims` |
 | Financial Agent | **built (mock LLM)** | live Anthropic path written in `agents/client.py`, **never run against the API** (no key here) |
-| Business, Valuation, Scenario, Red Team, Synthesizer | stub | Steps 3-5 |
-| Parallel execution | not started | Step 3 |
+| Business Agent | **built (mock LLM)** | sections: company, management, competitive_position, catalysts. Reads `business`, `risk_factors`, `mdna` only. Live path never run (B8). |
+| Valuation, Scenario, Red Team, Synthesizer | stub | Steps 4-5 |
+| Parallel execution | **built, tested** | `Coordinator.stages()`: financial \|\| business in a `ThreadPoolExecutor`; results merged in canonical order (deterministic); a failing agent lets its partner finish, emits `failed`, and the first failure in canonical order is raised. Concurrency is proven by a two-party barrier. Neither agent sees the other's output. |
 | Retry loop (`retry.py`) | not started | Step 5 |
 | Report generator (`orchestrator/report/`) | **built, tested** | deterministic Jinja render: card first, case against, sections; unverified claims marked, pending claims marked `unchecked`, `unavailable` never 0, fact/estimate/assumption carried, disclaimer top and bottom. Without a synthesizer it renders a PRELIMINARY report with no card. `render()` needs `state.synthesis` (`agents/synthesis.py`) and raises `ReportInputError` rather than invent it. |
-| FastAPI server + SSE | **built, tested** | `POST /api/analyze`, `GET /api/runs/{id}`, `/events` (SSE, full replay for late subscribers), `/stats`, `/config`. Runner is injectable (`server.RUNNER`). |
-| `web/` UI | **built, tested** | Next.js: verdict card first, case against second, collapsible sections with status chips, numbers coloured by type, `unavailable` never 0, unverified/unchecked markers, data-quality banner, agent lanes, disclaimer via the site shell (every page). 31 vitest tests, typecheck, production build; screenshot-checked in Chrome. `/demo` works with no backend; `/` runs against the API (CORS, POST, SSE verified with curl). Safe markdown renderer (no raw HTML). |
+| FastAPI server + SSE | **built, tested** | `POST /api/analyze`, `GET /api/runs/{id}` (verdict, or `409 preliminary`), `/report`, `/events` (SSE with a lane per agent, full replay for late subscribers), `/stats`, `/config`. `server.configure(mcp_factory, ...)` is the composition hook that puts the real Coordinator behind it. |
+| Demo composition | **built** | `uvicorn tests.e2e.support.dev_app:app` = real Coordinator + server over the MCP **test double** and mock LLM, with a per-call delay so the lanes are visible. |
+| `web/` UI | **built, tested (37 tests)** | Next.js: verdict card first, case against second, collapsible sections with status chips, numbers coloured by type, `unavailable` never 0, unverified/unchecked markers, data-quality banner, agent lanes, disclaimer via the site shell (every page). 31 vitest tests, typecheck, production build; screenshot-checked in Chrome. `/demo` works with no backend; `/` runs against the API and shows live lanes, then a preliminary report when there is no verdict yet (checked in Chrome: Financial and Business `running` at the same moment). `/?ticker=ACME` auto-runs. Safe markdown renderer (no raw HTML). |
 | Prompt-injection guard | **built, tested** | instruction-like sentences removed before the model sees them and reported in `data_quality.gaps`. The full "verdict must not move" e2e test needs the Synthesizer (Step 5). |
 | Redact hook | **built, tested** | applied in `Agent.wrap_untrusted`, i.e. before every model call; `ResearchState.redacted` recorded |
 | Cost/latency logging | partial | tokens/seconds per agent in `Coordinator.stats` and `orchestrator/logs/runs.jsonl` (gitignored). Rates in `agents/client.py::PRICES` are an ASSUMPTION copied from the claude-api skill (2026-06-24). |
@@ -55,4 +57,4 @@ cd web && npm run typecheck && npm test
 uvicorn orchestrator.server:app --port 8000     # then: cd web && npm run dev
 ```
 
-**Last updated:** 2026-09-19 (Step 2)
+**Last updated:** 2026-09-19 (Step 3, offline)

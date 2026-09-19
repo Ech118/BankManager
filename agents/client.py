@@ -52,6 +52,7 @@ _MOCK_DIR = Path(__file__).resolve().parents[1] / "fixtures" / "mock"
 # mock runs exercise the same routing a live run does.
 _MOCK_SECTIONS = {
     AgentName.FINANCIAL: ["financials", "earnings_quality", "earnings_quality"],
+    AgentName.BUSINESS: ["competitive_position", "competitive_position", "company"],
 }
 
 

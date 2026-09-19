@@ -11,15 +11,17 @@ from tests.e2e.support.fake_mcp import build_fake_server
 
 def _assert_step1(state: ResearchState) -> None:
     ResearchState.model_validate(state.model_dump(mode="json"))
-    owned = {k for k, o in SECTION_OWNERS.items() if o is AgentName.FINANCIAL}
+    owned = {k for k, o in SECTION_OWNERS.items() if o in (AgentName.FINANCIAL, AgentName.BUSINESS)}
     filled = {s.section_key for s in state.sections.as_list() if s.claims}
-    assert filled and filled <= owned  # the financial agent's sections, and nothing else
-    assert set(state.agent_outputs) == {AgentName.FINANCIAL}
+    assert (
+        filled and filled <= owned
+    )  # the financial and business agents' sections, and nothing else
+    assert set(state.agent_outputs) == {AgentName.FINANCIAL, AgentName.BUSINESS}
     assert state.data_quality.overall == "ok" and state.ticker == "ACME"
 
 
-def test_mock_run_produces_a_research_state_with_one_section():
-    """Step 1 checkpoint: coordinator + real MCP (in-memory) + one agent."""
+def test_mock_run_produces_a_research_state_from_the_financial_and_business_agents():
+    """Steps 1 and 3 (offline): coordinator + real MCP (in-memory) + the parallel pair."""
     mcp = InMemoryMcpClient(build_fake_server())
     try:
         _assert_step1(Coordinator(mcp).run_state("ACME"))

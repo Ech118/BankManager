@@ -53,6 +53,31 @@ export async function fetchVerdict(runId: string): Promise<Verdict> {
   return res.json();
 }
 
+/** What a finished run produced: a full verdict, or (until the synthesizer exists) a preliminary report. */
+export type RunResult =
+  | { kind: "verdict"; verdict: Verdict }
+  | { kind: "preliminary"; markdown: string };
+
+/**
+ * The outcome of a finished run. 200 is a Verdict; 409 means the run gathered evidence but has no
+ * verdict yet, so the preliminary report is fetched instead; 422 is a failed run with its reason.
+ */
+export async function fetchResult(runId: string): Promise<RunResult> {
+  const base = `${API_BASE}/api/runs/${encodeURIComponent(runId)}`;
+  const res = await fetch(base, { cache: "no-store" });
+  if (res.status === 409) {
+    const rep = await fetch(`${base}/report`, { cache: "no-store" });
+    if (!rep.ok) throw new Error(`could not fetch the preliminary report (${rep.status})`);
+    return { kind: "preliminary", markdown: (await rep.json()).markdown as string };
+  }
+  if (res.status === 422) {
+    const body = await res.json().catch(() => ({}));
+    throw new RunFailed(body.error ?? "the analysis failed");
+  }
+  if (!res.ok) throw new Error(`could not fetch the run (${res.status})`);
+  return { kind: "verdict", verdict: (await res.json()) as Verdict };
+}
+
 /**
  * Subscribe to per-agent progress. Drives one lane per agent, which is what makes the
  * parallel pair visible to a viewer. Returns an unsubscribe function.

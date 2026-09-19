@@ -61,9 +61,11 @@ text is shown as text (there is a test that plants `<script>` and `<img onerror>
 
 ```bash
 npm install
-npm run dev        # http://localhost:3000; /demo works with no backend
+npm run dev        # http://localhost:3000; /demo works with no backend; /?ticker=ACME auto-runs
 npm run typecheck && npm test && npm run build
-# live: uvicorn orchestrator.server:app --port 8000   (from the repo root)
+# live demo (from the repo root), lanes visible:
+#   uvicorn tests.e2e.support.dev_app:app --port 8000     # real Coordinator over the MCP test double
+#   cd web && npm run dev
 ```
 
 `NEXT_PUBLIC_API_BASE` overrides the API URL (default `http://localhost:8000`).

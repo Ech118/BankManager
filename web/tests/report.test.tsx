@@ -176,3 +176,40 @@ describe("agent lanes", () => {
     expect(container.firstChild).toBeNull();
   });
 });
+
+describe("preliminary report", () => {
+  it("says there is no verdict, and shows no score, probability or recommendation", async () => {
+    const { PreliminaryReport } = await import("@/components/PreliminaryReport");
+    const { readFileSync } = await import("node:fs");
+    const { resolve } = await import("node:path");
+    const md = readFileSync(resolve(__dirname, "fixtures/preliminary_report.md"), "utf-8");
+    const { container } = render(<PreliminaryReport markdown={md} />);
+    expect(screen.getAllByText(/No verdict yet/).length).toBeGreaterThan(0);
+    expect(screen.queryByTestId("verdict-word")).toBeNull();
+    expect(container.textContent).not.toMatch(/Probability of beating/);
+    expect(container.querySelector("[data-kind='preliminary']")).toBeTruthy();
+    expect(container.querySelector('[data-value-type="fact"]')).toBeTruthy(); // numbers still typed
+    expect(container.textContent).toContain(DISCLAIMER);
+  });
+});
+
+describe("analyzer errors", () => {
+  it("explains an unreachable server instead of showing 'Failed to fetch'", async () => {
+    const { vi } = await import("vitest");
+    const { fireEvent } = await import("@testing-library/react");
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new TypeError("Failed to fetch")));
+    render(<Analyzer />);
+    fireEvent.change(screen.getByLabelText("Ticker"), { target: { value: "ACME" } });
+    fireEvent.click(screen.getByRole("button", { name: "Analyze" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent(/Could not reach the analysis server/);
+    vi.unstubAllGlobals();
+  });
+
+  it("rejects a malformed ticker before any network call", async () => {
+    const { fireEvent } = await import("@testing-library/react");
+    render(<Analyzer />);
+    fireEvent.change(screen.getByLabelText("Ticker"), { target: { value: "AA;DROP" } });
+    fireEvent.click(screen.getByRole("button", { name: "Analyze" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent(/1-5 letters/);
+  });
+});

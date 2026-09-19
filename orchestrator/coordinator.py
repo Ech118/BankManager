@@ -46,10 +46,12 @@ import logging
 import os
 import time
 from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
 from typing import Any
 
 from agents.base import Agent, section_id_for
+from agents.business_agent import BusinessAgent
 from agents.financial_agent import FinancialAgent
 from orchestrator import events
 from orchestrator.mcp_client import McpToolError
@@ -79,7 +81,10 @@ SECTION_TITLES = {
     "decision": "Investment committee decision",
 }
 
-IMPLEMENTED: dict[AgentName, type[Agent]] = {AgentName.FINANCIAL: FinancialAgent}
+IMPLEMENTED: dict[AgentName, type[Agent]] = {
+    AgentName.FINANCIAL: FinancialAgent,
+    AgentName.BUSINESS: BusinessAgent,
+}
 """Agents that exist so far. Grows with the roadmap; `plan()` reads it."""
 
 CANONICAL_ORDER = [
@@ -115,8 +120,14 @@ FACT_METRICS = [
     "receivables",
     "inventory",
 ]
-SECTION_ITEMS = ("mdna", "sbc_note", "debt_note")
-"""Filing items the Financial Agent reads. Sections, not whole filings (error K)."""
+
+
+def items_needed() -> list[str]:
+    """Filing items to fetch: the union of what the implemented agents read (sections, not whole
+    filings; error K). Each agent is then shown only its own items."""
+    return sorted({item for cls in IMPLEMENTED.values() for item in cls.items})
+
+
 MAX_SECTION_CHARS = 60_000
 
 
@@ -185,8 +196,22 @@ class Coordinator:
         events.emit(events.AgentEvent(run_id=self.run_id, agent=agent, status=status, **kw))
 
     def plan(self, ticker: Ticker, as_of: ISODate | None) -> list[str]:
-        """Agent execution order, honouring the parallel pair (financial || business)."""
-        return [a.value for a in CANONICAL_ORDER if a in IMPLEMENTED]
+        """Agent execution order (the parallel pair first, then the rest in canonical order)."""
+        return [a.value for stage in self.stages() for a in stage]
+
+    @staticmethod
+    def stages() -> list[list[AgentName]]:
+        """Execution stages. Agents in one stage run CONCURRENTLY; stages run in order.
+
+        financial || business is one stage: they are independent, and running them one after
+        the other would make wall-clock the sum instead of the max (and leave the UI lanes with
+        nothing to show side by side)."""
+        stages: list[list[AgentName]] = []
+        pair = [a for a in PARALLEL_PAIR if a in IMPLEMENTED]
+        if pair:
+            stages.append(pair)
+        stages += [[a] for a in CANONICAL_ORDER if a in IMPLEMENTED and a not in PARALLEL_PAIR]
+        return stages
 
     # ------------------------------------------------------------------ ingest
     def ingest(self, ticker: Ticker, as_of: ISODate | None) -> dict:
@@ -218,7 +243,7 @@ class Coordinator:
             raise ValueError(e.detail) from e
         gaps: list[str] = []
         sections: list[dict] = []
-        wanted = set(SECTION_ITEMS)
+        wanted = set(items_needed())
         for (
             filing
         ) in filings:  # newest first: take each item from the most recent filing that has it
@@ -256,52 +281,84 @@ class Coordinator:
         }
 
     # ----------------------------------------------------------------- agents
-    def run_agents(self, state: ResearchState, context: dict) -> ResearchState:
-        """Run the implemented roster in order. Step 1: sequential, one agent.
+    def _execute(self, name: AgentName, context: dict) -> tuple[Agent, Any, float]:
+        """Run ONE agent. Called from a worker thread, so it touches no shared state except the
+        (locked) event feed; the caller merges results afterwards, in canonical order."""
+        agent = IMPLEMENTED[name](self.mcp, redact=self.redact)
+        self._emit(name, "running")
+        t0 = time.monotonic()
+        try:
+            analysis = agent.run(context)
+        except Exception as e:
+            self._emit(name, "failed", detail=str(e))
+            raise
+        seconds = time.monotonic() - t0
+        self._emit(
+            name,
+            "done",
+            tokens_in=agent.usage["tokens_in"],
+            tokens_out=agent.usage["tokens_out"],
+        )
+        return agent, analysis, seconds
 
-        TODO(roadmap Step 3, P3): run financial and business concurrently.
-        """
-        for name in CANONICAL_ORDER:
-            cls = IMPLEMENTED.get(name)
-            if cls is None:
-                continue
-            agent = cls(self.mcp, redact=self.redact)
-            self._emit(name, "running")
-            t0 = time.monotonic()
-            try:
-                analysis = agent.run(context)
-            except Exception as e:
-                self._emit(name, "failed", detail=str(e))
-                raise
-            claims = agent.to_claims(analysis)
-            for claim in claims:
-                key = (claim.model_extra or {}).get("section_key") or agent.sections[0]
-                getattr(state.sections, key).claims.append(claim)
-            state.agent_outputs[name] = analysis
-            if agent.guard_flags:
-                state.data_quality.gaps += [
-                    f"Possible prompt-injection text removed from {f.source_id}: {f.snippet!r}"
-                    for f in agent.guard_flags
-                ]
-                if state.data_quality.overall == "ok":
-                    state.data_quality.overall = "partial"
-                self._emit(
-                    "guard",
-                    "flagged",
-                    detail=f"{len(agent.guard_flags)} instruction-like sentence(s) removed",
-                )
-            self.stats["agents"][name.value] = {
-                **agent.usage,
-                "dropped": agent.dropped,
-                "claims": len(claims),
-                "wall_seconds": round(time.monotonic() - t0, 3),
-            }
+    def _merge(
+        self, state: ResearchState, name: AgentName, result: tuple[Agent, Any, float]
+    ) -> None:
+        agent, analysis, seconds = result
+        claims = agent.to_claims(analysis)
+        for claim in claims:
+            key = (claim.model_extra or {}).get("section_key") or agent.sections[0]
+            getattr(state.sections, key).claims.append(claim)
+        state.agent_outputs[name] = analysis
+        if agent.guard_flags:
+            state.data_quality.gaps += [
+                f"Possible prompt-injection text removed from {f.source_id}: {f.snippet!r}"
+                for f in agent.guard_flags
+            ]
+            if state.data_quality.overall == "ok":
+                state.data_quality.overall = "partial"
             self._emit(
-                name,
-                "done",
-                tokens_in=agent.usage["tokens_in"],
-                tokens_out=agent.usage["tokens_out"],
+                "guard",
+                "flagged",
+                detail=f"{len(agent.guard_flags)} instruction-like sentence(s) removed",
             )
+        self.stats["agents"][name.value] = {
+            **agent.usage,
+            "dropped": agent.dropped,
+            "claims": len(claims),
+            "wall_seconds": round(seconds, 3),
+        }
+
+    def run_agents(self, state: ResearchState, context: dict) -> ResearchState:
+        """Run the implemented roster: the financial/business pair concurrently, then the rest.
+
+        Results are merged into the state in CANONICAL order after each stage, never in
+        completion order, so the same inputs give the same state however the threads are
+        scheduled. If an agent fails, its stage still finishes (no orphaned threads) and the
+        first failure in canonical order is raised.
+
+        TODO(roadmap Step 4-5, P3): valuation, scenario, red team, synthesizer join as later stages.
+        """
+        for stage in self.stages():
+            outcomes: dict[AgentName, tuple[Agent, Any, float] | BaseException] = {}
+            if len(stage) == 1:
+                try:
+                    outcomes[stage[0]] = self._execute(stage[0], context)
+                except Exception as e:
+                    outcomes[stage[0]] = e
+            else:
+                with ThreadPoolExecutor(max_workers=len(stage), thread_name_prefix="agent") as pool:
+                    futures = {name: pool.submit(self._execute, name, context) for name in stage}
+                    for name, future in futures.items():
+                        try:
+                            outcomes[name] = future.result()
+                        except Exception as e:
+                            outcomes[name] = e
+            for name in stage:  # canonical order: deterministic merge, deterministic failure
+                outcome = outcomes[name]
+                if isinstance(outcome, BaseException):
+                    raise outcome
+                self._merge(state, name, outcome)
         return state
 
     def verify(self, state: ResearchState, context: dict) -> ResearchState:

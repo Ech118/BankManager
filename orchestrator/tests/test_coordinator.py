@@ -20,7 +20,7 @@ def mcp():
 
 
 def test_plan_lists_implemented_agents_in_canonical_order(mcp):
-    assert Coordinator(mcp).plan("ACME", None) == ["financial"]
+    assert Coordinator(mcp).plan("ACME", None) == ["financial", "business"]
 
 
 def test_empty_state_has_all_fourteen_sections_with_canonical_owners():
@@ -29,14 +29,14 @@ def test_empty_state_has_all_fourteen_sections_with_canonical_owners():
     assert all(not s.claims for s in st.sections.as_list())
 
 
-def test_mock_run_builds_a_valid_state_with_claims_only_in_financial_sections(mcp):
+def test_mock_run_builds_a_valid_state_with_claims_only_in_the_running_agents_sections(mcp):
     st = Coordinator(mcp, run_id="t1").run_state("ACME")
     ResearchState.model_validate(st.model_dump(mode="json"))  # every contract validator passes
-    owned = {k for k, o in SECTION_OWNERS.items() if o is AgentName.FINANCIAL}
+    owned = {k for k, o in SECTION_OWNERS.items() if o in (AgentName.FINANCIAL, AgentName.BUSINESS)}
     filled = {s.section_key for s in st.sections.as_list() if s.claims}
     assert filled and filled <= owned
     assert (
-        AgentName.FINANCIAL in st.agent_outputs
+        set(st.agent_outputs) == {AgentName.FINANCIAL, AgentName.BUSINESS}
         and st.mode is Mode.MOCK
         and st.as_of == "2026-09-19"
     )
@@ -101,19 +101,16 @@ def test_injection_in_a_filing_is_removed_flagged_and_reported(monkeypatch):
     )
 
 
-def test_progress_events_show_each_stage_and_the_agent_lane(mcp):
+def test_progress_events_show_each_stage_and_a_lane_per_agent(mcp):
     run_id = events.new_run()
     Coordinator(mcp, run_id=run_id).run_state("ACME")
-    seq = [
-        (e.agent if isinstance(e.agent, str) else e.agent.value, e.status)
-        for e in events.history(run_id)
-    ]
-    assert seq == [
-        ("ingest", "running"),
-        ("ingest", "done"),
-        ("financial", "running"),
-        ("financial", "done"),
-    ]
+    seq = [(getattr(e.agent, "value", e.agent), e.status) for e in events.history(run_id)]
+    assert seq[:2] == [("ingest", "running"), ("ingest", "done")]
+    for agent in (
+        "financial",
+        "business",
+    ):  # the pair interleaves; each lane still runs, then finishes
+        assert [status for a, status in seq if a == agent] == ["running", "done"]
 
 
 def test_stats_record_tokens_per_agent_and_a_run_log_line(mcp, tmp_path, monkeypatch):
@@ -121,9 +118,8 @@ def test_stats_record_tokens_per_agent_and_a_run_log_line(mcp, tmp_path, monkeyp
     script_model(monkeypatch, lambda s, u, n: analysis_payload(finding()))
     coord = Coordinator(mcp)
     coord.run_state("ACME")
-    assert (
-        coord.stats["agents"]["financial"]["tokens_in"] == 100 and coord.stats["tokens_out"] == 20
-    )
+    assert coord.stats["agents"]["financial"]["tokens_in"] == 100
+    assert coord.stats["agents"]["business"]["tokens_out"] == 20 and coord.stats["tokens_out"] == 40
     assert (tmp_path / "runs.jsonl").read_text().count("\n") == 1
 
 

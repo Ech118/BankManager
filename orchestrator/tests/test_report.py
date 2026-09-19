@@ -221,6 +221,20 @@ def test_ui_golden_sample_matches_the_generator():
     claims[0]["verification_status"], claims[1]["verification_status"] = "failed", "pending"
     d["sections"]["financials"]["claims"][0]["value"]["type"] = "assumption"
     s = ResearchState.model_validate(d)
-    body = "\n\n".join(g.render_section(sec).body_markdown for sec in (s.sections.financials, s.sections.earnings_quality))
-    golden = (Path(__file__).resolve().parents[2] / "web" / "tests" / "fixtures" / "section_bodies.md").read_text()
+    body = "\n\n".join(
+        g.render_section(sec).body_markdown
+        for sec in (s.sections.financials, s.sections.earnings_quality)
+    )
+    golden = (
+        Path(__file__).resolve().parents[2] / "web" / "tests" / "fixtures" / "section_bodies.md"
+    ).read_text()
     assert body + "\n" == golden
+
+
+def test_ui_preliminary_golden_sample_matches_the_generator():
+    """web/tests/fixtures/preliminary_report.md is the generator's real preliminary output."""
+    state = ResearchState.model_validate(_load("research_state.json"))
+    golden = (
+        Path(__file__).resolve().parents[2] / "web" / "tests" / "fixtures" / "preliminary_report.md"
+    ).read_text()
+    assert g.render_markdown(state) == golden

@@ -3,11 +3,6 @@
 import pytest
 
 
-@pytest.mark.skip(reason="TODO(roadmap Step 3, P3): parallel execution")
-def test_financial_and_business_agents_run_concurrently():
-    """Wall-clock must be the max of the two, not the sum."""
-
-
 @pytest.mark.skip(reason="TODO(roadmap Step 5, P3): retry loop")
 def test_retry_targets_only_the_failing_section():
     """Agents that already passed are not re-run."""

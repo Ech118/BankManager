@@ -19,7 +19,8 @@ Its questions:
 This agent does the most qualitative work, so it is held hardest to the citation
 rule: every claim cites a quote, and the verifier string-matches it.
 
-TODO(roadmap Step 3, P3).
+All machinery (prompt assembly, evidence and fact-id enforcement, retry) lives in
+agents/base.py; this class declares identity, tools and the filing items it reads.
 """
 
 from __future__ import annotations
@@ -40,6 +41,4 @@ class BusinessAgent(Agent):
         "search_news",
         "resolve_fact",
     )
-
-    def run(self, context: dict):
-        raise NotImplementedError("TODO(roadmap Step 3, P3)")
+    items = ("business", "risk_factors", "mdna")

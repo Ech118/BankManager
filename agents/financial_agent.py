@@ -33,6 +33,7 @@ class FinancialAgent(Agent):
 
     name = AgentName.FINANCIAL
     prompt_file = "financial.md"
+    items = ("mdna", "sbc_note", "debt_note")
     tools = (
         "get_financial_facts",
         "get_filing_section",

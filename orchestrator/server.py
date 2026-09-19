@@ -4,7 +4,9 @@ Specified by docs/pipeline.md.
 
     POST /api/analyze                 {"ticker": "ACME"} -> {"run_id"}
     GET  /api/runs/{run_id}/events    SSE {"agent","status","ts", ...}
-    GET  /api/runs/{run_id}           the Verdict when finished
+    GET  /api/runs/{run_id}           the Verdict when finished; 409 {"status":"preliminary"} when the
+                                      run has produced evidence but no verdict yet (Steps 3-4)
+    GET  /api/runs/{run_id}/report    the preliminary report: {"markdown", "state", "stats"}
     GET  /api/runs/{run_id}/stats     tokens and latency for the run
     GET  /api/config                  {"mode","llm"} so the UI can show a mock banner
 
@@ -36,6 +38,28 @@ APP_TITLE = "BankManager research API"
 TICKER_RE = re.compile(r"^[A-Z]{1,5}([.-][A-Z])?$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
+
+class Composition:
+    """What the process that RUNS the server injects: P3 may not import mcp_server/ or audit/."""
+
+    def __init__(self, mcp_factory: Callable[[], Any], auditor=None, factsheet=None, redact=None):
+        self.mcp_factory, self.auditor, self.factsheet, self.redact = (
+            mcp_factory,
+            auditor,
+            factsheet,
+            redact,
+        )
+
+
+COMPOSITION: Composition | None = None
+
+
+def configure(mcp_factory: Callable[[], Any], *, auditor=None, factsheet=None, redact=None) -> None:
+    """Wire the Coordinator to a data layer. Called once by the composition root (a script or test)."""
+    global COMPOSITION
+    COMPOSITION = Composition(mcp_factory, auditor, factsheet, redact)
+
+
 RUNNER: Callable[[str, str | None, str], dict] | None = None
 """(ticker, as_of, run_id) -> Verdict dict. None means orchestrator.api.run_analysis.
 Tests and the future composition root set this."""
@@ -50,7 +74,34 @@ _RESULTS: dict[str, dict[str, Any]] = {}
 _LOCK = threading.Lock()
 
 
+def _coordinator_runner(ticker: str, as_of: str | None, run_id: str) -> dict:
+    """Run the real Coordinator so every agent's progress reaches this run's event feed.
+
+    Returns a PRELIMINARY result (state + markdown), because until the scenario agent, red team
+    and synthesizer exist (Steps 4-5) there is nothing to build a Verdict from."""
+    from orchestrator.coordinator import Coordinator
+    from orchestrator.report.generator import render_markdown
+
+    comp = COMPOSITION
+    assert comp is not None
+    mcp = comp.mcp_factory()
+    try:
+        coord = Coordinator(
+            mcp, redact=comp.redact, run_id=run_id, auditor=comp.auditor, factsheet=comp.factsheet
+        )
+        state = coord.run_state(ticker, as_of)
+    finally:
+        mcp.close()
+    return {
+        "state": state.model_dump(mode="json"),
+        "markdown": render_markdown(state),
+        "stats": coord.stats,
+    }
+
+
 def _default_runner(ticker: str, as_of: str | None, run_id: str) -> dict:
+    if COMPOSITION is not None:
+        return _coordinator_runner(ticker, as_of, run_id)
     from orchestrator.api import run_analysis
 
     return run_analysis(ticker, as_of)
@@ -72,7 +123,10 @@ def start_run(ticker: str, as_of: str | None = None) -> str:
             events.emit(events.AgentEvent(run_id, "run", "failed", detail=str(e)))
         else:
             with _LOCK:
-                _RESULTS[run_id].update(status="done", verdict=verdict)
+                if "card" in verdict:
+                    _RESULTS[run_id].update(status="done", verdict=verdict)
+                else:
+                    _RESULTS[run_id].update(status="done", preliminary=verdict)
             events.emit(events.AgentEvent(run_id, "run", "done"))
         finally:
             events.close(run_id)
@@ -136,12 +190,33 @@ def create_app() -> Any:
             return JSONResponse({"status": "running"}, status_code=202)
         if r["status"] == "failed":
             return JSONResponse({"status": "failed", "error": r["error"]}, status_code=422)
+        if "preliminary" in r:
+            return JSONResponse(
+                {
+                    "status": "preliminary",
+                    "detail": "No verdict yet: the scenario, red team and synthesizer steps have not run.",
+                },
+                status_code=409,
+            )
         return r["verdict"]
+
+    @app.get("/api/runs/{run_id}/report")
+    def report(run_id: str):
+        try:
+            r = get_run(run_id)
+        except KeyError:
+            raise HTTPException(404, "Unknown run.") from None
+        if "preliminary" not in r:
+            raise HTTPException(404, "This run has no preliminary report.")
+        return r["preliminary"]
 
     @app.get("/api/runs/{run_id}/stats")
     def stats(run_id: str) -> dict:
         if not events.known(run_id):
             raise HTTPException(404, "Unknown run.")
+        recorded = get_run(run_id).get("preliminary", {}).get("stats")
+        if recorded:
+            return recorded
         evs = events.history(run_id)
         tin = sum(e.tokens_in or 0 for e in evs)
         tout = sum(e.tokens_out or 0 for e in evs)

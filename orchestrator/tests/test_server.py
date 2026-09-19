@@ -42,12 +42,26 @@ def test_health_and_config(api):
     assert set(api.get("/api/config").json()) == {"mode", "llm"}
 
 
-def test_analyze_runs_to_completion_and_returns_the_result(api):
+def test_analyze_runs_to_completion_and_returns_the_verdict(monkeypatch):
+    from pathlib import Path
+
+    fixture = json.loads(
+        (Path(__file__).resolve().parents[2] / "fixtures/mock/verdict.json").read_text()
+    )
+    monkeypatch.setattr(server, "RUNNER", lambda ticker, as_of, run_id: fixture)
+    api = TestClient(server.create_app())
     run_id = api.post("/api/analyze", json={"ticker": "acme"}).json()[
         "run_id"
     ]  # lowercase is normalised
     r = wait_done(api, run_id)
-    assert r.status_code == 200 and r.json()["ticker"] == "ACME"
+    assert (
+        r.status_code == 200
+        and r.json()["ticker"] == "ACME"
+        and r.json()["card"]["verdict"] == "avoid"
+    )
+    assert (
+        api.get(f"/api/runs/{run_id}/report").status_code == 404
+    )  # a verdict run has no preliminary report
 
 
 def test_sse_streams_a_lane_per_stage_then_done(api):
@@ -108,3 +122,61 @@ def test_a_failed_run_reports_the_reason_and_closes_the_stream(monkeypatch):
 def test_unknown_run_is_404(api):
     for path in ("", "/events", "/stats"):
         assert api.get(f"/api/runs/nope{path}").status_code == 404
+
+
+# ------------------------------------------------------- Step 3: real Coordinator behind the server
+def composed_client(monkeypatch):
+    monkeypatch.setattr(server, "RUNNER", None)
+    monkeypatch.setattr(server, "COMPOSITION", None)
+    server.configure(lambda: InMemoryMcpClient(build_fake_server()))
+    return TestClient(server.create_app())
+
+
+def test_composed_run_is_preliminary_until_a_verdict_exists(monkeypatch):
+    api = composed_client(monkeypatch)
+    run_id = api.post("/api/analyze", json={"ticker": "ACME"}).json()["run_id"]
+    r = wait_done(api, run_id)
+    assert r.status_code == 409 and r.json()["status"] == "preliminary"
+    rep = api.get(f"/api/runs/{run_id}/report").json()
+    assert "Preliminary report" in rep["markdown"] and "## Verdict" not in rep["markdown"]
+    assert "Competitive position" in rep["markdown"] and "Financial quality" in rep["markdown"]
+    assert rep["state"]["ticker"] == "ACME" and set(rep["state"]["agent_outputs"]) == {
+        "financial",
+        "business",
+    }
+
+
+def test_composed_run_streams_a_lane_for_each_agent(monkeypatch):
+    api = composed_client(monkeypatch)
+    run_id = api.post("/api/analyze", json={"ticker": "ACME"}).json()["run_id"]
+    with api.stream("GET", f"/api/runs/{run_id}/events") as r:
+        evs = [json.loads(ln[6:]) for ln in r.iter_lines() if ln.startswith("data: ")]
+    lanes = {(e["agent"], e["status"]) for e in evs}
+    assert {
+        ("ingest", "done"),
+        ("financial", "running"),
+        ("business", "running"),
+        ("financial", "done"),
+        ("business", "done"),
+        ("run", "done"),
+    } <= lanes
+    assert any("tokens_in" in e for e in evs if e["agent"] in ("financial", "business"))
+
+
+def test_composed_run_reports_stats_from_the_coordinator(monkeypatch):
+    api = composed_client(monkeypatch)
+    run_id = api.post("/api/analyze", json={"ticker": "ACME"}).json()["run_id"]
+    wait_done(api, run_id)
+    stats = api.get(f"/api/runs/{run_id}/stats").json()
+    assert set(stats["agents"]) == {"financial", "business"} and "seconds" in stats
+
+
+def test_composed_run_for_an_unknown_company_fails_with_the_reason(monkeypatch):
+    api = composed_client(monkeypatch)
+    run_id = api.post("/api/analyze", json={"ticker": "NOPE"}).json()["run_id"]
+    r = wait_done(api, run_id)
+    assert r.status_code == 422 and "no company profile" in r.json()["error"].lower()
+
+
+def test_report_endpoint_404s_for_a_verdict_run_and_unknown_runs(api):
+    assert api.get("/api/runs/nope/report").status_code == 404

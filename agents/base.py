@@ -86,6 +86,9 @@ class Agent:
     prompt_file: str
     tools: tuple[str, ...] = ()
     """MCP tools this agent may call. Narrower is cheaper and safer."""
+    items: tuple[str, ...] = ()
+    """Filing items (ItemCode values) this agent reads. The coordinator fetches the union; each
+    agent is shown only its own, so prompts stay small (error K) and the parallel pair stay independent."""
 
     def __init__(self, mcp: McpClient, redact: Callable[[str], str] | None = None) -> None:
         self.mcp = mcp
@@ -184,6 +187,7 @@ class Agent:
                 period=str(s.get("fiscal_period", "")),
             )
             for s in context.get("sections", [])
+            if not self.items or str(s.get("item")) in self.items
         ]
         return (
             f"TICKER: {context['ticker']}\nAS OF: {context['as_of']}\n\n"

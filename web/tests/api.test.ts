@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { RunFailed, fetchVerdict, startAnalysis } from "@/lib/api";
+import { RunFailed, fetchResult, fetchVerdict, startAnalysis } from "@/lib/api";
 import { acmeVerdict } from "./fixtures";
 
 afterEach(() => vi.unstubAllGlobals());
@@ -40,5 +40,32 @@ describe("types match the real fixture", () => {
     }
     expect(v.sections.length).toBe(14);
     for (const s of v.sections) for (const k of ["id", "title", "body_markdown", "agent", "verification_status", "unverified_claim_ids"]) expect(s).toHaveProperty(k);
+  });
+});
+
+describe("fetchResult", () => {
+  const seq = (...responses: { status: number; body: unknown }[]) => {
+    const f = vi.fn();
+    for (const r of responses) f.mockResolvedValueOnce({ ok: r.status < 400, status: r.status, json: async () => r.body });
+    vi.stubGlobal("fetch", f);
+    return f;
+  };
+
+  it("returns the verdict on 200", async () => {
+    seq({ status: 200, body: acmeVerdict() });
+    const r = await fetchResult("abc");
+    expect(r.kind === "verdict" && r.verdict.ticker).toBe("ACME");
+  });
+
+  it("fetches the preliminary report on 409 instead of failing", async () => {
+    const f = seq({ status: 409, body: { status: "preliminary" } }, { status: 200, body: { markdown: "# ACME — preliminary research" } });
+    const r = await fetchResult("abc");
+    expect(r).toEqual({ kind: "preliminary", markdown: "# ACME — preliminary research" });
+    expect(f.mock.calls[1][0]).toContain("/report");
+  });
+
+  it("throws the server's reason on 422", async () => {
+    seq({ status: 422, body: { error: "Banks are out of scope for v1." } });
+    await expect(fetchResult("abc")).rejects.toThrow("Banks are out of scope");
   });
 });
