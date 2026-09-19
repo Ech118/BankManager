@@ -41,7 +41,7 @@
       "claims": [
         {
           "claim_id": "claim:financial:revenue",
-          "text": "Revenue reached five billion dollars in the latest full year.",
+          "text": "Gross margin was 40.0% of revenue in the latest full year.",
           "value": {
             "value": 0.4,
             "unit": "fraction",
@@ -54,6 +54,7 @@
             ]
           },
           "fact_ids": [
+            "fact:ACME:gross_profit:FY2025",
             "fact:ACME:revenue:FY2025"
           ],
           "section_ids": [],

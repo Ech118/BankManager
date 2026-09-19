@@ -194,10 +194,28 @@ FLOW_METRICS = {
     "capex": ("capex", "usd", "PaymentsToAcquirePropertyPlantAndEquipment"),
     "eps_diluted": ("eps", "usd_per_share", "EarningsPerShareDiluted"),
     "shares_diluted": ("shares", "shares", "WeightedAverageNumberOfDilutedSharesOutstanding"),
+    # Added so every fact the mock analyses cite actually exists (docs/p3/TO_BE_FIXED.md S5).
+    "cost_of_revenue": ("cost", "usd", "CostOfRevenue"),
+    "gross_profit": ("gp", "usd", "GrossProfit"),
+    "operating_income": ("op", "usd", "OperatingIncomeLoss"),
+    "pretax_income": (
+        "pretax",
+        "usd",
+        "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+    ),
+    "depreciation_amortization": ("da", "usd", "DepreciationDepletionAndAmortization"),
+    "sbc": ("sbc", "usd", "ShareBasedCompensation"),
+    "interest_expense": ("interest", "usd", "InterestExpense"),
 }
 INSTANT_METRICS = {
     "cash": ("cash", "usd", "CashAndCashEquivalentsAtCarryingValue"),
     "total_debt": ("debt", "usd", "DebtLongtermAndShorttermCombinedAmount"),
+    "receivables": ("recv", "usd", "AccountsReceivableNetCurrent"),
+    "inventory": ("inv", "usd", "InventoryNet"),
+    "current_assets": ("ca", "usd", "AssetsCurrent"),
+    "current_liabilities": ("cl", "usd", "LiabilitiesCurrent"),
+    "total_assets": ("assets", "usd", "Assets"),
+    "total_equity": ("equity", "usd", "StockholdersEquity"),
 }
 
 
@@ -995,8 +1013,9 @@ def build_research_state(metrics, sres, audit, analyses):
                        "source_id": S_BUS}])],
         "financials": [claim(
             "claim:financial:revenue",
-            "Revenue reached five billion dollars in the latest full year.",
-            value=metrics["margins"]["FY2025"]["gross"], facts=[f("revenue", "FY2025")],
+            "Gross margin was 40.0% of revenue in the latest full year.",
+            value=metrics["margins"]["FY2025"]["gross"],
+            facts=[f("gross_profit", "FY2025"), f("revenue", "FY2025")],
             by="code", trend="structurally_positive")],
         "balance_sheet": [claim(
             "claim:financial:net-debt",
