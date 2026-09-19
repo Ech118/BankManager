@@ -1,0 +1,4 @@
+# Dependencies of the shared contracts package (schema/contracts/).
+# Kept deliberately tiny: every partition installs this, so anything added here
+# is added to all three environments. Adding a dependency is a CONTRACT-CHANGE PR.
+pydantic>=2.7,<3

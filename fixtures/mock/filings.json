@@ -1,0 +1,56 @@
+[
+  {
+    "accession": "0001234567-26-000090",
+    "company_id": "ACME",
+    "cik": "0001234567",
+    "form": "10-Q",
+    "fiscal_period": "Q2-2026",
+    "period_end": "2026-06-30",
+    "filed_at": "2026-08-05",
+    "retrieved_at": "2026-09-19T12:00:00Z",
+    "source_url": "https://example.invalid/edgar/0001234567-26-000090.htm",
+    "section_ids": []
+  },
+  {
+    "accession": "0001234567-26-000010",
+    "company_id": "ACME",
+    "cik": "0001234567",
+    "form": "10-K",
+    "fiscal_period": "FY2025",
+    "period_end": "2025-12-31",
+    "filed_at": "2026-02-20",
+    "retrieved_at": "2026-09-19T12:00:00Z",
+    "source_url": "https://example.invalid/edgar/0001234567-26-000010.htm",
+    "section_ids": [
+      "sec:0001234567-26-000010:business",
+      "sec:0001234567-26-000010:risk_factors",
+      "sec:0001234567-26-000010:mdna",
+      "sec:0001234567-26-000010:debt_note",
+      "sec:0001234567-26-000010:sbc_note"
+    ]
+  },
+  {
+    "accession": "0001234567-25-000010",
+    "company_id": "ACME",
+    "cik": "0001234567",
+    "form": "10-K",
+    "fiscal_period": "FY2024",
+    "period_end": "2024-12-31",
+    "filed_at": "2025-02-21",
+    "retrieved_at": "2026-09-19T12:00:00Z",
+    "source_url": "https://example.invalid/edgar/0001234567-25-000010.htm",
+    "section_ids": []
+  },
+  {
+    "accession": "0001234567-24-000010",
+    "company_id": "ACME",
+    "cik": "0001234567",
+    "form": "10-K",
+    "fiscal_period": "FY2023",
+    "period_end": "2023-12-31",
+    "filed_at": "2024-02-22",
+    "retrieved_at": "2026-09-19T12:00:00Z",
+    "source_url": "https://example.invalid/edgar/0001234567-24-000010.htm",
+    "section_ids": []
+  }
+]

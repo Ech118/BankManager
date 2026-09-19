@@ -1,0 +1,319 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bankmanager.local/schema/financial_fact.json",
+  "title": "Financial fact",
+  "description": "GENERATED from schema/contracts/facts.py. The row type of the truth layer.",
+  "$defs": {
+    "Derivation": {
+      "additionalProperties": true,
+      "description": "How a derived fact was computed. Required when source_kind is `derived`.\n\n`formula` is a human-readable expression over the input metric names, e.g.\n\"op_cash_flow - capex\". The verifier recomputes it and raises\nIssueType.RECOMPUTE_MISMATCH when the stored value disagrees.",
+      "properties": {
+        "formula": {
+          "description": "Expression over input metrics, e.g. \"op_cash_flow - capex\".",
+          "minLength": 1,
+          "title": "Formula",
+          "type": "string"
+        },
+        "input_fact_ids": {
+          "description": "Every fact this value was computed from.",
+          "items": {
+            "pattern": "^fact:[A-Za-z0-9._:-]+$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Input Fact Ids",
+          "type": "array"
+        },
+        "computed_by": {
+          "default": "calc",
+          "description": "Module that computed it. calc/ is the only legitimate producer.",
+          "title": "Computed By",
+          "type": "string"
+        }
+      },
+      "required": [
+        "formula",
+        "input_fact_ids"
+      ],
+      "title": "Derivation",
+      "type": "object"
+    },
+    "FilingType": {
+      "enum": [
+        "10-K",
+        "10-Q",
+        "8-K"
+      ],
+      "title": "FilingType",
+      "type": "string"
+    },
+    "PeriodType": {
+      "description": "XBRL period shape. `duration` spans a range; `instant` is a point in time.",
+      "enum": [
+        "duration",
+        "instant"
+      ],
+      "title": "PeriodType",
+      "type": "string"
+    },
+    "SourceKind": {
+      "description": "Where a FinancialFact came from. `derived` REQUIRES a Derivation.",
+      "enum": [
+        "xbrl_reported",
+        "derived",
+        "filing_text",
+        "market_api",
+        "estimate"
+      ],
+      "title": "SourceKind",
+      "type": "string"
+    },
+    "Unit": {
+      "description": "Unit of a ValueObject. `fraction` is never a percent (0.25 means 25%).",
+      "enum": [
+        "usd",
+        "usd_per_share",
+        "shares",
+        "fraction",
+        "multiple",
+        "count",
+        "days",
+        "ratio"
+      ],
+      "title": "Unit",
+      "type": "string"
+    }
+  },
+  "additionalProperties": true,
+  "properties": {
+    "fact_id": {
+      "pattern": "^fact:[A-Za-z0-9._:-]+$",
+      "title": "Fact Id",
+      "type": "string"
+    },
+    "company_id": {
+      "description": "Ticker. CIK lives on CompanyProfile.",
+      "pattern": "^[A-Z]{1,5}([.-][A-Z])?$",
+      "title": "Company Id",
+      "type": "string"
+    },
+    "metric": {
+      "description": "Canonical metric name, e.g. revenue, op_cash_flow. Not the XBRL tag.",
+      "minLength": 1,
+      "title": "Metric",
+      "type": "string"
+    },
+    "xbrl_concept": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "The us-gaap tag actually used, recorded because tags vary by filer.",
+      "title": "Xbrl Concept"
+    },
+    "value": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Full units. Null only for an unavailable fact.",
+      "title": "Value"
+    },
+    "unit": {
+      "$ref": "#/$defs/Unit"
+    },
+    "currency": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": "USD",
+      "description": "ISO 4217 code for monetary units; null otherwise.",
+      "title": "Currency"
+    },
+    "scale": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "What the filing reported (\"units\"/\"thousands\"/\"millions\"). PROVENANCE ONLY - value is already normalized.",
+      "title": "Scale"
+    },
+    "period_type": {
+      "$ref": "#/$defs/PeriodType"
+    },
+    "period_start": {
+      "anyOf": [
+        {
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Required for duration facts; must be null for instant.",
+      "title": "Period Start"
+    },
+    "period_end": {
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "title": "Period End",
+      "type": "string"
+    },
+    "fiscal_period": {
+      "pattern": "^(FY\\d{4}|Q[1-4]-\\d{4})$",
+      "title": "Fiscal Period",
+      "type": "string"
+    },
+    "dimension": {
+      "anyOf": [
+        {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "XBRL segment axis members. None means the CONSOLIDATED total (docs/sec-pitfalls.md: never sum dimensioned facts into a total).",
+      "title": "Dimension"
+    },
+    "filing_type": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/FilingType"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "accession_number": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Required for anything sourced from a filing.",
+      "title": "Accession Number"
+    },
+    "filed_at": {
+      "anyOf": [
+        {
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Filing date. Point-in-time queries drop facts filed after as_of.",
+      "title": "Filed At"
+    },
+    "retrieved_at": {
+      "description": "When we fetched it. Always required.",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+      "title": "Retrieved At",
+      "type": "string"
+    },
+    "source_url": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Source Url"
+    },
+    "source_location": {
+      "anyOf": [
+        {
+          "pattern": "^sec:[A-Za-z0-9._:-]+$",
+          "type": "string"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Section id or XBRL fragment the value was read from.",
+      "title": "Source Location"
+    },
+    "source_kind": {
+      "$ref": "#/$defs/SourceKind"
+    },
+    "derivation": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Derivation"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Required if and only if source_kind is `derived`."
+    },
+    "superseded_by": {
+      "anyOf": [
+        {
+          "pattern": "^fact:[A-Za-z0-9._:-]+$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Set when a later filing restated this value. Citing a superseded fact raises IssueType.SUPERSEDED_FACT.",
+      "title": "Superseded By"
+    }
+  },
+  "required": [
+    "fact_id",
+    "company_id",
+    "metric",
+    "value",
+    "unit",
+    "period_type",
+    "period_end",
+    "fiscal_period",
+    "retrieved_at",
+    "source_kind"
+  ],
+  "type": "object"
+}

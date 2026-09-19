@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "2.0.0",
   "ticker": "ACME",
   "as_of": "2026-09-19",
   "generated_at": "2026-09-19T12:00:00Z",
@@ -36,8 +36,44 @@
       "status": "ok",
       "source_id": null,
       "derived_from": [
-        "scenario_result.scenarios.*.annualized_return"
+        "scenario_result.scenarios.*.annualized_return",
+        "scenario_result.weights"
       ]
+    },
+    "expected_return_vs_sp500": {
+      "short_term": {
+        "value": -0.0894506576,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      },
+      "medium_term": {
+        "value": -0.0894506576,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      },
+      "long_term": {
+        "value": -0.0894506576,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      }
     },
     "primary_catalyst": "Software mix shift lifting gross margin above 41%.",
     "biggest_risk": "Multiple compression from 33x toward 22x even if guidance is met.",
@@ -52,124 +88,182 @@
   },
   "sections": [
     {
-      "id": "financial_quality",
-      "title": "1. Financial quality",
-      "body_markdown": "_Mock content for **1. Financial quality**. Real text is written by the forensic agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
-      "agent": "forensic",
+      "id": "company",
+      "title": "Company",
+      "body_markdown": "_Mock content for **Company**, rendered from 1 claim(s) owned by the business agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
+      "agent": "business",
       "evidence": [
         {
-          "quote": "Gross margin improved to 40.0% from 38.9% as a result of price increases and a favorable product mix toward software subscriptions.",
-          "source_id": "src:edgar:0001234567-26-000010:mdna"
+          "quote": "Acme Corporation designs and sells industrial sensors and monitoring software to manufacturers",
+          "source_id": "src:edgar:0001234567-26-000010:business"
         }
-      ]
+      ],
+      "verification_status": "verified",
+      "unverified_claim_ids": []
     },
     {
-      "id": "income_statement",
-      "title": "2. Income statement deep dive",
-      "body_markdown": "_Mock content for **2. Income statement deep dive**. Real text is written by the forensic agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
-      "agent": "forensic",
-      "evidence": []
+      "id": "financials",
+      "title": "Financial quality",
+      "body_markdown": "_Mock content for **Financial quality**, rendered from 1 claim(s) owned by the financial agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
+      "agent": "financial",
+      "evidence": [],
+      "verification_status": "verified",
+      "unverified_claim_ids": []
     },
     {
       "id": "balance_sheet",
-      "title": "3. Balance sheet strength",
-      "body_markdown": "_Mock content for **3. Balance sheet strength**. Real text is written by the balance_sheet agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
-      "agent": "balance_sheet",
-      "evidence": []
+      "title": "Balance sheet strength",
+      "body_markdown": "_Mock content for **Balance sheet strength**, rendered from 1 claim(s) owned by the financial agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
+      "agent": "financial",
+      "evidence": [],
+      "verification_status": "verified",
+      "unverified_claim_ids": []
     },
     {
-      "id": "free_cash_flow",
-      "title": "4. Free cash flow",
-      "body_markdown": "_Mock content for **4. Free cash flow**. Real text is written by the balance_sheet agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
-      "agent": "balance_sheet",
-      "evidence": []
+      "id": "cash_flow",
+      "title": "Free cash flow",
+      "body_markdown": "_Mock content for **Free cash flow**, rendered from 1 claim(s) owned by the financial agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
+      "agent": "financial",
+      "evidence": [],
+      "verification_status": "verified",
+      "unverified_claim_ids": []
     },
     {
-      "id": "management_guidance",
-      "title": "5. Management and guidance",
-      "body_markdown": "_Mock content for **5. Management and guidance**. Real text is written by the business agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
+      "id": "earnings_quality",
+      "title": "Earnings quality",
+      "body_markdown": "_Mock content for **Earnings quality**, rendered from 3 claim(s) owned by the financial agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
+      "agent": "financial",
+      "evidence": [
+        {
+          "quote": "reduced diluted shares outstanding by 2.4%",
+          "source_id": "src:edgar:0001234567-26-000010:mdna"
+        }
+      ],
+      "verification_status": "verified",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "management",
+      "title": "Management and guidance",
+      "body_markdown": "_Mock content for **Management and guidance**, rendered from 1 claim(s) owned by the business agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
       "agent": "business",
-      "evidence": []
+      "evidence": [
+        {
+          "quote": "we expect revenue growth of 8% to 10% and operating margin of 16% to 17%",
+          "source_id": "src:edgar:0001234567-26-000010:mdna"
+        }
+      ],
+      "verification_status": "verified",
+      "unverified_claim_ids": []
     },
     {
       "id": "competitive_position",
-      "title": "6. Competitive position",
-      "body_markdown": "_Mock content for **6. Competitive position**. Real text is written by the business agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
+      "title": "Competitive position",
+      "body_markdown": "_Mock content for **Competitive position**, rendered from 1 claim(s) owned by the business agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
       "agent": "business",
-      "evidence": []
+      "evidence": [
+        {
+          "quote": "Customers who adopted our software platform renewed at a rate of 94% in fiscal 2025.",
+          "source_id": "src:edgar:0001234567-26-000010:business"
+        }
+      ],
+      "verification_status": "verified",
+      "unverified_claim_ids": []
     },
     {
       "id": "valuation",
-      "title": "7. Valuation",
-      "body_markdown": "_Mock content for **7. Valuation**. Real text is written by the valuation agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
+      "title": "Valuation",
+      "body_markdown": "_Mock content for **Valuation**, rendered from 1 claim(s) owned by the valuation agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
       "agent": "valuation",
-      "evidence": []
+      "evidence": [],
+      "verification_status": "verified",
+      "unverified_claim_ids": []
     },
     {
-      "id": "expectations_vs_reality",
-      "title": "8. Expectations vs reality",
-      "body_markdown": "_Mock content for **8. Expectations vs reality**. Real text is written by the valuation agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
+      "id": "expectations",
+      "title": "Expectations vs reality",
+      "body_markdown": "_Mock content for **Expectations vs reality**, rendered from 1 claim(s) owned by the valuation agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
       "agent": "valuation",
-      "evidence": []
+      "evidence": [
+        {
+          "quote": "we expect revenue growth of 8% to 10% and operating margin of 16% to 17%",
+          "source_id": "src:edgar:0001234567-26-000010:mdna"
+        }
+      ],
+      "verification_status": "verified",
+      "unverified_claim_ids": []
     },
     {
       "id": "catalysts",
-      "title": "9. Catalysts",
-      "body_markdown": "_Mock content for **9. Catalysts**. Real text is written by the business agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
+      "title": "Catalysts",
+      "body_markdown": "_Mock content for **Catalysts**, rendered from 1 claim(s) owned by the business agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
       "agent": "business",
-      "evidence": []
+      "evidence": [
+        {
+          "quote": "a favorable product mix toward software subscriptions",
+          "source_id": "src:edgar:0001234567-26-000010:mdna"
+        }
+      ],
+      "verification_status": "verified",
+      "unverified_claim_ids": []
     },
     {
       "id": "risks",
-      "title": "10. Risks",
-      "body_markdown": "_Mock content for **10. Risks**. Real text is written by the red_team agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
+      "title": "Risks",
+      "body_markdown": "_Mock content for **Risks**, rendered from 2 claim(s) owned by the red_team agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
       "agent": "red_team",
-      "evidence": []
+      "evidence": [
+        {
+          "quote": "could reduce our gross margin by up to 150 basis points",
+          "source_id": "src:edgar:0001234567-26-000010:risk_factors"
+        }
+      ],
+      "verification_status": "verified",
+      "unverified_claim_ids": []
     },
     {
       "id": "scenarios",
-      "title": "11. Bull / base / bear",
-      "body_markdown": "_Mock content for **11. Bull / base / bear**. Real text is written by the valuation agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
-      "agent": "valuation",
-      "evidence": []
+      "title": "Bull / base / bear",
+      "body_markdown": "_Mock content for **Bull / base / bear**, rendered from 1 claim(s) owned by the scenario agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
+      "agent": "scenario",
+      "evidence": [],
+      "verification_status": "verified",
+      "unverified_claim_ids": []
     },
     {
-      "id": "sp500_test",
-      "title": "12. S&P 500 outperformance test",
-      "body_markdown": "_Mock content for **12. S&P 500 outperformance test**. Real text is written by the valuation agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
-      "agent": "valuation",
-      "evidence": []
+      "id": "sp500_comparison",
+      "title": "S&P 500 outperformance test",
+      "body_markdown": "_Mock content for **S&P 500 outperformance test**, rendered from 1 claim(s) owned by the scenario agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
+      "agent": "scenario",
+      "evidence": [],
+      "verification_status": "verified",
+      "unverified_claim_ids": []
     },
     {
-      "id": "buyability",
-      "title": "13. Buyability score",
-      "body_markdown": "_Mock content for **13. Buyability score**. Real text is written by the synthesizer agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
+      "id": "decision",
+      "title": "Investment committee verdict",
+      "body_markdown": "_Mock content for **Investment committee verdict**, rendered from 1 claim(s) owned by the synthesizer agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
       "agent": "synthesizer",
-      "evidence": []
-    },
-    {
-      "id": "buy_more_or_sell",
-      "title": "14. What would make me buy more or sell",
-      "body_markdown": "_Mock content for **14. What would make me buy more or sell**. Real text is written by the synthesizer agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
-      "agent": "synthesizer",
-      "evidence": []
-    },
-    {
-      "id": "committee_verdict",
-      "title": "15. Investment committee verdict",
-      "body_markdown": "_Mock content for **15. Investment committee verdict**. Real text is written by the synthesizer agent._ ACME trades at 33.8x trailing earnings, a 27% premium to peers.",
-      "agent": "synthesizer",
-      "evidence": []
+      "evidence": [
+        {
+          "quote": "we expect revenue growth of 8% to 10% and operating margin of 16% to 17%",
+          "source_id": "src:edgar:0001234567-26-000010:mdna"
+        }
+      ],
+      "verification_status": "verified",
+      "unverified_claim_ids": []
     }
   ],
   "red_team": {
     "summary": "Even the base case underperforms the S&P; the stock is exposed to multiple compression and a 2027 refinancing.",
-    "responses_by_synthesizer": "Accepted: valuation risk is the dominant issue and drives the AVOID. Not accepted: the 2027 refinancing is low-risk given 13x interest coverage."
+    "responses_by_synthesizer": "Accepted: valuation risk is the dominant issue and drives the AVOID. Not accepted: the 2027 refinancing is low-risk given 13x interest coverage.",
+    "drawdown_path": "A de-rating to the peer median combined with a single large contract loss.",
+    "requested_prior_shift": null
   },
   "agent_outputs": {
-    "forensic": {
-      "schema_version": "1.0.0",
-      "agent": "forensic",
+    "financial": {
+      "schema_version": "2.0.0",
+      "agent": "financial",
       "ticker": "ACME",
       "as_of": "2026-09-19",
       "model": "mock",
@@ -224,7 +318,7 @@
           "confidence": "high"
         },
         {
-          "claim": "Buybacks shrank the diluted share count 2.4%, contributing about 2.4 points of the 24.4% EPS growth.",
+          "claim": "Buybacks shrank the diluted share count, contributing part of reported EPS growth rather than operating improvement.",
           "trend": "neutral",
           "evidence": [
             {
@@ -246,11 +340,35 @@
             }
           ],
           "confidence": "high"
+        },
+        {
+          "claim": "Management presents non-GAAP operating income excluding a recurring stock compensation expense.",
+          "trend": "structurally_negative",
+          "evidence": [
+            {
+              "quote": "stock-based compensation is a recurring expense and that our non-GAAP measures should not be considered in isolation",
+              "source_id": "src:edgar:0001234567-26-000010:sbc_note"
+            }
+          ],
+          "numbers": [
+            {
+              "value": 0.02,
+              "unit": "fraction",
+              "type": "fact",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "financials.FY2025.sbc",
+                "financials.FY2025.revenue"
+              ]
+            }
+          ],
+          "confidence": "high"
         }
       ]
     },
     "business": {
-      "schema_version": "1.0.0",
+      "schema_version": "2.0.0",
       "agent": "business",
       "ticker": "ACME",
       "as_of": "2026-09-19",
@@ -296,7 +414,7 @@
       ]
     },
     "valuation": {
-      "schema_version": "1.0.0",
+      "schema_version": "2.0.0",
       "agent": "valuation",
       "ticker": "ACME",
       "as_of": "2026-09-19",
@@ -304,7 +422,7 @@
       "summary": "At $50 the market already prices double-digit FCF growth for a decade; guidance does not support that.",
       "findings": [
         {
-          "claim": "The current price implies about 11.6% annual FCF growth for ten years (9% discount rate, 3% terminal growth); guidance is 8-10% revenue growth.",
+          "claim": "The current price implies roughly double-digit annual FCF growth for a decade at a nine percent discount rate; guidance implies less.",
           "trend": "structurally_negative",
           "evidence": [
             {
@@ -330,7 +448,7 @@
       ]
     },
     "red_team": {
-      "schema_version": "1.0.0",
+      "schema_version": "2.0.0",
       "agent": "red_team",
       "ticker": "ACME",
       "as_of": "2026-09-19",
@@ -338,7 +456,7 @@
       "summary": "Even the base case underperforms the S&P; the stock is exposed to multiple compression and a 2027 refinancing.",
       "findings": [
         {
-          "claim": "A de-rating from 33x to 22x earnings alone would cut the price about a third even if guidance is met.",
+          "claim": "A de-rating toward the peer median alone would cut the price by roughly a third even if guidance is met.",
           "trend": "structurally_negative",
           "evidence": [
             {
@@ -362,12 +480,12 @@
           "confidence": "medium"
         },
         {
-          "claim": "$400 million of debt matures in fiscal 2027 and may be refinanced on worse terms.",
+          "claim": "Senior notes mature in fiscal 2027 and may be refinanced on worse terms.",
           "trend": "temporarily_negative",
           "evidence": [
             {
-              "quote": "of which $400 million matures in fiscal 2027",
-              "source_id": "src:edgar:0001234567-26-000010:risk_factors"
+              "quote": "consisting of $400 million of 4.25% senior notes due fiscal 2027",
+              "source_id": "src:edgar:0001234567-26-000010:debt_note"
             }
           ],
           "numbers": [],
@@ -377,7 +495,7 @@
     }
   },
   "scenario_result": {
-    "schema_version": "1.0.0",
+    "schema_version": "2.0.0",
     "ticker": "ACME",
     "as_of": "2026-09-19",
     "scenarios": {
@@ -457,6 +575,48 @@
         }
       }
     },
+    "weights": {
+      "bear": 0.3,
+      "base": 0.5,
+      "bull": 0.2,
+      "clamps": [
+        {
+          "scenario": "bear",
+          "requested": 0.3,
+          "clamped_to": 0.3,
+          "applied": 0.3,
+          "default_weight": 0.3,
+          "band": 0.15,
+          "was_clamped": false,
+          "was_renormalized": false,
+          "reason": "Competitor bundling is already visible in the mid-market risk disclosure."
+        },
+        {
+          "scenario": "base",
+          "requested": 0.5,
+          "clamped_to": 0.5,
+          "applied": 0.5,
+          "default_weight": 0.5,
+          "band": 0.15,
+          "was_clamped": false,
+          "was_renormalized": false,
+          "reason": "Management guidance has been met in each of the last three years."
+        },
+        {
+          "scenario": "bull",
+          "requested": 0.2,
+          "clamped_to": 0.2,
+          "applied": 0.2,
+          "default_weight": 0.2,
+          "band": 0.15,
+          "was_clamped": false,
+          "was_renormalized": false,
+          "reason": "Software mix shift would have to accelerate beyond the guided range."
+        }
+      ],
+      "any_clamped": false,
+      "renormalized": false
+    },
     "expected_annualized_return": {
       "value": -0.0194506576,
       "unit": "fraction",
@@ -464,7 +624,8 @@
       "status": "ok",
       "source_id": null,
       "derived_from": [
-        "scenario_result.scenarios.*.annualized_return"
+        "scenario_result.scenarios.*.annualized_return",
+        "scenario_result.weights"
       ]
     },
     "sp500_expected_return": {
@@ -474,8 +635,43 @@
       "status": "ok",
       "source_id": "src:config:calc_assumptions"
     },
+    "expected_return_vs_sp500": {
+      "short_term": {
+        "value": -0.0894506576,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      },
+      "medium_term": {
+        "value": -0.0894506576,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      },
+      "long_term": {
+        "value": -0.0894506576,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      }
+    },
     "excess_vs_sp500": {
-      "1y": {
+      "short_term": {
         "value": -0.0894506576,
         "unit": "fraction",
         "type": "estimate",
@@ -486,7 +682,7 @@
           "scenario_result.sp500_expected_return"
         ]
       },
-      "3y": {
+      "medium_term": {
         "value": -0.0894506576,
         "unit": "fraction",
         "type": "estimate",
@@ -497,7 +693,7 @@
           "scenario_result.sp500_expected_return"
         ]
       },
-      "5y": {
+      "long_term": {
         "value": -0.0894506576,
         "unit": "fraction",
         "type": "estimate",
@@ -510,19 +706,22 @@
       }
     },
     "p_beat_sp500": {
-      "1y": 0.37,
-      "3y": 0.34,
-      "5y": 0.32
+      "short_term": 0.37,
+      "medium_term": 0.34,
+      "long_term": 0.32
     },
     "prior": {
       "base_rate": {
-        "1y": 0.47,
-        "3y": 0.44,
-        "5y": 0.42
+        "short_term": 0.47,
+        "medium_term": 0.44,
+        "long_term": 0.42
       },
       "requested_shift": -0.1,
       "applied_shift": -0.1,
-      "cap": 0.15
+      "cap": 0.15,
+      "shift_reasons": [
+        "scenario: stock trades at a 27% P/E premium to peers with decelerating guided growth."
+      ]
     },
     "scores": {
       "short_term": 3,
@@ -535,18 +734,30 @@
     }
   },
   "audit": {
-    "schema_version": "1.0.0",
+    "schema_version": "2.0.0",
     "passed": true,
     "issues": [
       {
+        "issue_type": "recompute_mismatch",
         "severity": "warn",
-        "path": "agent_outputs.forensic.findings[2]",
-        "message": "Mock warning: EPS-growth attribution (2.4 points) is derived by the agent, not by calc/."
+        "path": "sections.earnings_quality",
+        "message": "Mock warning: EPS-growth attribution was rounded by the agent rather than recomputed by calc/.",
+        "claim_id": "claim:financial:buyback-eps",
+        "expected": "2.44 points of the 24.37% EPS growth",
+        "actual": "about 2.4 points",
+        "checked_by_llm": false
       }
-    ]
+    ],
+    "claims_checked": 16,
+    "claims_verified": 16,
+    "claims_unverified": 0,
+    "llm_checks_run": 4,
+    "retries_issued": []
   },
   "data_quality": {
     "overall": "ok",
     "gaps": []
-  }
+  },
+  "metrics_ref": "fixtures/mock/metrics.json",
+  "state_version": "1.0.0"
 }

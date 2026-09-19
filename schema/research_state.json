@@ -1,0 +1,1362 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bankmanager.local/schema/research_state.json",
+  "title": "Research state",
+  "description": "GENERATED from schema/contracts/state.py. The single object the report is rendered from (ADR 0004).",
+  "$defs": {
+    "AgentName": {
+      "description": "The P3 agent roster (docs/pipeline.md).\n\nfinancial and business run in parallel; valuation, then scenario, then\nred_team, then synthesizer. `verifier` is the LLM half of audit/.",
+      "enum": [
+        "financial",
+        "business",
+        "valuation",
+        "scenario",
+        "red_team",
+        "synthesizer",
+        "verifier"
+      ],
+      "title": "AgentName",
+      "type": "string"
+    },
+    "Analysis": {
+      "additionalProperties": true,
+      "description": "The full output of one agent pass.",
+      "properties": {
+        "schema_version": {
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "agent": {
+          "$ref": "#/$defs/AgentName"
+        },
+        "ticker": {
+          "pattern": "^[A-Z]{1,5}([.-][A-Z])?$",
+          "title": "Ticker",
+          "type": "string"
+        },
+        "as_of": {
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "title": "As Of",
+          "type": "string"
+        },
+        "model": {
+          "description": "Model id used, or 'mock'.",
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "summary": {
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        },
+        "findings": {
+          "items": {
+            "$ref": "#/$defs/Finding"
+          },
+          "title": "Findings",
+          "type": "array"
+        },
+        "tokens_in": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Cost tracking (error K).",
+          "title": "Tokens In"
+        },
+        "tokens_out": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tokens Out"
+        }
+      },
+      "required": [
+        "schema_version",
+        "agent",
+        "ticker",
+        "as_of",
+        "model",
+        "summary"
+      ],
+      "title": "Analysis",
+      "type": "object"
+    },
+    "Claim": {
+      "additionalProperties": true,
+      "description": "One assertion made by an agent, or computed by code, inside a ResearchState section.\n\nThe report is rendered from Claims, never from free-form agent prose (ADR 0004).",
+      "properties": {
+        "claim_id": {
+          "pattern": "^claim:[A-Za-z0-9._:-]+$",
+          "title": "Claim Id",
+          "type": "string"
+        },
+        "text": {
+          "description": "The assertion, as one sentence.",
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ValueObject"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The number this claim is about, when it is about a number."
+        },
+        "fact_ids": {
+          "description": "Facts this claim rests on. REQUIRED whenever a number appears.",
+          "items": {
+            "pattern": "^fact:[A-Za-z0-9._:-]+$",
+            "type": "string"
+          },
+          "title": "Fact Ids",
+          "type": "array"
+        },
+        "section_ids": {
+          "description": "Filing sections this claim rests on. REQUIRED for qualitative claims.",
+          "items": {
+            "pattern": "^sec:[A-Za-z0-9._:-]+$",
+            "type": "string"
+          },
+          "title": "Section Ids",
+          "type": "array"
+        },
+        "evidence": {
+          "description": "Verbatim quotes. The verifier string-matches each one.",
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "derived_by": {
+          "$ref": "#/$defs/DerivedBy",
+          "description": "code = computed in calc/, agent = asserted by an LLM, filing_text = lifted from a filing."
+        },
+        "trend": {
+          "$ref": "#/$defs/Trend",
+          "default": "neutral"
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence",
+          "default": "medium"
+        },
+        "verification_status": {
+          "$ref": "#/$defs/VerificationStatus",
+          "default": "pending"
+        }
+      },
+      "required": [
+        "claim_id",
+        "text",
+        "derived_by"
+      ],
+      "title": "Claim",
+      "type": "object"
+    },
+    "Confidence": {
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "title": "Confidence",
+      "type": "string"
+    },
+    "Consistency": {
+      "additionalProperties": true,
+      "description": "Whether score, P(beat S&P), expected return and verdict agree.",
+      "properties": {
+        "ok": {
+          "title": "Ok",
+          "type": "boolean"
+        },
+        "issues": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Issues",
+          "type": "array"
+        }
+      },
+      "required": [
+        "ok"
+      ],
+      "title": "Consistency",
+      "type": "object"
+    },
+    "DataQuality": {
+      "additionalProperties": true,
+      "description": "Run-level data health, surfaced as a banner in the report (error E).",
+      "properties": {
+        "overall": {
+          "description": "ok | partial | degraded",
+          "title": "Overall",
+          "type": "string"
+        },
+        "gaps": {
+          "description": "Human-readable description of each gap.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Gaps",
+          "type": "array"
+        }
+      },
+      "required": [
+        "overall"
+      ],
+      "title": "DataQuality",
+      "type": "object"
+    },
+    "DerivedBy": {
+      "description": "Who produced a Claim. `code` claims may carry numbers computed in calc/.",
+      "enum": [
+        "code",
+        "agent",
+        "filing_text"
+      ],
+      "title": "DerivedBy",
+      "type": "string"
+    },
+    "Evidence": {
+      "additionalProperties": true,
+      "description": "A verbatim quote from a source, string-matched by the verifier.\n\nThe quote must appear in the text behind `source_id` after whitespace\nnormalization, or audit/ raises IssueType.UNSUPPORTED_CLAIM.",
+      "properties": {
+        "quote": {
+          "description": "Verbatim text, copied not paraphrased.",
+          "minLength": 8,
+          "title": "Quote",
+          "type": "string"
+        },
+        "source_id": {
+          "pattern": "^src:[a-z0-9_]+:[A-Za-z0-9._:-]+$",
+          "title": "Source Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "quote",
+        "source_id"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "Finding": {
+      "additionalProperties": true,
+      "description": "One assertion by an agent, with the evidence that makes it checkable.",
+      "properties": {
+        "claim": {
+          "minLength": 1,
+          "title": "Claim",
+          "type": "string"
+        },
+        "trend": {
+          "$ref": "#/$defs/Trend"
+        },
+        "evidence": {
+          "description": "At least one verbatim quote. Empty evidence makes the finding invalid.",
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "minItems": 1,
+          "title": "Evidence",
+          "type": "array"
+        },
+        "numbers": {
+          "description": "Numbers cited by this finding. Never arithmetic done by the LLM.",
+          "items": {
+            "$ref": "#/$defs/ValueObject"
+          },
+          "title": "Numbers",
+          "type": "array"
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        }
+      },
+      "required": [
+        "claim",
+        "trend",
+        "evidence",
+        "confidence"
+      ],
+      "title": "Finding",
+      "type": "object"
+    },
+    "HorizonProbabilities": {
+      "additionalProperties": true,
+      "description": "A bare probability per horizon (documented exception to the ValueObject rule).",
+      "properties": {
+        "short_term": {
+          "description": "0-12m.",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Short Term",
+          "type": "number"
+        },
+        "medium_term": {
+          "description": "1-3y.",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Medium Term",
+          "type": "number"
+        },
+        "long_term": {
+          "description": "3-5y.",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Long Term",
+          "type": "number"
+        }
+      },
+      "required": [
+        "short_term",
+        "medium_term",
+        "long_term"
+      ],
+      "title": "HorizonProbabilities",
+      "type": "object"
+    },
+    "HorizonValues": {
+      "additionalProperties": true,
+      "description": "A ValueObject per horizon. Keys match Scores so returns and scores align.",
+      "properties": {
+        "short_term": {
+          "$ref": "#/$defs/ValueObject",
+          "description": "0-12m."
+        },
+        "medium_term": {
+          "$ref": "#/$defs/ValueObject",
+          "description": "1-3y."
+        },
+        "long_term": {
+          "$ref": "#/$defs/ValueObject",
+          "description": "3-5y."
+        }
+      },
+      "required": [
+        "short_term",
+        "medium_term",
+        "long_term"
+      ],
+      "title": "HorizonValues",
+      "type": "object"
+    },
+    "IssueType": {
+      "description": "Every check the verifier can raise. Routing table: docs/verification.md.\n\nunresolved_fact            a cited fact_id does not exist\nrecompute_mismatch         a number does not match recomputation from its inputs\nprose_number_mismatch      a number in claim text disagrees with its ValueObject\nsuperseded_fact            a cited fact has a non-null superseded_by\nfuture_fact                a cited fact was filed after the run's as_of\nadjusted_as_gaap           a non-GAAP figure is presented as GAAP\nunsupported_claim          a qualitative claim's quote is not in the cited section\ncross_agent_contradiction  two sections assert incompatible things",
+      "enum": [
+        "unresolved_fact",
+        "recompute_mismatch",
+        "prose_number_mismatch",
+        "superseded_fact",
+        "future_fact",
+        "adjusted_as_gaap",
+        "unsupported_claim",
+        "cross_agent_contradiction"
+      ],
+      "title": "IssueType",
+      "type": "string"
+    },
+    "Mode": {
+      "description": "How a run obtained its data. `backtest` implies a non-null as_of.",
+      "enum": [
+        "live",
+        "mock",
+        "backtest"
+      ],
+      "title": "Mode",
+      "type": "string"
+    },
+    "Prior": {
+      "additionalProperties": true,
+      "description": "The base rate for P(beat S&P), and how far the agents were allowed to move it.\n\nHistorically only about 40-45% of individual stocks beat the index over five\nyears. Starting from that and capping the LLM's tilt is what stops\nP(beat S&P) from being a number the model simply made up (error C).",
+      "properties": {
+        "base_rate": {
+          "$ref": "#/$defs/HorizonProbabilities"
+        },
+        "requested_shift": {
+          "description": "Sum of every agent's requested shift.",
+          "title": "Requested Shift",
+          "type": "number"
+        },
+        "applied_shift": {
+          "description": "After the cap. |applied| <= cap.",
+          "title": "Applied Shift",
+          "type": "number"
+        },
+        "cap": {
+          "description": "Hard cap from calc/config.py.",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Cap",
+          "type": "number"
+        },
+        "shift_reasons": {
+          "description": "One entry per requesting agent.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Shift Reasons",
+          "type": "array"
+        }
+      },
+      "required": [
+        "base_rate",
+        "requested_shift",
+        "applied_shift",
+        "cap"
+      ],
+      "title": "Prior",
+      "type": "object"
+    },
+    "ResearchSection": {
+      "additionalProperties": true,
+      "description": "One section of the report, owned by exactly one agent.",
+      "properties": {
+        "section_key": {
+          "description": "Key from SECTION_OWNERS.",
+          "minLength": 1,
+          "title": "Section Key",
+          "type": "string"
+        },
+        "title": {
+          "description": "Human-readable heading.",
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "owner": {
+          "$ref": "#/$defs/AgentName",
+          "description": "The agent responsible; also the retry target."
+        },
+        "claims": {
+          "items": {
+            "$ref": "#/$defs/Claim"
+          },
+          "title": "Claims",
+          "type": "array"
+        },
+        "verification_status": {
+          "$ref": "#/$defs/VerificationStatus",
+          "default": "pending"
+        },
+        "retry_count": {
+          "default": 0,
+          "description": "Targeted retries spent on this section.",
+          "minimum": 0,
+          "title": "Retry Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "section_key",
+        "title",
+        "owner"
+      ],
+      "title": "ResearchSection",
+      "type": "object"
+    },
+    "ResearchSections": {
+      "additionalProperties": true,
+      "description": "The fourteen sections, in report order.",
+      "properties": {
+        "company": {
+          "$ref": "#/$defs/ResearchSection"
+        },
+        "financials": {
+          "$ref": "#/$defs/ResearchSection"
+        },
+        "balance_sheet": {
+          "$ref": "#/$defs/ResearchSection"
+        },
+        "cash_flow": {
+          "$ref": "#/$defs/ResearchSection"
+        },
+        "earnings_quality": {
+          "$ref": "#/$defs/ResearchSection"
+        },
+        "management": {
+          "$ref": "#/$defs/ResearchSection"
+        },
+        "competitive_position": {
+          "$ref": "#/$defs/ResearchSection"
+        },
+        "valuation": {
+          "$ref": "#/$defs/ResearchSection"
+        },
+        "expectations": {
+          "$ref": "#/$defs/ResearchSection"
+        },
+        "catalysts": {
+          "$ref": "#/$defs/ResearchSection"
+        },
+        "risks": {
+          "$ref": "#/$defs/ResearchSection"
+        },
+        "scenarios": {
+          "$ref": "#/$defs/ResearchSection"
+        },
+        "sp500_comparison": {
+          "$ref": "#/$defs/ResearchSection"
+        },
+        "decision": {
+          "$ref": "#/$defs/ResearchSection"
+        }
+      },
+      "required": [
+        "company",
+        "financials",
+        "balance_sheet",
+        "cash_flow",
+        "earnings_quality",
+        "management",
+        "competitive_position",
+        "valuation",
+        "expectations",
+        "catalysts",
+        "risks",
+        "scenarios",
+        "sp500_comparison",
+        "decision"
+      ],
+      "title": "ResearchSections",
+      "type": "object"
+    },
+    "RetryDirective": {
+      "additionalProperties": true,
+      "description": "An instruction to re-run ONE agent for ONE section, with the reasons.\n\nTargeted, not a whole-pipeline rerun: re-running everything would re-roll\nagents that already passed and would make cost unpredictable (error K).",
+      "properties": {
+        "target_agent": {
+          "$ref": "#/$defs/AgentName"
+        },
+        "section_key": {
+          "description": "The section to redo.",
+          "minLength": 1,
+          "title": "Section Key",
+          "type": "string"
+        },
+        "issues": {
+          "description": "Why. Passed back into the agent's prompt.",
+          "items": {
+            "$ref": "#/$defs/VerificationIssue"
+          },
+          "minItems": 1,
+          "title": "Issues",
+          "type": "array"
+        },
+        "attempt": {
+          "description": "1-based attempt number.",
+          "minimum": 1,
+          "title": "Attempt",
+          "type": "integer"
+        },
+        "max_attempts": {
+          "default": 2,
+          "minimum": 1,
+          "title": "Max Attempts",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "target_agent",
+        "section_key",
+        "issues",
+        "attempt"
+      ],
+      "title": "RetryDirective",
+      "type": "object"
+    },
+    "ScenarioName": {
+      "enum": [
+        "bear",
+        "base",
+        "bull"
+      ],
+      "title": "ScenarioName",
+      "type": "string"
+    },
+    "ScenarioOut": {
+      "additionalProperties": true,
+      "description": "One evaluated scenario: what the price would be, and what that returns.",
+      "properties": {
+        "probability": {
+          "description": "The APPLIED weight, after bounding.",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Probability",
+          "type": "number"
+        },
+        "price_target": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "annualized_return": {
+          "$ref": "#/$defs/ValueObject"
+        }
+      },
+      "required": [
+        "probability",
+        "price_target",
+        "annualized_return"
+      ],
+      "title": "ScenarioOut",
+      "type": "object"
+    },
+    "ScenarioResult": {
+      "additionalProperties": true,
+      "description": "Everything calc/ derives from a Scenarios proposal plus the factsheet.",
+      "properties": {
+        "schema_version": {
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "ticker": {
+          "pattern": "^[A-Z]{1,5}([.-][A-Z])?$",
+          "title": "Ticker",
+          "type": "string"
+        },
+        "as_of": {
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "title": "As Of",
+          "type": "string"
+        },
+        "scenarios": {
+          "additionalProperties": {
+            "$ref": "#/$defs/ScenarioOut"
+          },
+          "propertyNames": {
+            "$ref": "#/$defs/ScenarioName"
+          },
+          "title": "Scenarios",
+          "type": "object"
+        },
+        "weights": {
+          "$ref": "#/$defs/ScenarioWeights",
+          "description": "Bounded weights used for expected value, with the full clamp record."
+        },
+        "expected_annualized_return": {
+          "$ref": "#/$defs/ValueObject",
+          "description": "Weighted by the APPLIED weights, not the requested ones."
+        },
+        "sp500_expected_return": {
+          "$ref": "#/$defs/ValueObject",
+          "description": "Assumed index return (assumption)."
+        },
+        "expected_return_vs_sp500": {
+          "$ref": "#/$defs/HorizonValues",
+          "description": "Expected return minus the index, per horizon."
+        },
+        "excess_vs_sp500": {
+          "$ref": "#/$defs/HorizonValues"
+        },
+        "p_beat_sp500": {
+          "$ref": "#/$defs/HorizonProbabilities"
+        },
+        "prior": {
+          "$ref": "#/$defs/Prior"
+        },
+        "scores": {
+          "$ref": "#/$defs/Scores"
+        },
+        "consistency": {
+          "$ref": "#/$defs/Consistency"
+        }
+      },
+      "required": [
+        "schema_version",
+        "ticker",
+        "as_of",
+        "scenarios",
+        "weights",
+        "expected_annualized_return",
+        "sp500_expected_return",
+        "expected_return_vs_sp500",
+        "excess_vs_sp500",
+        "p_beat_sp500",
+        "prior",
+        "scores",
+        "consistency"
+      ],
+      "title": "ScenarioResult",
+      "type": "object"
+    },
+    "ScenarioWeights": {
+      "additionalProperties": true,
+      "description": "The bounded weights actually used to compute expected value.\n\nCarries one WeightClamp per scenario, always all three, so that a reader can\nreconstruct exactly what the agent asked for and what code did with it.",
+      "properties": {
+        "bear": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Bear",
+          "type": "number"
+        },
+        "base": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Base",
+          "type": "number"
+        },
+        "bull": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Bull",
+          "type": "number"
+        },
+        "clamps": {
+          "description": "One per scenario. Never fewer.",
+          "items": {
+            "$ref": "#/$defs/WeightClamp"
+          },
+          "maxItems": 3,
+          "minItems": 3,
+          "title": "Clamps",
+          "type": "array"
+        },
+        "any_clamped": {
+          "description": "True when at least one weight was overruled.",
+          "title": "Any Clamped",
+          "type": "boolean"
+        },
+        "renormalized": {
+          "description": "True when clamping forced a rescale.",
+          "title": "Renormalized",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "bear",
+        "base",
+        "bull",
+        "clamps",
+        "any_clamped",
+        "renormalized"
+      ],
+      "title": "ScenarioWeights",
+      "type": "object"
+    },
+    "Scores": {
+      "additionalProperties": true,
+      "description": "Buyability 1..10 per horizon, from calc/'s fixed rubric (docs/p2 rubric).",
+      "properties": {
+        "short_term": {
+          "description": "0-12m.",
+          "maximum": 10,
+          "minimum": 1,
+          "title": "Short Term",
+          "type": "integer"
+        },
+        "medium_term": {
+          "description": "1-3y.",
+          "maximum": 10,
+          "minimum": 1,
+          "title": "Medium Term",
+          "type": "integer"
+        },
+        "long_term": {
+          "description": "3-5y.",
+          "maximum": 10,
+          "minimum": 1,
+          "title": "Long Term",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "short_term",
+        "medium_term",
+        "long_term"
+      ],
+      "title": "Scores",
+      "type": "object"
+    },
+    "Severity": {
+      "description": "Verification issue severity. A single `error` fails the whole audit.",
+      "enum": [
+        "error",
+        "warn"
+      ],
+      "title": "Severity",
+      "type": "string"
+    },
+    "Trend": {
+      "description": "Whether a finding reflects a durable change or a passing one.",
+      "enum": [
+        "structurally_positive",
+        "temporarily_positive",
+        "structurally_negative",
+        "temporarily_negative",
+        "neutral"
+      ],
+      "title": "Trend",
+      "type": "string"
+    },
+    "Unit": {
+      "description": "Unit of a ValueObject. `fraction` is never a percent (0.25 means 25%).",
+      "enum": [
+        "usd",
+        "usd_per_share",
+        "shares",
+        "fraction",
+        "multiple",
+        "count",
+        "days",
+        "ratio"
+      ],
+      "title": "Unit",
+      "type": "string"
+    },
+    "ValueObject": {
+      "additionalProperties": true,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "ok"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "value"
+            ]
+          },
+          "title": "status ok requires a numeric value"
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "ok"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "anyOf": [
+              {
+                "properties": {
+                  "source_id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "source_id"
+                ]
+              },
+              {
+                "properties": {
+                  "derived_from": {
+                    "minItems": 1,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "derived_from"
+                ]
+              }
+            ]
+          },
+          "title": "status ok requires a source_id or a non-empty derived_from"
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "unavailable"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          },
+          "title": "status unavailable requires a null value"
+        },
+        {
+          "if": {
+            "properties": {
+              "unit": {
+                "const": "fraction"
+              }
+            },
+            "required": [
+              "unit"
+            ]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "anyOf": [
+                  {
+                    "maximum": 10.0,
+                    "minimum": -10.0,
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          "title": "fractions are fractions, not percents"
+        }
+      ],
+      "description": "Every reported or computed financial number in the system.\n\nFractions, not percents. Money in full USD. Missing data is\n{\"value\": null, \"status\": \"unavailable\"} - never 0, never \"N/A\", never an\nomitted key.\n\nA value computed in code from facts has type \"fact\" and lists `derived_from`.\nDiscount rate, terminal growth and exit multiples are \"assumption\".\nConsensus numbers and scenario outputs are \"estimate\".",
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "The number in full units, or null when status is unavailable.",
+          "title": "Value"
+        },
+        "unit": {
+          "$ref": "#/$defs/Unit"
+        },
+        "type": {
+          "$ref": "#/$defs/ValueType"
+        },
+        "status": {
+          "$ref": "#/$defs/ValueStatus"
+        },
+        "source_id": {
+          "anyOf": [
+            {
+              "pattern": "^src:[a-z0-9_]+:[A-Za-z0-9._:-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Where the number came from. Required unless derived_from is set.",
+          "title": "Source Id"
+        },
+        "derived_from": {
+          "description": "Dotted paths or fact_ids this value was computed from.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Derived From",
+          "type": "array"
+        }
+      },
+      "required": [
+        "value",
+        "unit",
+        "type",
+        "status"
+      ],
+      "title": "ValueObject",
+      "type": "object"
+    },
+    "ValueStatus": {
+      "description": "`unavailable` is the ONLY way to express missing data. Never 0, never \"N/A\".",
+      "enum": [
+        "ok",
+        "unavailable"
+      ],
+      "title": "ValueStatus",
+      "type": "string"
+    },
+    "ValueType": {
+      "description": "Epistemic status of a number, rendered as a colour in the report.\n\nfact       reported in a filing, or computed in code from reported values\nestimate   a forecast: consensus, or a scenario output\nassumption a chosen constant: discount rate, terminal growth, exit multiple",
+      "enum": [
+        "fact",
+        "estimate",
+        "assumption"
+      ],
+      "title": "ValueType",
+      "type": "string"
+    },
+    "VerificationIssue": {
+      "additionalProperties": true,
+      "description": "One failed check, with enough detail to route a retry and to show the reader.",
+      "properties": {
+        "issue_type": {
+          "$ref": "#/$defs/IssueType"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "path": {
+          "description": "Dotted path into the audited object, e.g. sections.valuation.",
+          "minLength": 1,
+          "title": "Path",
+          "type": "string"
+        },
+        "message": {
+          "description": "What is wrong, in one sentence.",
+          "minLength": 1,
+          "title": "Message",
+          "type": "string"
+        },
+        "claim_id": {
+          "anyOf": [
+            {
+              "pattern": "^claim:[A-Za-z0-9._:-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Claim Id"
+        },
+        "fact_id": {
+          "anyOf": [
+            {
+              "pattern": "^fact:[A-Za-z0-9._:-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fact Id"
+        },
+        "section_id": {
+          "anyOf": [
+            {
+              "pattern": "^sec:[A-Za-z0-9._:-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Section Id"
+        },
+        "expected": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "What the check computed.",
+          "title": "Expected"
+        },
+        "actual": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "What the claim asserted.",
+          "title": "Actual"
+        },
+        "checked_by_llm": {
+          "default": false,
+          "description": "True only for the qualitative-claim check.",
+          "title": "Checked By Llm",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "issue_type",
+        "severity",
+        "path",
+        "message"
+      ],
+      "title": "VerificationIssue",
+      "type": "object"
+    },
+    "VerificationResult": {
+      "additionalProperties": true,
+      "description": "The audit report. `passed` is false if any issue has severity 'error'.",
+      "properties": {
+        "schema_version": {
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "passed": {
+          "title": "Passed",
+          "type": "boolean"
+        },
+        "issues": {
+          "items": {
+            "$ref": "#/$defs/VerificationIssue"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "claims_checked": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Claims Checked",
+          "type": "integer"
+        },
+        "claims_verified": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Claims Verified",
+          "type": "integer"
+        },
+        "claims_unverified": {
+          "default": 0,
+          "description": "Shipped marked unverified after the retry cap.",
+          "minimum": 0,
+          "title": "Claims Unverified",
+          "type": "integer"
+        },
+        "llm_checks_run": {
+          "default": 0,
+          "description": "Cost tracking; keep this number small.",
+          "minimum": 0,
+          "title": "Llm Checks Run",
+          "type": "integer"
+        },
+        "retries_issued": {
+          "items": {
+            "$ref": "#/$defs/RetryDirective"
+          },
+          "title": "Retries Issued",
+          "type": "array"
+        }
+      },
+      "required": [
+        "schema_version",
+        "passed"
+      ],
+      "title": "VerificationResult",
+      "type": "object"
+    },
+    "VerificationStatus": {
+      "description": "Lifecycle of a Claim through the verification gate (docs/verification.md).\n\nunverified is the terminal state for a claim that failed after the retry cap;\nthe report ships with it marked, rather than being blocked.",
+      "enum": [
+        "pending",
+        "verified",
+        "failed",
+        "unverified"
+      ],
+      "title": "VerificationStatus",
+      "type": "string"
+    },
+    "WeightClamp": {
+      "additionalProperties": true,
+      "description": "Audit record for ONE scenario weight, from request to applied value.\n\nThe pipeline is: requested -> clamped_to (band around default) -> applied\n(after renormalizing so the three weights sum to 1). Both steps are recorded\nseparately so a reader can see whether the agent was overruled, or merely\nrescaled because another weight was overruled.",
+      "properties": {
+        "scenario": {
+          "$ref": "#/$defs/ScenarioName"
+        },
+        "requested": {
+          "description": "What the Scenario Agent asked for.",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Requested",
+          "type": "number"
+        },
+        "clamped_to": {
+          "description": "After the band clamp.",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Clamped To",
+          "type": "number"
+        },
+        "applied": {
+          "description": "After renormalization. Used in the EV.",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Applied",
+          "type": "number"
+        },
+        "default_weight": {
+          "description": "Configured default for this scenario.",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Default Weight",
+          "type": "number"
+        },
+        "band": {
+          "description": "Configured +/- band around the default.",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Band",
+          "type": "number"
+        },
+        "was_clamped": {
+          "description": "True when the band overruled the request.",
+          "title": "Was Clamped",
+          "type": "boolean"
+        },
+        "was_renormalized": {
+          "description": "True when rescaling changed the clamped value.",
+          "title": "Was Renormalized",
+          "type": "boolean"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The agent's rationale for the requested weight.",
+          "title": "Reason"
+        }
+      },
+      "required": [
+        "scenario",
+        "requested",
+        "clamped_to",
+        "applied",
+        "default_weight",
+        "band",
+        "was_clamped",
+        "was_renormalized"
+      ],
+      "title": "WeightClamp",
+      "type": "object"
+    }
+  },
+  "additionalProperties": true,
+  "properties": {
+    "state_version": {
+      "default": "1.0.0",
+      "description": "Shape version of this object.",
+      "title": "State Version",
+      "type": "string"
+    },
+    "schema_version": {
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "ticker": {
+      "pattern": "^[A-Z]{1,5}([.-][A-Z])?$",
+      "title": "Ticker",
+      "type": "string"
+    },
+    "as_of": {
+      "description": "Point-in-time cutoff for the whole run (ADR 0003).",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "title": "As Of",
+      "type": "string"
+    },
+    "created_at": {
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+      "title": "Created At",
+      "type": "string"
+    },
+    "mode": {
+      "$ref": "#/$defs/Mode"
+    },
+    "sections": {
+      "$ref": "#/$defs/ResearchSections"
+    },
+    "agent_outputs": {
+      "additionalProperties": {
+        "$ref": "#/$defs/Analysis"
+      },
+      "description": "Raw per-agent output, kept for the UI lanes.",
+      "propertyNames": {
+        "$ref": "#/$defs/AgentName"
+      },
+      "title": "Agent Outputs",
+      "type": "object"
+    },
+    "scenario_result": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ScenarioResult"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Set once calc.evaluate_scenarios has run."
+    },
+    "verification": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/VerificationResult"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Set by audit.run_audit on the final pass."
+    },
+    "data_quality": {
+      "$ref": "#/$defs/DataQuality"
+    },
+    "redacted": {
+      "default": false,
+      "description": "True when a redact hook anonymized filing text before the agents saw it (backtest contamination, error A).",
+      "title": "Redacted",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "schema_version",
+    "ticker",
+    "as_of",
+    "created_at",
+    "mode",
+    "sections",
+    "data_quality"
+  ],
+  "type": "object"
+}

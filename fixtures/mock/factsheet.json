@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "2.0.0",
   "ticker": "ACME",
   "company_name": "Acme Corporation (fictional mock)",
   "as_of": "2026-09-19",
@@ -14,9 +14,20 @@
     "gaps": []
   },
   "market": {
+    "ticker": "ACME",
+    "as_of": "2026-09-19T12:00:00Z",
+    "retrieved_at": "2026-09-19T12:00:00Z",
+    "source_id": "src:market:quote",
     "price": {
       "value": 50.0,
       "unit": "usd_per_share",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:market:quote"
+    },
+    "shares_outstanding": {
+      "value": 395000000,
+      "unit": "shares",
       "type": "fact",
       "status": "ok",
       "source_id": "src:market:quote"
@@ -28,12 +39,19 @@
       "status": "ok",
       "source_id": "src:market:quote"
     },
-    "shares_outstanding": {
-      "value": 395000000,
-      "unit": "shares",
+    "total_debt": {
+      "value": 1150000000,
+      "unit": "usd",
       "type": "fact",
       "status": "ok",
-      "source_id": "src:market:quote"
+      "source_id": "src:edgar:0001234567-26-000090:xbrl"
+    },
+    "cash": {
+      "value": 1000000000,
+      "unit": "usd",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:edgar:0001234567-26-000090:xbrl"
     },
     "enterprise_value": {
       "value": 19900000000.0,
@@ -46,7 +64,8 @@
         "financials.Q2-2026.total_debt",
         "financials.Q2-2026.cash"
       ]
-    }
+    },
+    "currency": "USD"
   },
   "financials": [
     {
@@ -431,7 +450,7 @@
         "unit": "usd",
         "type": "fact",
         "status": "ok",
-        "source_id": "src:edgar:0001234567-25-000010:xbrl"
+        "source_id": "src:edgar:0001234567-26-000010:xbrl"
       },
       "capex": {
         "value": 220000000,
@@ -669,6 +688,8 @@
   "peers": [
     {
       "ticker": "PRAA",
+      "company_name": "Peer Alpha (mock)",
+      "sic": "3823",
       "market_cap": {
         "value": 12000000000.0,
         "unit": "usd",
@@ -703,10 +724,13 @@
         "type": "fact",
         "status": "ok",
         "source_id": "src:market:peers"
-      }
+      },
+      "selection_reason": "Same SIC code and within one order of magnitude on market cap."
     },
     {
       "ticker": "PRBB",
+      "company_name": "Peer Beta (mock)",
+      "sic": "3823",
       "market_cap": {
         "value": 30000000000.0,
         "unit": "usd",
@@ -741,10 +765,13 @@
         "type": "fact",
         "status": "ok",
         "source_id": "src:market:peers"
-      }
+      },
+      "selection_reason": "Same SIC code and within one order of magnitude on market cap."
     },
     {
       "ticker": "PRCC",
+      "company_name": "Peer Gamma (mock)",
+      "sic": "3823",
       "market_cap": {
         "value": 18000000000.0,
         "unit": "usd",
@@ -779,10 +806,13 @@
         "type": "fact",
         "status": "ok",
         "source_id": "src:market:peers"
-      }
+      },
+      "selection_reason": "Same SIC code and within one order of magnitude on market cap."
     },
     {
       "ticker": "PRDD",
+      "company_name": "Peer Delta (mock)",
+      "sic": "3823",
       "market_cap": {
         "value": 25000000000.0,
         "unit": "usd",
@@ -817,7 +847,8 @@
         "type": "fact",
         "status": "ok",
         "source_id": "src:market:peers"
-      }
+      },
+      "selection_reason": "Same SIC code and within one order of magnitude on market cap."
     }
   ],
   "sp500_baseline": {
@@ -865,28 +896,96 @@
   },
   "filing_sections": [
     {
-      "name": "business",
+      "section_id": "sec:0001234567-26-000010:business",
       "source_id": "src:edgar:0001234567-26-000010:business",
       "accession": "0001234567-26-000010",
+      "company_id": "ACME",
       "form": "10-K",
-      "period": "FY2025",
-      "char_count": 914
+      "fiscal_period": "FY2025",
+      "filed_at": "2026-02-20",
+      "item": "business",
+      "heading_path": [
+        "Part I",
+        "Item 1. Business"
+      ],
+      "char_start": 0,
+      "char_end": 914,
+      "char_count": 914,
+      "text": ""
     },
     {
-      "name": "risk_factors",
+      "section_id": "sec:0001234567-26-000010:risk_factors",
       "source_id": "src:edgar:0001234567-26-000010:risk_factors",
       "accession": "0001234567-26-000010",
+      "company_id": "ACME",
       "form": "10-K",
-      "period": "FY2025",
-      "char_count": 751
+      "fiscal_period": "FY2025",
+      "filed_at": "2026-02-20",
+      "item": "risk_factors",
+      "heading_path": [
+        "Part I",
+        "Item 1A. Risk Factors"
+      ],
+      "char_start": 0,
+      "char_end": 751,
+      "char_count": 751,
+      "text": ""
     },
     {
-      "name": "mdna",
+      "section_id": "sec:0001234567-26-000010:mdna",
       "source_id": "src:edgar:0001234567-26-000010:mdna",
       "accession": "0001234567-26-000010",
+      "company_id": "ACME",
       "form": "10-K",
-      "period": "FY2025",
-      "char_count": 1152
+      "fiscal_period": "FY2025",
+      "filed_at": "2026-02-20",
+      "item": "mdna",
+      "heading_path": [
+        "Part II",
+        "Item 7. Management's Discussion and Analysis"
+      ],
+      "char_start": 0,
+      "char_end": 1152,
+      "char_count": 1152,
+      "text": ""
+    },
+    {
+      "section_id": "sec:0001234567-26-000010:debt_note",
+      "source_id": "src:edgar:0001234567-26-000010:debt_note",
+      "accession": "0001234567-26-000010",
+      "company_id": "ACME",
+      "form": "10-K",
+      "fiscal_period": "FY2025",
+      "filed_at": "2026-02-20",
+      "item": "debt_note",
+      "heading_path": [
+        "Part II",
+        "Item 8. Financial Statements",
+        "Note 9. Debt"
+      ],
+      "char_start": 0,
+      "char_end": 937,
+      "char_count": 937,
+      "text": ""
+    },
+    {
+      "section_id": "sec:0001234567-26-000010:sbc_note",
+      "source_id": "src:edgar:0001234567-26-000010:sbc_note",
+      "accession": "0001234567-26-000010",
+      "company_id": "ACME",
+      "form": "10-K",
+      "fiscal_period": "FY2025",
+      "filed_at": "2026-02-20",
+      "item": "sbc_note",
+      "heading_path": [
+        "Part II",
+        "Item 8. Financial Statements",
+        "Note 14. Stock-Based Compensation"
+      ],
+      "char_start": 0,
+      "char_end": 1100,
+      "char_count": 1100,
+      "text": ""
     }
   ],
   "news": [
@@ -946,6 +1045,18 @@
       "accession": "0001234567-26-000010",
       "fetched_at": "2026-09-19T12:00:00Z"
     },
+    "src:edgar:0001234567-26-000010:debt_note": {
+      "kind": "edgar_text",
+      "url": null,
+      "accession": "0001234567-26-000010",
+      "fetched_at": "2026-09-19T12:00:00Z"
+    },
+    "src:edgar:0001234567-26-000010:sbc_note": {
+      "kind": "edgar_text",
+      "url": null,
+      "accession": "0001234567-26-000010",
+      "fetched_at": "2026-09-19T12:00:00Z"
+    },
     "src:market:quote": {
       "kind": "market",
       "url": null,
@@ -965,6 +1076,12 @@
       "fetched_at": "2026-09-19T12:00:00Z"
     },
     "src:market:consensus": {
+      "kind": "market",
+      "url": null,
+      "accession": null,
+      "fetched_at": "2026-09-19T12:00:00Z"
+    },
+    "src:market:profile": {
       "kind": "market",
       "url": null,
       "accession": null,

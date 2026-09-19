@@ -1,0 +1,54 @@
+{
+  "ticker": "ACME",
+  "as_of": "2026-09-19T12:00:00Z",
+  "retrieved_at": "2026-09-19T12:00:00Z",
+  "source_id": "src:market:quote",
+  "price": {
+    "value": 50.0,
+    "unit": "usd_per_share",
+    "type": "fact",
+    "status": "ok",
+    "source_id": "src:market:quote"
+  },
+  "shares_outstanding": {
+    "value": 395000000,
+    "unit": "shares",
+    "type": "fact",
+    "status": "ok",
+    "source_id": "src:market:quote"
+  },
+  "market_cap": {
+    "value": 19750000000.0,
+    "unit": "usd",
+    "type": "fact",
+    "status": "ok",
+    "source_id": "src:market:quote"
+  },
+  "total_debt": {
+    "value": 1150000000,
+    "unit": "usd",
+    "type": "fact",
+    "status": "ok",
+    "source_id": "src:edgar:0001234567-26-000090:xbrl"
+  },
+  "cash": {
+    "value": 1000000000,
+    "unit": "usd",
+    "type": "fact",
+    "status": "ok",
+    "source_id": "src:edgar:0001234567-26-000090:xbrl"
+  },
+  "enterprise_value": {
+    "value": 19900000000.0,
+    "unit": "usd",
+    "type": "fact",
+    "status": "ok",
+    "source_id": null,
+    "derived_from": [
+      "market.market_cap",
+      "financials.Q2-2026.total_debt",
+      "financials.Q2-2026.cash"
+    ]
+  },
+  "currency": "USD"
+}

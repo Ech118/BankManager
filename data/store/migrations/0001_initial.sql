@@ -1,0 +1,53 @@
+-- Initial schema for the financial truth layer.
+--
+-- EMPTY ON PURPOSE (Step 0 ships no logic). Specified by docs/data-model.md.
+--
+-- TODO(roadmap Step 1, P1): create the tables below.
+-- TODO(roadmap Step 2, P1): add the restatement index.
+-- TODO(roadmap Step 3, P1): add the full-text search index.
+--
+-- Tables to create, mirroring schema/contracts/:
+--
+--   companies
+--       ticker (pk), cik, company_name, sic, sic_description, exchange,
+--       fiscal_year_end, retrieved_at
+--
+--   filings
+--       accession (pk), ticker (fk), cik, form, fiscal_period, period_end,
+--       filed_at, retrieved_at, source_url
+--       INDEX on (ticker, filed_at) - every point-in-time query filters here.
+--
+--   filing_sections
+--       section_id (pk), source_id (unique), accession (fk), ticker, form,
+--       fiscal_period, filed_at, item, heading_path, char_start, char_end,
+--       char_count, text
+--       INDEX on (ticker, item, filed_at)
+--       TODO Step 3: GIN index on to_tsvector('english', text) for search_filing.
+--
+--   financial_facts
+--       fact_id (pk), ticker, metric, xbrl_concept, value, unit, currency,
+--       scale, period_type, period_start, period_end, fiscal_period, dimension,
+--       filing_type, accession_number (fk), filed_at, retrieved_at, source_url,
+--       source_location, source_kind, derivation (jsonb), superseded_by (fk self)
+--       INDEX on (ticker, metric, period_end DESC, filed_at)
+--       TODO Step 2: partial index WHERE superseded_by IS NULL, which is the
+--       default read path for agents.
+--
+--   market_snapshots
+--       ticker, as_of (pk together), retrieved_at, source_id, price,
+--       shares_outstanding, market_cap, total_debt, cash, enterprise_value,
+--       currency
+--
+--   peers
+--       ticker, peer_ticker (pk together), as_of, market_cap, pe, ev_ebitda,
+--       ev_revenue, fcf_yield, selection_reason
+--
+--   news
+--       source_id (pk), ticker, headline, date, url, snippet, retrieved_at
+--
+-- CONSTRAINT to add with the tables (it is the storage-level statement of the
+-- provenance rule the pydantic models already enforce):
+--   financial_facts CHECK (
+--     (source_kind = 'derived' AND derivation IS NOT NULL)
+--     OR (source_kind <> 'derived' AND derivation IS NULL)
+--   )

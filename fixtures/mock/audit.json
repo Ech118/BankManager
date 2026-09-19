@@ -1,11 +1,21 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "2.0.0",
   "passed": true,
   "issues": [
     {
+      "issue_type": "recompute_mismatch",
       "severity": "warn",
-      "path": "agent_outputs.forensic.findings[2]",
-      "message": "Mock warning: EPS-growth attribution (2.4 points) is derived by the agent, not by calc/."
+      "path": "sections.earnings_quality",
+      "message": "Mock warning: EPS-growth attribution was rounded by the agent rather than recomputed by calc/.",
+      "claim_id": "claim:financial:buyback-eps",
+      "expected": "2.44 points of the 24.37% EPS growth",
+      "actual": "about 2.4 points",
+      "checked_by_llm": false
     }
-  ]
+  ],
+  "claims_checked": 16,
+  "claims_verified": 16,
+  "claims_unverified": 0,
+  "llm_checks_run": 4,
+  "retries_issued": []
 }

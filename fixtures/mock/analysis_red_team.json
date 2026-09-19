@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "2.0.0",
   "agent": "red_team",
   "ticker": "ACME",
   "as_of": "2026-09-19",
@@ -7,7 +7,7 @@
   "summary": "Even the base case underperforms the S&P; the stock is exposed to multiple compression and a 2027 refinancing.",
   "findings": [
     {
-      "claim": "A de-rating from 33x to 22x earnings alone would cut the price about a third even if guidance is met.",
+      "claim": "A de-rating toward the peer median alone would cut the price by roughly a third even if guidance is met.",
       "trend": "structurally_negative",
       "evidence": [
         {
@@ -31,12 +31,12 @@
       "confidence": "medium"
     },
     {
-      "claim": "$400 million of debt matures in fiscal 2027 and may be refinanced on worse terms.",
+      "claim": "Senior notes mature in fiscal 2027 and may be refinanced on worse terms.",
       "trend": "temporarily_negative",
       "evidence": [
         {
-          "quote": "of which $400 million matures in fiscal 2027",
-          "source_id": "src:edgar:0001234567-26-000010:risk_factors"
+          "quote": "consisting of $400 million of 4.25% senior notes due fiscal 2027",
+          "source_id": "src:edgar:0001234567-26-000010:debt_note"
         }
       ],
       "numbers": [],

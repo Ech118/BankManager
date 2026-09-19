@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "2.0.0",
   "ticker": "ACME",
   "as_of": "2026-09-19",
   "scenarios": {
@@ -79,6 +79,48 @@
       }
     }
   },
+  "weights": {
+    "bear": 0.3,
+    "base": 0.5,
+    "bull": 0.2,
+    "clamps": [
+      {
+        "scenario": "bear",
+        "requested": 0.3,
+        "clamped_to": 0.3,
+        "applied": 0.3,
+        "default_weight": 0.3,
+        "band": 0.15,
+        "was_clamped": false,
+        "was_renormalized": false,
+        "reason": "Competitor bundling is already visible in the mid-market risk disclosure."
+      },
+      {
+        "scenario": "base",
+        "requested": 0.5,
+        "clamped_to": 0.5,
+        "applied": 0.5,
+        "default_weight": 0.5,
+        "band": 0.15,
+        "was_clamped": false,
+        "was_renormalized": false,
+        "reason": "Management guidance has been met in each of the last three years."
+      },
+      {
+        "scenario": "bull",
+        "requested": 0.2,
+        "clamped_to": 0.2,
+        "applied": 0.2,
+        "default_weight": 0.2,
+        "band": 0.15,
+        "was_clamped": false,
+        "was_renormalized": false,
+        "reason": "Software mix shift would have to accelerate beyond the guided range."
+      }
+    ],
+    "any_clamped": false,
+    "renormalized": false
+  },
   "expected_annualized_return": {
     "value": -0.0194506576,
     "unit": "fraction",
@@ -86,7 +128,8 @@
     "status": "ok",
     "source_id": null,
     "derived_from": [
-      "scenario_result.scenarios.*.annualized_return"
+      "scenario_result.scenarios.*.annualized_return",
+      "scenario_result.weights"
     ]
   },
   "sp500_expected_return": {
@@ -96,8 +139,43 @@
     "status": "ok",
     "source_id": "src:config:calc_assumptions"
   },
+  "expected_return_vs_sp500": {
+    "short_term": {
+      "value": -0.0894506576,
+      "unit": "fraction",
+      "type": "estimate",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "scenario_result.expected_annualized_return",
+        "scenario_result.sp500_expected_return"
+      ]
+    },
+    "medium_term": {
+      "value": -0.0894506576,
+      "unit": "fraction",
+      "type": "estimate",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "scenario_result.expected_annualized_return",
+        "scenario_result.sp500_expected_return"
+      ]
+    },
+    "long_term": {
+      "value": -0.0894506576,
+      "unit": "fraction",
+      "type": "estimate",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "scenario_result.expected_annualized_return",
+        "scenario_result.sp500_expected_return"
+      ]
+    }
+  },
   "excess_vs_sp500": {
-    "1y": {
+    "short_term": {
       "value": -0.0894506576,
       "unit": "fraction",
       "type": "estimate",
@@ -108,7 +186,7 @@
         "scenario_result.sp500_expected_return"
       ]
     },
-    "3y": {
+    "medium_term": {
       "value": -0.0894506576,
       "unit": "fraction",
       "type": "estimate",
@@ -119,7 +197,7 @@
         "scenario_result.sp500_expected_return"
       ]
     },
-    "5y": {
+    "long_term": {
       "value": -0.0894506576,
       "unit": "fraction",
       "type": "estimate",
@@ -132,19 +210,22 @@
     }
   },
   "p_beat_sp500": {
-    "1y": 0.37,
-    "3y": 0.34,
-    "5y": 0.32
+    "short_term": 0.37,
+    "medium_term": 0.34,
+    "long_term": 0.32
   },
   "prior": {
     "base_rate": {
-      "1y": 0.47,
-      "3y": 0.44,
-      "5y": 0.42
+      "short_term": 0.47,
+      "medium_term": 0.44,
+      "long_term": 0.42
     },
     "requested_shift": -0.1,
     "applied_shift": -0.1,
-    "cap": 0.15
+    "cap": 0.15,
+    "shift_reasons": [
+      "scenario: stock trades at a 27% P/E premium to peers with decelerating guided growth."
+    ]
   },
   "scores": {
     "short_term": 3,

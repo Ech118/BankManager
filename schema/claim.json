@@ -1,0 +1,350 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bankmanager.local/schema/claim.json",
+  "title": "Claim",
+  "description": "GENERATED from schema/contracts/claims.py. The unit an agent may assert; numbers must cite fact_ids.",
+  "$defs": {
+    "Confidence": {
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "title": "Confidence",
+      "type": "string"
+    },
+    "DerivedBy": {
+      "description": "Who produced a Claim. `code` claims may carry numbers computed in calc/.",
+      "enum": [
+        "code",
+        "agent",
+        "filing_text"
+      ],
+      "title": "DerivedBy",
+      "type": "string"
+    },
+    "Evidence": {
+      "additionalProperties": true,
+      "description": "A verbatim quote from a source, string-matched by the verifier.\n\nThe quote must appear in the text behind `source_id` after whitespace\nnormalization, or audit/ raises IssueType.UNSUPPORTED_CLAIM.",
+      "properties": {
+        "quote": {
+          "description": "Verbatim text, copied not paraphrased.",
+          "minLength": 8,
+          "title": "Quote",
+          "type": "string"
+        },
+        "source_id": {
+          "pattern": "^src:[a-z0-9_]+:[A-Za-z0-9._:-]+$",
+          "title": "Source Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "quote",
+        "source_id"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "Trend": {
+      "description": "Whether a finding reflects a durable change or a passing one.",
+      "enum": [
+        "structurally_positive",
+        "temporarily_positive",
+        "structurally_negative",
+        "temporarily_negative",
+        "neutral"
+      ],
+      "title": "Trend",
+      "type": "string"
+    },
+    "Unit": {
+      "description": "Unit of a ValueObject. `fraction` is never a percent (0.25 means 25%).",
+      "enum": [
+        "usd",
+        "usd_per_share",
+        "shares",
+        "fraction",
+        "multiple",
+        "count",
+        "days",
+        "ratio"
+      ],
+      "title": "Unit",
+      "type": "string"
+    },
+    "ValueObject": {
+      "additionalProperties": true,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "ok"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "value"
+            ]
+          },
+          "title": "status ok requires a numeric value"
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "ok"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "anyOf": [
+              {
+                "properties": {
+                  "source_id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "source_id"
+                ]
+              },
+              {
+                "properties": {
+                  "derived_from": {
+                    "minItems": 1,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "derived_from"
+                ]
+              }
+            ]
+          },
+          "title": "status ok requires a source_id or a non-empty derived_from"
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "unavailable"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          },
+          "title": "status unavailable requires a null value"
+        },
+        {
+          "if": {
+            "properties": {
+              "unit": {
+                "const": "fraction"
+              }
+            },
+            "required": [
+              "unit"
+            ]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "anyOf": [
+                  {
+                    "maximum": 10.0,
+                    "minimum": -10.0,
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          "title": "fractions are fractions, not percents"
+        }
+      ],
+      "description": "Every reported or computed financial number in the system.\n\nFractions, not percents. Money in full USD. Missing data is\n{\"value\": null, \"status\": \"unavailable\"} - never 0, never \"N/A\", never an\nomitted key.\n\nA value computed in code from facts has type \"fact\" and lists `derived_from`.\nDiscount rate, terminal growth and exit multiples are \"assumption\".\nConsensus numbers and scenario outputs are \"estimate\".",
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "The number in full units, or null when status is unavailable.",
+          "title": "Value"
+        },
+        "unit": {
+          "$ref": "#/$defs/Unit"
+        },
+        "type": {
+          "$ref": "#/$defs/ValueType"
+        },
+        "status": {
+          "$ref": "#/$defs/ValueStatus"
+        },
+        "source_id": {
+          "anyOf": [
+            {
+              "pattern": "^src:[a-z0-9_]+:[A-Za-z0-9._:-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Where the number came from. Required unless derived_from is set.",
+          "title": "Source Id"
+        },
+        "derived_from": {
+          "description": "Dotted paths or fact_ids this value was computed from.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Derived From",
+          "type": "array"
+        }
+      },
+      "required": [
+        "value",
+        "unit",
+        "type",
+        "status"
+      ],
+      "title": "ValueObject",
+      "type": "object"
+    },
+    "ValueStatus": {
+      "description": "`unavailable` is the ONLY way to express missing data. Never 0, never \"N/A\".",
+      "enum": [
+        "ok",
+        "unavailable"
+      ],
+      "title": "ValueStatus",
+      "type": "string"
+    },
+    "ValueType": {
+      "description": "Epistemic status of a number, rendered as a colour in the report.\n\nfact       reported in a filing, or computed in code from reported values\nestimate   a forecast: consensus, or a scenario output\nassumption a chosen constant: discount rate, terminal growth, exit multiple",
+      "enum": [
+        "fact",
+        "estimate",
+        "assumption"
+      ],
+      "title": "ValueType",
+      "type": "string"
+    },
+    "VerificationStatus": {
+      "description": "Lifecycle of a Claim through the verification gate (docs/verification.md).\n\nunverified is the terminal state for a claim that failed after the retry cap;\nthe report ships with it marked, rather than being blocked.",
+      "enum": [
+        "pending",
+        "verified",
+        "failed",
+        "unverified"
+      ],
+      "title": "VerificationStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": true,
+  "properties": {
+    "claim_id": {
+      "pattern": "^claim:[A-Za-z0-9._:-]+$",
+      "title": "Claim Id",
+      "type": "string"
+    },
+    "text": {
+      "description": "The assertion, as one sentence.",
+      "minLength": 1,
+      "title": "Text",
+      "type": "string"
+    },
+    "value": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ValueObject"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "The number this claim is about, when it is about a number."
+    },
+    "fact_ids": {
+      "description": "Facts this claim rests on. REQUIRED whenever a number appears.",
+      "items": {
+        "pattern": "^fact:[A-Za-z0-9._:-]+$",
+        "type": "string"
+      },
+      "title": "Fact Ids",
+      "type": "array"
+    },
+    "section_ids": {
+      "description": "Filing sections this claim rests on. REQUIRED for qualitative claims.",
+      "items": {
+        "pattern": "^sec:[A-Za-z0-9._:-]+$",
+        "type": "string"
+      },
+      "title": "Section Ids",
+      "type": "array"
+    },
+    "evidence": {
+      "description": "Verbatim quotes. The verifier string-matches each one.",
+      "items": {
+        "$ref": "#/$defs/Evidence"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "derived_by": {
+      "$ref": "#/$defs/DerivedBy",
+      "description": "code = computed in calc/, agent = asserted by an LLM, filing_text = lifted from a filing."
+    },
+    "trend": {
+      "$ref": "#/$defs/Trend",
+      "default": "neutral"
+    },
+    "confidence": {
+      "$ref": "#/$defs/Confidence",
+      "default": "medium"
+    },
+    "verification_status": {
+      "$ref": "#/$defs/VerificationStatus",
+      "default": "pending"
+    }
+  },
+  "required": [
+    "claim_id",
+    "text",
+    "derived_by"
+  ],
+  "type": "object"
+}

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # FROZEN (Step 0). Fails if your changes touch paths outside your partition.
-# usage: scripts/check_ownership.sh p1|p2|p3|coordinator|step0
+# usage: scripts/check_ownership.sh p1|p2|p3|contracts|coordinator|step0
 # Checks BOTH committed changes (vs $BASE, default origin/main) and staged changes.
 set -euo pipefail
 
@@ -11,9 +11,12 @@ case "$ROLE" in
   p1) ALLOWED="data/ mcp_server/ fixtures/real/ docs/p1/" ;;
   p2) ALLOWED="calc/ audit/ backtest/ predictions/ docs/p2/" ;;
   p3) ALLOWED="agents/ prompts/ orchestrator/ web/ tests/e2e/ docs/p3/" ;;
-  coordinator) ALLOWED="schema/ fixtures/mock/ tests/contracts/ scripts/ .gitignore .env.example README.md CLAUDE.md plan.txt Makefile" ;;
+  # A contract-change PR touches the shared contract surface. It needs written
+  # approval from all three partitions first (CONTRIBUTING.md).
+  contracts) ALLOWED="schema/ fixtures/mock/ tests/contracts/ scripts/gen_schema.py scripts/gen_mock_fixtures.py data/api.py calc/api.py audit/api.py orchestrator/api.py" ;;
+  coordinator) ALLOWED="schema/ fixtures/mock/ tests/contracts/ scripts/ .gitignore .env.example ruff.toml README.md CLAUDE.md ARCHITECTURE.md CONTRIBUTING.md Makefile docs/ .github/ archive/" ;;
   step0) echo "role step0: everything allowed (initial skeleton commit only)"; exit 0 ;;
-  *) echo "usage: $0 p1|p2|p3|coordinator|step0" >&2; exit 2 ;;
+  *) echo "usage: $0 p1|p2|p3|contracts|coordinator|step0" >&2; exit 2 ;;
 esac
 
 if ! git rev-parse --verify --quiet "$BASE" >/dev/null; then
@@ -30,7 +33,8 @@ while IFS=$'\t' read -r status path; do
   for prefix in $ALLOWED; do
     case "$path" in "$prefix"*) ok=1 ;; esac
   done
-  # docs/requests/: anyone may ADD new files, nobody may modify/delete existing ones
+  # docs/requests/: anyone may ADD new files, nobody may modify/delete existing ones.
+  # New files cannot conflict, which is what keeps cross-partition asks merge-safe.
   case "$path" in
     docs/requests/*) if [ "$status" = "A" ]; then ok=1; else ok=0; fi ;;
   esac
@@ -42,8 +46,13 @@ done <<< "$CHANGES"
 
 if [ "$bad" -ne 0 ]; then
   echo
-  echo "You may only change: $ALLOWED (plus NEW files in docs/requests/)."
-  echo "Need a change elsewhere? File a request: docs/requests/YYYY-MM-DD-pX-to-pY-<slug>.md (plan.txt 15.11)."
+  echo "You may only change: $ALLOWED"
+  echo "(plus NEW files in docs/requests/)"
+  echo
+  echo "Need a change elsewhere? File a request:"
+  echo "  docs/requests/YYYY-MM-DD-pX-to-pY-<slug>.md"
+  echo "Changing schema/ or an api.py signature is a CONTRACT-CHANGE PR and needs"
+  echo "approval from all three partitions. See CONTRIBUTING.md."
   exit 1
 fi
 echo "ownership OK ($ROLE)"
