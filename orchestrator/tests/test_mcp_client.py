@@ -31,7 +31,10 @@ def test_mock_mode_speaks_real_mcp_not_a_shortcut(mcp):
     """Tool discovery and calls go through the SDK session, so the tool schema is the server's own."""
     tools = mcp.list_tools()
     assert set(tools) <= set(TOOL_REQUESTS) and "get_financial_facts" in tools
-    assert mcp._sync._session.__class__.__name__ == "ClientSession"  # a real MCP client session
+    assert mcp._sync._session.__class__.__name__ in (
+        "ClientSession",
+        "Client",
+    )  # a real MCP client session
     out = mcp.call_tool(
         "get_financial_facts", {"ticker": "ACME", "metrics": ["revenue"], "as_of": "2026-09-19"}
     )

@@ -37,6 +37,28 @@ from schema.contracts.tools import TOOL_REQUESTS, TOOL_RESPONSES
 CALL_TIMEOUT_S = 60.0
 
 
+def sdk_client_class():
+    """mcp 2.x has a high-level `mcp.Client` that covers every transport; mcp 1.x does not.
+
+    P3 supports BOTH majors so the team can pick one without P3 blocking it: 2.x results use
+    snake_case fields and 1.x camelCase, and the in-memory / stdio plumbing differs. Everything
+    version-specific is confined to this function, `_field()`, and the two open_session factories."""
+    try:
+        from mcp import Client
+    except ImportError:
+        return None
+    return Client
+
+
+def _field(obj: Any, snake: str, camel: str, default: Any = None) -> Any:
+    """Read a result field by its 2.x (snake_case) or 1.x (camelCase) name."""
+    for name in (snake, camel):
+        value = getattr(obj, name, None)
+        if value is not None:
+            return value
+    return default
+
+
 class McpToolError(RuntimeError):
     """The server reported an error for a tool call (out-of-scope ticker, unknown id...)."""
 
@@ -116,9 +138,9 @@ class _BaseMcpClient:
         payload = request.model_dump(mode="json", exclude_none=True)
         result = self._sync.request(lambda s: s.call_tool(name, payload))
         text = "".join(getattr(c, "text", "") for c in result.content)
-        if result.isError:
+        if _field(result, "is_error", "isError", False):
             raise McpToolError(name, text or "tool reported an error")
-        data = result.structuredContent
+        data = _field(result, "structured_content", "structuredContent")
         if data is None:
             data = json.loads(text)
         if set(data) == {"result"} and isinstance(data["result"], dict):
@@ -147,10 +169,14 @@ class InMemoryMcpClient(_BaseMcpClient):
                 "InMemoryMcpClient needs a server object. P3 may not import mcp_server/, so the "
                 "composition root must inject one (see docs/requests/2026-09-19-p3-to-p1-mock-mcp-server.md)."
             )
-        from mcp.shared.memory import create_connected_server_and_client_session
-
         self.server = server
-        self._sync = _SyncSession(lambda: create_connected_server_and_client_session(server))
+        Client = sdk_client_class()
+        if Client is not None:  # mcp 2.x
+            self._sync = _SyncSession(lambda: Client(server))
+        else:  # mcp 1.x
+            from mcp.shared.memory import create_connected_server_and_client_session
+
+            self._sync = _SyncSession(lambda: create_connected_server_and_client_session(server))
 
 
 class StdioMcpClient(_BaseMcpClient):
@@ -162,12 +188,19 @@ class StdioMcpClient(_BaseMcpClient):
 
         @asynccontextmanager
         async def open_session():
-            from mcp import ClientSession, StdioServerParameters
-            from mcp.client.stdio import stdio_client
+            from mcp import StdioServerParameters
 
             params = StdioServerParameters(
                 command=self.command[0], args=self.command[1:], env=child_env
             )
+            Client = sdk_client_class()
+            if Client is not None:  # mcp 2.x
+                async with Client(params) as session:
+                    yield session
+                return
+            from mcp import ClientSession  # mcp 1.x
+            from mcp.client.stdio import stdio_client
+
             async with stdio_client(params) as (read, write):
                 async with ClientSession(read, write) as session:
                     await session.initialize()

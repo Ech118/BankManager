@@ -46,11 +46,8 @@ def test_mock_run_builds_a_valid_state_with_claims_only_in_the_running_agents_se
 
 def test_out_of_scope_ticker_costs_zero_llm_calls(mcp, monkeypatch):
     calls = script_model(monkeypatch, lambda s, u, n: analysis_payload(finding()))
-    server = build_fake_server()
-    server._tool_manager._tools["get_company_profile"].fn = lambda ticker, as_of: (
-        _ for _ in ()
-    ).throw(ValueError("Financial institution (SIC 6022). Banks are out of scope for v1."))
-    bank = InMemoryMcpClient(server)
+    reason = "Financial institution (SIC 6022). Banks are out of scope for v1."
+    bank = InMemoryMcpClient(build_fake_server(out_of_scope={"BANKX": reason}))
     try:
         with pytest.raises(ValueError, match="Banks are out of scope"):
             Coordinator(bank).run_state("BANKX")

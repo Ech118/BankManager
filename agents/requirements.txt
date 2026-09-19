@@ -2,8 +2,8 @@
 -r ../schema/contracts/requirements.txt
 
 anthropic>=0.40   # Claude, for every agent
-mcp>=1.2,<2       # MCP client: in-memory transport for mock, stdio for live. <2: v2 renames FastMCP and pulls a starlette that breaks fastapi
-fastapi>=0.115    # orchestrator/server.py
+mcp>=1.2,<3       # P3 supports BOTH majors (tested on 1.30 and 2.2). 2.x needs a current fastapi (>=0.141); see docs/requests/2026-09-19-mcp-sdk-major-version.md
+fastapi>=0.115    # orchestrator/server.py (mcp 2.x pulls starlette 1.x, which needs fastapi>=0.141)
 uvicorn>=0.32     # ASGI server
 httpx>=0.27       # fastapi TestClient in orchestrator/tests
 jinja2>=3.1       # orchestrator/report (deterministic templates)

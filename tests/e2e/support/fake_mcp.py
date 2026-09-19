@@ -19,7 +19,12 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from mcp.server.fastmcp import FastMCP
+try:  # mcp 2.x renamed FastMCP to MCPServer
+    from mcp.server.mcpserver import MCPServer as _Server
+    from mcp.server.mcpserver.exceptions import ToolError
+except ImportError:  # mcp 1.x
+    from mcp.server.fastmcp import FastMCP as _Server
+    from mcp.server.fastmcp.exceptions import ToolError
 
 from schema.contracts.enums import ItemCode
 from schema.contracts.facts import FinancialFact
@@ -46,9 +51,21 @@ def _text_override(tool: str, section_id: str) -> str | None:
     return None
 
 
-def build_fake_server(section_text_hook=None) -> FastMCP:
-    """`section_text_hook(section_id, text) -> text` lets a test alter filing text."""
-    server = FastMCP("fake-bankmanager-financial-research")
+def build_fake_server(
+    section_text_hook=None, out_of_scope: dict[str, str] | None = None
+) -> _Server:
+    """`section_text_hook(section_id, text) -> text` lets a test alter filing text.
+    `out_of_scope` maps a ticker to the reason the data tools refuse it, as the real server must.
+
+    Errors are raised as ToolError: mcp 2.x MASKS the message of any other exception, so the real
+    server's tools must do the same for the out-of-scope reason to reach the user."""
+    server = _Server("fake-bankmanager-financial-research")
+    refused = out_of_scope or {}
+
+    def refuse_if_out_of_scope(ticker: str) -> None:
+        if ticker in refused:
+            raise ToolError(refused[ticker])
+
     facts = [FinancialFact.model_validate(f) for f in _load("facts.json")]
     filings = [Filing.model_validate(f) for f in _load("filings.json")]
 
@@ -62,6 +79,7 @@ def build_fake_server(section_text_hook=None) -> FastMCP:
         include_superseded: bool = False,
     ) -> dict:
         """Reported facts, newest first. Restated values excluded unless asked for."""
+        refuse_if_out_of_scope(ticker)
         rows = [
             f
             for f in facts
@@ -94,6 +112,7 @@ def build_fake_server(section_text_hook=None) -> FastMCP:
         ticker: str, as_of: str, forms: list[str] | None = None, limit: int = 20
     ) -> dict:
         """Filings filed on or before as_of, newest first."""
+        refuse_if_out_of_scope(ticker)
         rows = [
             f
             for f in filings
@@ -112,7 +131,7 @@ def build_fake_server(section_text_hook=None) -> FastMCP:
         _, accession, name = section_id.split(":", 2)
         filing = next((f for f in filings if f.accession == accession), None)
         if filing is None or section_id not in filing.section_ids or filing.filed_at > as_of:
-            raise KeyError(section_id)
+            raise ToolError(f"unknown section, or filed after as_of: {section_id}")
         text = (MOCK / "sections" / f"{name}.txt").read_text(encoding="utf-8")
         if section_text_hook:
             text = section_text_hook(section_id, text)
@@ -139,6 +158,7 @@ def build_fake_server(section_text_hook=None) -> FastMCP:
 
     @server.tool()
     def get_market_snapshot(ticker: str, as_of: str) -> dict:
+        refuse_if_out_of_scope(ticker)
         snap = MarketSnapshot.model_validate(_load("market_snapshot.json"))
         return GetMarketSnapshotResponse(
             snapshot=snap if snap.ticker == ticker else None, as_of=as_of
@@ -146,6 +166,7 @@ def build_fake_server(section_text_hook=None) -> FastMCP:
 
     @server.tool()
     def get_company_profile(ticker: str, as_of: str) -> dict:
+        refuse_if_out_of_scope(ticker)
         prof = CompanyProfile.model_validate(_load("company_profile.json"))
         return GetCompanyProfileResponse(
             profile=prof if prof.ticker == ticker else None, as_of=as_of
