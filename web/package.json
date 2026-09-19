@@ -4,11 +4,14 @@
   "private": true,
   "description": "P3. Next.js UI. Renders fixtures/mock/verdict.json until the backend exists.",
   "scripts": {
+    "sync-mock": "node scripts/sync-mock.mjs",
+    "predev": "npm run sync-mock",
     "dev": "next dev",
+    "prebuild": "npm run sync-mock",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
   },
   "dependencies": {
     "next": "^15.0.0",
@@ -16,10 +19,14 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.0",
+    "@testing-library/react": "^16.1.0",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
-    "eslint": "^9.0.0",
-    "eslint-config-next": "^15.0.0",
-    "typescript": "^5.6.0"
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "jsdom": "^25.0.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
   }
 }

@@ -8,8 +8,9 @@
  * generated JSON is committed at all: a non-Python consumer needs something to
  * read.
  *
- * TODO(roadmap Step 2, P3): generate these from schema/*.json instead of
- * maintaining them by hand, so they cannot drift.
+ * Still hand-maintained. tests/types.test.ts checks them against the real fixture
+ * so drift shows up as a failing test rather than a blank screen.
+ * TODO(roadmap Step 3, P3): generate these from schema/*.json.
  */
 
 /** Every reported or computed number. Fractions, not percents. */
@@ -107,5 +108,30 @@ export interface Verdict {
     drawdown_path?: string | null;
   };
   data_quality: DataQuality;
+  audit?: {
+    passed: boolean;
+    claims_checked: number;
+    claims_verified: number;
+    claims_unverified: number;
+  };
+  scenario_result?: {
+    weights?: { any_clamped?: boolean };
+    p_beat_sp500?: Scores;
+    [key: string]: unknown;
+  };
   [key: string]: unknown;
+}
+
+export type VerificationStatus = ReportSection["verification_status"];
+
+/** One progress event from GET /api/runs/{id}/events. */
+export interface AgentEvent {
+  run_id: string;
+  /** A roster agent (financial, business...) or a stage (ingest, verify, run, guard). */
+  agent: string;
+  status: "pending" | "running" | "retrying" | "done" | "failed" | "flagged";
+  ts: string;
+  detail?: string;
+  tokens_in?: number;
+  tokens_out?: number;
 }

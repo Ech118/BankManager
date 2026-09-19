@@ -211,3 +211,16 @@ def test_status_enum_members_used_by_the_renderer_exist():
         VerificationStatus.UNVERIFIED,
         VerificationStatus.PENDING,
     } <= set(VerificationStatus)
+
+
+def test_ui_golden_sample_matches_the_generator():
+    """web/tests/fixtures/section_bodies.md is the generator's real output; the UI tests parse it.
+    If this fails, the markdown format changed: regenerate the file AND check the UI still renders it."""
+    d = full_state_dict()
+    claims = d["sections"]["earnings_quality"]["claims"]
+    claims[0]["verification_status"], claims[1]["verification_status"] = "failed", "pending"
+    d["sections"]["financials"]["claims"][0]["value"]["type"] = "assumption"
+    s = ResearchState.model_validate(d)
+    body = "\n\n".join(g.render_section(sec).body_markdown for sec in (s.sections.financials, s.sections.earnings_quality))
+    golden = (Path(__file__).resolve().parents[2] / "web" / "tests" / "fixtures" / "section_bodies.md").read_text()
+    assert body + "\n" == golden

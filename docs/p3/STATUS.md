@@ -3,7 +3,7 @@
 Update whenever a capability moves from mock to real, or when blocked.
 A PR that changes behaviour must update this file.
 
-**Step:** 2 backend built (offline-verified). **Next:** finish Step 2's `web/` UI, then Step 3 (Business Agent, parallelism, SSE lanes).
+**Step:** 2 built (offline-verified, UI included). **Next:** Step 3 (Business Agent, parallel execution, live SSE lanes, stdio in live mode).
 **Blockers:** the real mock MCP server (P1) - see
 [the request](../requests/2026-09-19-p3-to-p1-mock-mcp-server.md) - and where the report's inputs and the auditor's Factsheet come
 from - see [the report-inputs request](../requests/2026-09-19-p3-report-inputs.md). Everything up to that seam is tested against a
@@ -23,7 +23,7 @@ P3-owned MCP test double (`tests/e2e/support/fake_mcp.py`).
 | Retry loop (`retry.py`) | not started | Step 5 |
 | Report generator (`orchestrator/report/`) | **built, tested** | deterministic Jinja render: card first, case against, sections; unverified claims marked, pending claims marked `unchecked`, `unavailable` never 0, fact/estimate/assumption carried, disclaimer top and bottom. Without a synthesizer it renders a PRELIMINARY report with no card. `render()` needs `state.synthesis` (`agents/synthesis.py`) and raises `ReportInputError` rather than invent it. |
 | FastAPI server + SSE | **built, tested** | `POST /api/analyze`, `GET /api/runs/{id}`, `/events` (SSE, full replay for late subscribers), `/stats`, `/config`. Runner is injectable (`server.RUNNER`). |
-| `web/` UI | in progress | Step 2; types and API client drafted by Step 0 |
+| `web/` UI | **built, tested** | Next.js: verdict card first, case against second, collapsible sections with status chips, numbers coloured by type, `unavailable` never 0, unverified/unchecked markers, data-quality banner, agent lanes, disclaimer via the site shell (every page). 31 vitest tests, typecheck, production build; screenshot-checked in Chrome. `/demo` works with no backend; `/` runs against the API (CORS, POST, SSE verified with curl). Safe markdown renderer (no raw HTML). |
 | Prompt-injection guard | **built, tested** | instruction-like sentences removed before the model sees them and reported in `data_quality.gaps`. The full "verdict must not move" e2e test needs the Synthesizer (Step 5). |
 | Redact hook | **built, tested** | applied in `Agent.wrap_untrusted`, i.e. before every model call; `ResearchState.redacted` recorded |
 | Cost/latency logging | partial | tokens/seconds per agent in `Coordinator.stats` and `orchestrator/logs/runs.jsonl` (gitignored). Rates in `agents/client.py::PRICES` are an ASSUMPTION copied from the claude-api skill (2026-06-24). |
@@ -39,6 +39,8 @@ P3-owned MCP test double (`tests/e2e/support/fake_mcp.py`).
   a later step; `Agent.tools` already declares each agent's allowed set.
 
 ## Known gaps
+- The UI has only been exercised against the mock verdict and the mock `run_analysis`; per-agent lanes need the Coordinator wired into the server (Step 3), so today `/` shows only `run` events.
+- The disclaimer appears twice on a report page (the report's own, which must travel with the Verdict, and the site footer). Deliberate; easy to dedupe in CSS if it reads as noise.
 - The mock `ResearchState` has no synthesizer output, so the Step 2 checkpoint test composes `synthesis`/`market`/`company_name` from the other fixtures. See the report-inputs request.
 - `fixtures/mock/analysis_financial.json` cites facts missing from `facts.json` (`gross_profit`, `receivables`, `sbc`
   FY2025); the agent ignores unknown fact ids and logs it. Coordinator follow-up: extend the facts fixture.
@@ -49,7 +51,8 @@ P3-owned MCP test double (`tests/e2e/support/fake_mcp.py`).
 ```
 python -m pytest agents/tests orchestrator/tests tests/e2e -q
 make lint && make test-contracts
-uvicorn orchestrator.server:app --port 8000
+cd web && npm run typecheck && npm test
+uvicorn orchestrator.server:app --port 8000     # then: cd web && npm run dev
 ```
 
-**Last updated:** 2026-09-19 (Step 2 backend)
+**Last updated:** 2026-09-19 (Step 2)

@@ -1,0 +1,7 @@
+# P3 nested ignore (root .gitignore is frozen)
+node_modules/
+.next/
+next-env.d.ts
+*.tsbuildinfo
+public/mock/
+coverage/
