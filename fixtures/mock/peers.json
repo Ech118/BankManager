@@ -1,0 +1,166 @@
+[
+  {
+    "ticker": "PRAA",
+    "company_name": "Peer Alpha (mock)",
+    "sic": "3823",
+    "market_cap": {
+      "value": 12000000000.0,
+      "unit": "usd",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:market:peers"
+    },
+    "pe": {
+      "value": 22.0,
+      "unit": "multiple",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:market:peers"
+    },
+    "ev_ebitda": {
+      "value": 14.0,
+      "unit": "multiple",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:market:peers"
+    },
+    "ev_revenue": {
+      "value": 2.5,
+      "unit": "multiple",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:market:peers"
+    },
+    "fcf_yield": {
+      "value": 0.045,
+      "unit": "fraction",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:market:peers"
+    },
+    "selection_reason": "Same SIC code and within one order of magnitude on market cap."
+  },
+  {
+    "ticker": "PRBB",
+    "company_name": "Peer Beta (mock)",
+    "sic": "3823",
+    "market_cap": {
+      "value": 30000000000.0,
+      "unit": "usd",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:market:peers"
+    },
+    "pe": {
+      "value": 25.0,
+      "unit": "multiple",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:market:peers"
+    },
+    "ev_ebitda": {
+      "value": 15.0,
+      "unit": "multiple",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:market:peers"
+    },
+    "ev_revenue": {
+      "value": 3.0,
+      "unit": "multiple",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:market:peers"
+    },
+    "fcf_yield": {
+      "value": 0.04,
+      "unit": "fraction",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:market:peers"
+    },
+    "selection_reason": "Same SIC code and within one order of magnitude on market cap."
+  },
+  {
+    "ticker": "PRCC",
+    "company_name": "Peer Gamma (mock)",
+    "sic": "3823",
+    "market_cap": {
+      "value": 18000000000.0,
+      "unit": "usd",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:market:peers"
+    },
+    "pe": {
+      "value": 28.0,
+      "unit": "multiple",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:market:peers"
+    },
+    "ev_ebitda": {
+      "value": 16.0,
+      "unit": "multiple",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:market:peers"
+    },
+    "ev_revenue": {
+      "value": 3.2,
+      "unit": "multiple",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:market:peers"
+    },
+    "fcf_yield": {
+      "value": 0.038,
+      "unit": "fraction",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:market:peers"
+    },
+    "selection_reason": "Same SIC code and within one order of magnitude on market cap."
+  },
+  {
+    "ticker": "PRDD",
+    "company_name": "Peer Delta (mock)",
+    "sic": "3823",
+    "market_cap": {
+      "value": 25000000000.0,
+      "unit": "usd",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:market:peers"
+    },
+    "pe": {
+      "value": 30.0,
+      "unit": "multiple",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:market:peers"
+    },
+    "ev_ebitda": {
+      "value": 18.0,
+      "unit": "multiple",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:market:peers"
+    },
+    "ev_revenue": {
+      "value": 3.6,
+      "unit": "multiple",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:market:peers"
+    },
+    "fcf_yield": {
+      "value": 0.033,
+      "unit": "fraction",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:market:peers"
+    },
+    "selection_reason": "Same SIC code and within one order of magnitude on market cap."
+  }
+]

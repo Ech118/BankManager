@@ -1,5 +1,5 @@
-# FROZEN (Step 0). A partition needing extra ignores creates a nested .gitignore
-# inside its own directory instead of editing this file.
+# FROZEN (Step 0). A partition needing extra ignores creates a NESTED .gitignore
+# inside its own directory instead of editing this file (git honours it).
 
 # secrets
 .env
@@ -13,6 +13,7 @@ id_ed25519
 __pycache__/
 *.pyc
 .pytest_cache/
+.ruff_cache/
 .venv/
 venv/
 *.egg-info/
@@ -27,3 +28,16 @@ dist/
 .cache/
 .DS_Store
 .claude/settings.local.json
+
+# local database and generated run artifacts
+pgdata/
+*.sqlite
+*.sqlite3
+
+# forward prediction log: the code ships, the records do not
+predictions/log/
+
+# rendered reports and charts
+reports/
+*.png
+!docs/**/*.png

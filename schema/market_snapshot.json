@@ -1,0 +1,273 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bankmanager.local/schema/market_snapshot.json",
+  "title": "Market snapshot",
+  "description": "GENERATED from schema/contracts/market.py. Every field at ONE as_of instant.",
+  "$defs": {
+    "Unit": {
+      "description": "Unit of a ValueObject. `fraction` is never a percent (0.25 means 25%).",
+      "enum": [
+        "usd",
+        "usd_per_share",
+        "shares",
+        "fraction",
+        "multiple",
+        "count",
+        "days",
+        "ratio"
+      ],
+      "title": "Unit",
+      "type": "string"
+    },
+    "ValueObject": {
+      "additionalProperties": true,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "ok"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "value"
+            ]
+          },
+          "title": "status ok requires a numeric value"
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "ok"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "anyOf": [
+              {
+                "properties": {
+                  "source_id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "source_id"
+                ]
+              },
+              {
+                "properties": {
+                  "derived_from": {
+                    "minItems": 1,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "derived_from"
+                ]
+              }
+            ]
+          },
+          "title": "status ok requires a source_id or a non-empty derived_from"
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "unavailable"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          },
+          "title": "status unavailable requires a null value"
+        },
+        {
+          "if": {
+            "properties": {
+              "unit": {
+                "const": "fraction"
+              }
+            },
+            "required": [
+              "unit"
+            ]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "anyOf": [
+                  {
+                    "maximum": 10.0,
+                    "minimum": -10.0,
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          "title": "fractions are fractions, not percents"
+        }
+      ],
+      "description": "Every reported or computed financial number in the system.\n\nFractions, not percents. Money in full USD. Missing data is\n{\"value\": null, \"status\": \"unavailable\"} - never 0, never \"N/A\", never an\nomitted key.\n\nA value computed in code from facts has type \"fact\" and lists `derived_from`.\nDiscount rate, terminal growth and exit multiples are \"assumption\".\nConsensus numbers and scenario outputs are \"estimate\".",
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "The number in full units, or null when status is unavailable.",
+          "title": "Value"
+        },
+        "unit": {
+          "$ref": "#/$defs/Unit"
+        },
+        "type": {
+          "$ref": "#/$defs/ValueType"
+        },
+        "status": {
+          "$ref": "#/$defs/ValueStatus"
+        },
+        "source_id": {
+          "anyOf": [
+            {
+              "pattern": "^src:[a-z0-9_]+:[A-Za-z0-9._:-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Where the number came from. Required unless derived_from is set.",
+          "title": "Source Id"
+        },
+        "derived_from": {
+          "description": "Dotted paths or fact_ids this value was computed from.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Derived From",
+          "type": "array"
+        }
+      },
+      "required": [
+        "value",
+        "unit",
+        "type",
+        "status"
+      ],
+      "title": "ValueObject",
+      "type": "object"
+    },
+    "ValueStatus": {
+      "description": "`unavailable` is the ONLY way to express missing data. Never 0, never \"N/A\".",
+      "enum": [
+        "ok",
+        "unavailable"
+      ],
+      "title": "ValueStatus",
+      "type": "string"
+    },
+    "ValueType": {
+      "description": "Epistemic status of a number, rendered as a colour in the report.\n\nfact       reported in a filing, or computed in code from reported values\nestimate   a forecast: consensus, or a scenario output\nassumption a chosen constant: discount rate, terminal growth, exit multiple",
+      "enum": [
+        "fact",
+        "estimate",
+        "assumption"
+      ],
+      "title": "ValueType",
+      "type": "string"
+    }
+  },
+  "additionalProperties": true,
+  "properties": {
+    "ticker": {
+      "pattern": "^[A-Z]{1,5}([.-][A-Z])?$",
+      "title": "Ticker",
+      "type": "string"
+    },
+    "as_of": {
+      "description": "The single instant every field below was observed at.",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+      "title": "As Of",
+      "type": "string"
+    },
+    "retrieved_at": {
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+      "title": "Retrieved At",
+      "type": "string"
+    },
+    "source_id": {
+      "pattern": "^src:[a-z0-9_]+:[A-Za-z0-9._:-]+$",
+      "title": "Source Id",
+      "type": "string"
+    },
+    "price": {
+      "$ref": "#/$defs/ValueObject"
+    },
+    "shares_outstanding": {
+      "$ref": "#/$defs/ValueObject"
+    },
+    "market_cap": {
+      "$ref": "#/$defs/ValueObject"
+    },
+    "total_debt": {
+      "$ref": "#/$defs/ValueObject",
+      "description": "EV bridge input, from the latest balance sheet."
+    },
+    "cash": {
+      "$ref": "#/$defs/ValueObject",
+      "description": "Cash and equivalents, EV bridge input."
+    },
+    "enterprise_value": {
+      "$ref": "#/$defs/ValueObject"
+    },
+    "currency": {
+      "default": "USD",
+      "title": "Currency",
+      "type": "string"
+    }
+  },
+  "required": [
+    "ticker",
+    "as_of",
+    "retrieved_at",
+    "source_id",
+    "price",
+    "shares_outstanding",
+    "market_cap",
+    "total_debt",
+    "cash",
+    "enterprise_value"
+  ],
+  "type": "object"
+}

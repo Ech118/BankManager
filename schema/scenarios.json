@@ -2,52 +2,388 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://bankmanager.local/schema/scenarios.json",
   "title": "Valuation scenarios (LLM proposal)",
-  "description": "FROZEN CONTRACT. PRODUCED BY THE P3 VALUATION AGENT. CONSUMED BY P2 calc.api.evaluate_scenarios. The LLM proposes scenario INPUTS; it never produces P(beat S&P) or scores. Scenario probabilities must sum to 1.0 (P2 validates in code and rejects otherwise).",
-  "type": "object",
-  "required": ["schema_version", "ticker", "as_of", "scenarios", "prior_shift"],
-  "properties": {
-    "schema_version": { "$ref": "common.json#/$defs/schema_version" },
-    "ticker": { "$ref": "common.json#/$defs/ticker" },
-    "as_of": { "$ref": "common.json#/$defs/date" },
-    "scenarios": {
-      "type": "object",
-      "required": ["bear", "base", "bull"],
-      "properties": {
-        "bear": { "$ref": "#/$defs/scenario" },
-        "base": { "$ref": "#/$defs/scenario" },
-        "bull": { "$ref": "#/$defs/scenario" }
-      }
+  "description": "GENERATED from schema/contracts/scenarios.py. PRODUCED BY the P3 Scenario Agent. Weights are REQUESTS; calc/ bounds them.",
+  "$defs": {
+    "AgentName": {
+      "description": "The P3 agent roster (docs/pipeline.md).\n\nfinancial and business run in parallel; valuation, then scenario, then\nred_team, then synthesizer. `verifier` is the LLM half of audit/.",
+      "enum": [
+        "financial",
+        "business",
+        "valuation",
+        "scenario",
+        "red_team",
+        "synthesizer",
+        "verifier"
+      ],
+      "title": "AgentName",
+      "type": "string"
     },
-    "prior_shift": {
-      "description": "LLM's REQUESTED tilt to the base-rate prior for P(beat S&P). P2 applies it only within a hard cap (error C).",
-      "type": "object",
-      "required": ["value", "reason"],
+    "Evidence": {
+      "additionalProperties": true,
+      "description": "A verbatim quote from a source, string-matched by the verifier.\n\nThe quote must appear in the text behind `source_id` after whitespace\nnormalization, or audit/ raises IssueType.UNSUPPORTED_CLAIM.",
       "properties": {
-        "value": { "type": "number", "minimum": -1, "maximum": 1 },
-        "reason": { "type": "string", "minLength": 1 }
-      }
+        "quote": {
+          "description": "Verbatim text, copied not paraphrased.",
+          "minLength": 8,
+          "title": "Quote",
+          "type": "string"
+        },
+        "source_id": {
+          "pattern": "^src:[a-z0-9_]+:[A-Za-z0-9._:-]+$",
+          "title": "Source Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "quote",
+        "source_id"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "PriorShift": {
+      "additionalProperties": true,
+      "description": "A requested tilt to the base-rate prior for P(beat S&P).\n\nBoth the Scenario Agent and the Red Team may request one. calc/ applies the\nsum only within a hard cap and records requested vs applied (error C).",
+      "properties": {
+        "value": {
+          "description": "Requested shift. Negative argues the stock lags.",
+          "maximum": 1.0,
+          "minimum": -1.0,
+          "title": "Value",
+          "type": "number"
+        },
+        "reason": {
+          "description": "Why. An unjustified shift is rejected.",
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "source": {
+          "$ref": "#/$defs/AgentName",
+          "default": "scenario",
+          "description": "Which agent asked for it."
+        }
+      },
+      "required": [
+        "value",
+        "reason"
+      ],
+      "title": "PriorShift",
+      "type": "object"
+    },
+    "Scenario": {
+      "additionalProperties": true,
+      "description": "One of bear / base / bull.\n\n`probability` is a REQUEST, not a decision. calc/ clamps it into the\nconfigured band and records the clamp in ScenarioResult.weights.",
+      "properties": {
+        "probability": {
+          "description": "REQUESTED weight in [0,1]. calc/ bounds it before use.",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Probability",
+          "type": "number"
+        },
+        "probability_rationale": {
+          "default": "",
+          "description": "Why this weight. Required by the prompt; audited by the verifier.",
+          "title": "Probability Rationale",
+          "type": "string"
+        },
+        "horizon_years": {
+          "maximum": 10,
+          "minimum": 1,
+          "title": "Horizon Years",
+          "type": "integer"
+        },
+        "revenue_cagr": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "terminal_margin": {
+          "$ref": "#/$defs/ValueObject",
+          "description": "Net margin at the horizon."
+        },
+        "eps_at_horizon": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "exit_multiple": {
+          "$ref": "#/$defs/ValueObject",
+          "description": "P/E at the horizon."
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Evidence",
+          "type": "array"
+        }
+      },
+      "required": [
+        "probability",
+        "horizon_years",
+        "revenue_cagr",
+        "terminal_margin",
+        "eps_at_horizon",
+        "exit_multiple",
+        "rationale"
+      ],
+      "title": "Scenario",
+      "type": "object"
+    },
+    "ScenarioName": {
+      "enum": [
+        "bear",
+        "base",
+        "bull"
+      ],
+      "title": "ScenarioName",
+      "type": "string"
+    },
+    "Unit": {
+      "description": "Unit of a ValueObject. `fraction` is never a percent (0.25 means 25%).",
+      "enum": [
+        "usd",
+        "usd_per_share",
+        "shares",
+        "fraction",
+        "multiple",
+        "count",
+        "days",
+        "ratio"
+      ],
+      "title": "Unit",
+      "type": "string"
+    },
+    "ValueObject": {
+      "additionalProperties": true,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "ok"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "value"
+            ]
+          },
+          "title": "status ok requires a numeric value"
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "ok"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "anyOf": [
+              {
+                "properties": {
+                  "source_id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "source_id"
+                ]
+              },
+              {
+                "properties": {
+                  "derived_from": {
+                    "minItems": 1,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "derived_from"
+                ]
+              }
+            ]
+          },
+          "title": "status ok requires a source_id or a non-empty derived_from"
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "unavailable"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          },
+          "title": "status unavailable requires a null value"
+        },
+        {
+          "if": {
+            "properties": {
+              "unit": {
+                "const": "fraction"
+              }
+            },
+            "required": [
+              "unit"
+            ]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "anyOf": [
+                  {
+                    "maximum": 10.0,
+                    "minimum": -10.0,
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          "title": "fractions are fractions, not percents"
+        }
+      ],
+      "description": "Every reported or computed financial number in the system.\n\nFractions, not percents. Money in full USD. Missing data is\n{\"value\": null, \"status\": \"unavailable\"} - never 0, never \"N/A\", never an\nomitted key.\n\nA value computed in code from facts has type \"fact\" and lists `derived_from`.\nDiscount rate, terminal growth and exit multiples are \"assumption\".\nConsensus numbers and scenario outputs are \"estimate\".",
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "The number in full units, or null when status is unavailable.",
+          "title": "Value"
+        },
+        "unit": {
+          "$ref": "#/$defs/Unit"
+        },
+        "type": {
+          "$ref": "#/$defs/ValueType"
+        },
+        "status": {
+          "$ref": "#/$defs/ValueStatus"
+        },
+        "source_id": {
+          "anyOf": [
+            {
+              "pattern": "^src:[a-z0-9_]+:[A-Za-z0-9._:-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Where the number came from. Required unless derived_from is set.",
+          "title": "Source Id"
+        },
+        "derived_from": {
+          "description": "Dotted paths or fact_ids this value was computed from.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Derived From",
+          "type": "array"
+        }
+      },
+      "required": [
+        "value",
+        "unit",
+        "type",
+        "status"
+      ],
+      "title": "ValueObject",
+      "type": "object"
+    },
+    "ValueStatus": {
+      "description": "`unavailable` is the ONLY way to express missing data. Never 0, never \"N/A\".",
+      "enum": [
+        "ok",
+        "unavailable"
+      ],
+      "title": "ValueStatus",
+      "type": "string"
+    },
+    "ValueType": {
+      "description": "Epistemic status of a number, rendered as a colour in the report.\n\nfact       reported in a filing, or computed in code from reported values\nestimate   a forecast: consensus, or a scenario output\nassumption a chosen constant: discount rate, terminal growth, exit multiple",
+      "enum": [
+        "fact",
+        "estimate",
+        "assumption"
+      ],
+      "title": "ValueType",
+      "type": "string"
     }
   },
-  "$defs": {
-    "scenario": {
-      "type": "object",
-      "required": [
-        "probability", "horizon_years", "revenue_cagr", "terminal_margin",
-        "eps_at_horizon", "exit_multiple", "rationale", "evidence"
-      ],
-      "properties": {
-        "probability": { "$ref": "common.json#/$defs/probability" },
-        "horizon_years": { "type": "integer", "minimum": 1, "maximum": 10 },
-        "revenue_cagr": { "$ref": "common.json#/$defs/value" },
-        "terminal_margin": { "description": "Net margin at the horizon.", "$ref": "common.json#/$defs/value" },
-        "eps_at_horizon": { "$ref": "common.json#/$defs/value" },
-        "exit_multiple": { "description": "P/E at the horizon.", "$ref": "common.json#/$defs/value" },
-        "rationale": { "type": "string", "minLength": 1 },
-        "evidence": {
-          "type": "array",
-          "items": { "$ref": "common.json#/$defs/evidence" }
-        }
-      }
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "ticker": {
+      "pattern": "^[A-Z]{1,5}([.-][A-Z])?$",
+      "title": "Ticker",
+      "type": "string"
+    },
+    "as_of": {
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "title": "As Of",
+      "type": "string"
+    },
+    "scenarios": {
+      "additionalProperties": {
+        "$ref": "#/$defs/Scenario"
+      },
+      "description": "Exactly bear, base and bull.",
+      "propertyNames": {
+        "$ref": "#/$defs/ScenarioName"
+      },
+      "title": "Scenarios",
+      "type": "object"
+    },
+    "prior_shift": {
+      "$ref": "#/$defs/PriorShift"
     }
-  }
+  },
+  "required": [
+    "schema_version",
+    "ticker",
+    "as_of",
+    "scenarios",
+    "prior_shift"
+  ],
+  "type": "object"
 }

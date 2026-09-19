@@ -1,0 +1,10 @@
+ACME CORPORATION (FICTIONAL MOCK COMPANY - NOT REAL DATA)
+FORM 10-K, FISCAL YEAR 2025 - NOTES TO THE FINANCIAL STATEMENTS - NOTE 14. STOCK-BASED COMPENSATION
+
+Stock-based compensation expense was $100 million in fiscal 2025, $90 million in fiscal 2024 and $80 million in fiscal 2023. Of the fiscal 2025 expense, $62 million related to restricted stock units and $38 million related to performance share units.
+
+We granted 2.4 million restricted stock units during fiscal 2025 at a weighted average grant date fair value of $46.50 per share. Unrecognized compensation cost related to unvested awards was $180 million, expected to be recognized over a weighted average period of 2.3 years.
+
+We present non-GAAP operating income excluding stock-based compensation. Investors should note that stock-based compensation is a recurring expense and that our non-GAAP measures should not be considered in isolation from the corresponding GAAP measures.
+
+During fiscal 2025 we repurchased 10 million shares for an aggregate $450 million, of which approximately $100 million offset dilution from equity awards.

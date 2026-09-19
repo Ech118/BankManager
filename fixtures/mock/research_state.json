@@ -1,0 +1,998 @@
+{
+  "state_version": "1.0.0",
+  "schema_version": "2.0.0",
+  "ticker": "ACME",
+  "as_of": "2026-09-19",
+  "created_at": "2026-09-19T12:00:00Z",
+  "mode": "mock",
+  "sections": {
+    "company": {
+      "section_key": "company",
+      "title": "Company",
+      "owner": "business",
+      "claims": [
+        {
+          "claim_id": "claim:business:profile",
+          "text": "Acme designs and sells industrial sensors and monitoring software to manufacturers.",
+          "value": null,
+          "fact_ids": [],
+          "section_ids": [
+            "sec:0001234567-26-000010:business"
+          ],
+          "evidence": [
+            {
+              "quote": "Acme Corporation designs and sells industrial sensors and monitoring software to manufacturers",
+              "source_id": "src:edgar:0001234567-26-000010:business"
+            }
+          ],
+          "derived_by": "filing_text",
+          "trend": "neutral",
+          "confidence": "medium",
+          "verification_status": "verified"
+        }
+      ],
+      "verification_status": "verified",
+      "retry_count": 0
+    },
+    "financials": {
+      "section_key": "financials",
+      "title": "Financial quality",
+      "owner": "financial",
+      "claims": [
+        {
+          "claim_id": "claim:financial:revenue",
+          "text": "Revenue reached five billion dollars in the latest full year.",
+          "value": {
+            "value": 0.4,
+            "unit": "fraction",
+            "type": "fact",
+            "status": "ok",
+            "source_id": null,
+            "derived_from": [
+              "financials.FY2025.gross_profit",
+              "financials.FY2025.revenue"
+            ]
+          },
+          "fact_ids": [
+            "fact:ACME:revenue:FY2025"
+          ],
+          "section_ids": [],
+          "evidence": [],
+          "derived_by": "code",
+          "trend": "structurally_positive",
+          "confidence": "medium",
+          "verification_status": "verified"
+        }
+      ],
+      "verification_status": "verified",
+      "retry_count": 0
+    },
+    "balance_sheet": {
+      "section_key": "balance_sheet",
+      "title": "Balance sheet strength",
+      "owner": "financial",
+      "claims": [
+        {
+          "claim_id": "claim:financial:net-debt",
+          "text": "Net debt is small relative to earnings, leaving the balance sheet unstressed.",
+          "value": {
+            "value": 150000000,
+            "unit": "usd",
+            "type": "fact",
+            "status": "ok",
+            "source_id": null,
+            "derived_from": [
+              "financials.Q2-2026.total_debt",
+              "financials.Q2-2026.cash"
+            ]
+          },
+          "fact_ids": [
+            "fact:ACME:total_debt:Q2-2026",
+            "fact:ACME:cash:Q2-2026"
+          ],
+          "section_ids": [],
+          "evidence": [],
+          "derived_by": "code",
+          "trend": "neutral",
+          "confidence": "medium",
+          "verification_status": "verified"
+        }
+      ],
+      "verification_status": "verified",
+      "retry_count": 0
+    },
+    "cash_flow": {
+      "section_key": "cash_flow",
+      "title": "Free cash flow",
+      "owner": "financial",
+      "claims": [
+        {
+          "claim_id": "claim:financial:fcf",
+          "text": "Free cash flow is derived from operating cash flow less capital expenditure.",
+          "value": {
+            "value": 600000000,
+            "unit": "usd",
+            "type": "fact",
+            "status": "ok",
+            "source_id": null,
+            "derived_from": [
+              "financials.FY2025.op_cash_flow",
+              "financials.FY2025.capex"
+            ]
+          },
+          "fact_ids": [
+            "fact:ACME:fcf:FY2025"
+          ],
+          "section_ids": [],
+          "evidence": [],
+          "derived_by": "code",
+          "trend": "structurally_positive",
+          "confidence": "medium",
+          "verification_status": "verified"
+        }
+      ],
+      "verification_status": "verified",
+      "retry_count": 0
+    },
+    "earnings_quality": {
+      "section_key": "earnings_quality",
+      "title": "Earnings quality",
+      "owner": "financial",
+      "claims": [
+        {
+          "claim_id": "claim:financial:buyback-eps",
+          "text": "Buybacks shrank the diluted share count, flattering reported EPS growth.",
+          "value": {
+            "value": -0.0243902439,
+            "unit": "fraction",
+            "type": "fact",
+            "status": "ok",
+            "source_id": null,
+            "derived_from": [
+              "financials.FY2025.shares_diluted",
+              "financials.FY2024.shares_diluted"
+            ]
+          },
+          "fact_ids": [
+            "fact:ACME:shares_diluted:FY2025",
+            "fact:ACME:shares_diluted:FY2024"
+          ],
+          "section_ids": [
+            "sec:0001234567-26-000010:mdna"
+          ],
+          "evidence": [
+            {
+              "quote": "reduced diluted shares outstanding by 2.4%",
+              "source_id": "src:edgar:0001234567-26-000010:mdna"
+            }
+          ],
+          "derived_by": "code",
+          "trend": "neutral",
+          "confidence": "medium",
+          "verification_status": "verified"
+        },
+        {
+          "claim_id": "claim:financial:restated-ocf",
+          "text": "Prior-year operating cash flow was restated upward by the latest annual filing.",
+          "value": null,
+          "fact_ids": [
+            "fact:ACME:op_cash_flow:FY2024",
+            "fact:ACME:op_cash_flow:FY2024:as-filed"
+          ],
+          "section_ids": [],
+          "evidence": [],
+          "derived_by": "code",
+          "trend": "neutral",
+          "confidence": "medium",
+          "verification_status": "verified"
+        },
+        {
+          "claim_id": "claim:financial:non-gaap",
+          "text": "Management excludes a recurring stock compensation expense from its non-GAAP operating income.",
+          "value": null,
+          "fact_ids": [],
+          "section_ids": [
+            "sec:0001234567-26-000010:sbc_note"
+          ],
+          "evidence": [
+            {
+              "quote": "stock-based compensation is a recurring expense and that our non-GAAP measures should not be considered in isolation",
+              "source_id": "src:edgar:0001234567-26-000010:sbc_note"
+            }
+          ],
+          "derived_by": "agent",
+          "trend": "structurally_negative",
+          "confidence": "medium",
+          "verification_status": "verified"
+        }
+      ],
+      "verification_status": "verified",
+      "retry_count": 0
+    },
+    "management": {
+      "section_key": "management",
+      "title": "Management and guidance",
+      "owner": "business",
+      "claims": [
+        {
+          "claim_id": "claim:business:guidance",
+          "text": "Management has issued explicit forward guidance for revenue growth and operating margin.",
+          "value": null,
+          "fact_ids": [],
+          "section_ids": [
+            "sec:0001234567-26-000010:mdna"
+          ],
+          "evidence": [
+            {
+              "quote": "we expect revenue growth of 8% to 10% and operating margin of 16% to 17%",
+              "source_id": "src:edgar:0001234567-26-000010:mdna"
+            }
+          ],
+          "derived_by": "agent",
+          "trend": "neutral",
+          "confidence": "medium",
+          "verification_status": "verified"
+        }
+      ],
+      "verification_status": "verified",
+      "retry_count": 0
+    },
+    "competitive_position": {
+      "section_key": "competitive_position",
+      "title": "Competitive position",
+      "owner": "business",
+      "claims": [
+        {
+          "claim_id": "claim:business:switching-costs",
+          "text": "Embedded sensors and a subscription platform create switching costs, shown by a high renewal rate.",
+          "value": null,
+          "fact_ids": [],
+          "section_ids": [
+            "sec:0001234567-26-000010:business"
+          ],
+          "evidence": [
+            {
+              "quote": "Customers who adopted our software platform renewed at a rate of 94% in fiscal 2025.",
+              "source_id": "src:edgar:0001234567-26-000010:business"
+            }
+          ],
+          "derived_by": "agent",
+          "trend": "structurally_positive",
+          "confidence": "medium",
+          "verification_status": "verified"
+        }
+      ],
+      "verification_status": "verified",
+      "retry_count": 0
+    },
+    "valuation": {
+      "section_key": "valuation",
+      "title": "Valuation",
+      "owner": "valuation",
+      "claims": [
+        {
+          "claim_id": "claim:valuation:pe-premium",
+          "text": "The shares trade at a premium to the peer median on trailing earnings.",
+          "value": {
+            "value": 0.2748597654,
+            "unit": "fraction",
+            "type": "fact",
+            "status": "ok",
+            "source_id": null,
+            "derived_from": [
+              "valuation.pe",
+              "peers[*].pe"
+            ]
+          },
+          "fact_ids": [
+            "fact:ACME:eps_diluted:FY2025"
+          ],
+          "section_ids": [],
+          "evidence": [],
+          "derived_by": "code",
+          "trend": "structurally_negative",
+          "confidence": "medium",
+          "verification_status": "verified"
+        }
+      ],
+      "verification_status": "verified",
+      "retry_count": 0
+    },
+    "expectations": {
+      "section_key": "expectations",
+      "title": "Expectations vs reality",
+      "owner": "valuation",
+      "claims": [
+        {
+          "claim_id": "claim:valuation:implied-growth",
+          "text": "The current price implies faster free cash flow growth than management guides to.",
+          "value": {
+            "value": 0.1161030155,
+            "unit": "fraction",
+            "type": "fact",
+            "status": "ok",
+            "source_id": null,
+            "derived_from": [
+              "market.enterprise_value",
+              "cash_flow.fcf"
+            ]
+          },
+          "fact_ids": [
+            "fact:ACME:fcf:FY2025"
+          ],
+          "section_ids": [
+            "sec:0001234567-26-000010:mdna"
+          ],
+          "evidence": [
+            {
+              "quote": "we expect revenue growth of 8% to 10% and operating margin of 16% to 17%",
+              "source_id": "src:edgar:0001234567-26-000010:mdna"
+            }
+          ],
+          "derived_by": "code",
+          "trend": "structurally_negative",
+          "confidence": "medium",
+          "verification_status": "verified"
+        }
+      ],
+      "verification_status": "verified",
+      "retry_count": 0
+    },
+    "catalysts": {
+      "section_key": "catalysts",
+      "title": "Catalysts",
+      "owner": "business",
+      "claims": [
+        {
+          "claim_id": "claim:business:mix-shift",
+          "text": "A continued shift toward software subscriptions would lift gross margin further.",
+          "value": null,
+          "fact_ids": [],
+          "section_ids": [
+            "sec:0001234567-26-000010:mdna"
+          ],
+          "evidence": [
+            {
+              "quote": "a favorable product mix toward software subscriptions",
+              "source_id": "src:edgar:0001234567-26-000010:mdna"
+            }
+          ],
+          "derived_by": "agent",
+          "trend": "temporarily_positive",
+          "confidence": "medium",
+          "verification_status": "verified"
+        }
+      ],
+      "verification_status": "verified",
+      "retry_count": 0
+    },
+    "risks": {
+      "section_key": "risks",
+      "title": "Risks",
+      "owner": "red_team",
+      "claims": [
+        {
+          "claim_id": "claim:red-team:bundling",
+          "text": "Competitor bundling in the mid-market could force price cuts and compress gross margin.",
+          "value": null,
+          "fact_ids": [],
+          "section_ids": [
+            "sec:0001234567-26-000010:risk_factors"
+          ],
+          "evidence": [
+            {
+              "quote": "could reduce our gross margin by up to 150 basis points",
+              "source_id": "src:edgar:0001234567-26-000010:risk_factors"
+            }
+          ],
+          "derived_by": "agent",
+          "trend": "structurally_negative",
+          "confidence": "medium",
+          "verification_status": "verified"
+        },
+        {
+          "claim_id": "claim:red-team:refinancing",
+          "text": "Senior notes mature in fiscal 2027 and may be refinanced on worse terms.",
+          "value": null,
+          "fact_ids": [],
+          "section_ids": [
+            "sec:0001234567-26-000010:debt_note"
+          ],
+          "evidence": [
+            {
+              "quote": "consisting of $400 million of 4.25% senior notes due fiscal 2027",
+              "source_id": "src:edgar:0001234567-26-000010:debt_note"
+            }
+          ],
+          "derived_by": "agent",
+          "trend": "temporarily_negative",
+          "confidence": "low",
+          "verification_status": "verified"
+        }
+      ],
+      "verification_status": "verified",
+      "retry_count": 0
+    },
+    "scenarios": {
+      "section_key": "scenarios",
+      "title": "Bull / base / bear",
+      "owner": "scenario",
+      "claims": [
+        {
+          "claim_id": "claim:scenario:weights",
+          "text": "Scenario weights were proposed by the agent and bounded by code before use.",
+          "value": null,
+          "fact_ids": [],
+          "section_ids": [],
+          "evidence": [],
+          "derived_by": "code",
+          "trend": "neutral",
+          "confidence": "medium",
+          "verification_status": "verified"
+        }
+      ],
+      "verification_status": "verified",
+      "retry_count": 0
+    },
+    "sp500_comparison": {
+      "section_key": "sp500_comparison",
+      "title": "S&P 500 outperformance test",
+      "owner": "scenario",
+      "claims": [
+        {
+          "claim_id": "claim:scenario:excess",
+          "text": "The probability-weighted expected return trails the assumed index return.",
+          "value": {
+            "value": -0.0194506576,
+            "unit": "fraction",
+            "type": "estimate",
+            "status": "ok",
+            "source_id": null,
+            "derived_from": [
+              "scenario_result.scenarios.*.annualized_return",
+              "scenario_result.weights"
+            ]
+          },
+          "fact_ids": [
+            "fact:ACME:fcf:FY2025"
+          ],
+          "section_ids": [],
+          "evidence": [],
+          "derived_by": "code",
+          "trend": "structurally_negative",
+          "confidence": "medium",
+          "verification_status": "verified"
+        }
+      ],
+      "verification_status": "verified",
+      "retry_count": 0
+    },
+    "decision": {
+      "section_key": "decision",
+      "title": "Investment committee verdict",
+      "owner": "synthesizer",
+      "claims": [
+        {
+          "claim_id": "claim:synthesizer:verdict",
+          "text": "The business is sound but the price already discounts more growth than guidance supports, so the committee avoids the shares.",
+          "value": null,
+          "fact_ids": [],
+          "section_ids": [
+            "sec:0001234567-26-000010:mdna"
+          ],
+          "evidence": [
+            {
+              "quote": "we expect revenue growth of 8% to 10% and operating margin of 16% to 17%",
+              "source_id": "src:edgar:0001234567-26-000010:mdna"
+            }
+          ],
+          "derived_by": "agent",
+          "trend": "structurally_negative",
+          "confidence": "medium",
+          "verification_status": "verified"
+        }
+      ],
+      "verification_status": "verified",
+      "retry_count": 0
+    }
+  },
+  "agent_outputs": {
+    "financial": {
+      "schema_version": "2.0.0",
+      "agent": "financial",
+      "ticker": "ACME",
+      "as_of": "2026-09-19",
+      "model": "mock",
+      "summary": "Earnings growth is mostly real (volume, price, mix) but two items flatter it: buybacks and stretched receivables.",
+      "findings": [
+        {
+          "claim": "Gross margin expansion came from price and software mix; durable unless competitors' bundling forces price cuts.",
+          "trend": "temporarily_positive",
+          "evidence": [
+            {
+              "quote": "Gross margin improved to 40.0% from 38.9% as a result of price increases and a favorable product mix toward software subscriptions.",
+              "source_id": "src:edgar:0001234567-26-000010:mdna"
+            }
+          ],
+          "numbers": [
+            {
+              "value": 0.4,
+              "unit": "fraction",
+              "type": "fact",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "financials.FY2025.gross_profit",
+                "financials.FY2025.revenue"
+              ]
+            }
+          ],
+          "confidence": "medium"
+        },
+        {
+          "claim": "Receivables grew faster than revenue because two large customers received longer payment terms: a working-capital quality watch item.",
+          "trend": "temporarily_negative",
+          "evidence": [
+            {
+              "quote": "Accounts receivable increased to $700 million from $600 million, primarily due to longer payment terms granted to two large customers.",
+              "source_id": "src:edgar:0001234567-26-000010:mdna"
+            }
+          ],
+          "numbers": [
+            {
+              "value": 51.1,
+              "unit": "days",
+              "type": "fact",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "financials.FY2025.receivables",
+                "financials.FY2025.revenue"
+              ]
+            }
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "Buybacks shrank the diluted share count, contributing part of reported EPS growth rather than operating improvement.",
+          "trend": "neutral",
+          "evidence": [
+            {
+              "quote": "reduced diluted shares outstanding by 2.4%",
+              "source_id": "src:edgar:0001234567-26-000010:mdna"
+            }
+          ],
+          "numbers": [
+            {
+              "value": -0.0243902439,
+              "unit": "fraction",
+              "type": "fact",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "financials.FY2025.shares_diluted",
+                "financials.FY2024.shares_diluted"
+              ]
+            }
+          ],
+          "confidence": "high"
+        },
+        {
+          "claim": "Management presents non-GAAP operating income excluding a recurring stock compensation expense.",
+          "trend": "structurally_negative",
+          "evidence": [
+            {
+              "quote": "stock-based compensation is a recurring expense and that our non-GAAP measures should not be considered in isolation",
+              "source_id": "src:edgar:0001234567-26-000010:sbc_note"
+            }
+          ],
+          "numbers": [
+            {
+              "value": 0.02,
+              "unit": "fraction",
+              "type": "fact",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "financials.FY2025.sbc",
+                "financials.FY2025.revenue"
+              ]
+            }
+          ],
+          "confidence": "high"
+        }
+      ]
+    },
+    "business": {
+      "schema_version": "2.0.0",
+      "agent": "business",
+      "ticker": "ACME",
+      "as_of": "2026-09-19",
+      "model": "mock",
+      "summary": "Good business with real switching costs, but mid-market pricing pressure and customer concentration are live issues.",
+      "findings": [
+        {
+          "claim": "Embedded sensors and a subscription platform create switching costs, shown by high renewal rates.",
+          "trend": "structurally_positive",
+          "evidence": [
+            {
+              "quote": "Customers who adopted our software platform renewed at a rate of 94% in fiscal 2025.",
+              "source_id": "src:edgar:0001234567-26-000010:business"
+            }
+          ],
+          "numbers": [],
+          "confidence": "medium"
+        },
+        {
+          "claim": "Competitor bundling in the mid-market threatens pricing and gross margin.",
+          "trend": "temporarily_negative",
+          "evidence": [
+            {
+              "quote": "could reduce our gross margin by up to 150 basis points",
+              "source_id": "src:edgar:0001234567-26-000010:risk_factors"
+            }
+          ],
+          "numbers": [],
+          "confidence": "medium"
+        },
+        {
+          "claim": "Customer concentration raises the cost of any single contract loss.",
+          "trend": "structurally_negative",
+          "evidence": [
+            {
+              "quote": "Our largest ten customers accounted for 31% of fiscal 2025 revenue",
+              "source_id": "src:edgar:0001234567-26-000010:risk_factors"
+            }
+          ],
+          "numbers": [],
+          "confidence": "high"
+        }
+      ]
+    },
+    "valuation": {
+      "schema_version": "2.0.0",
+      "agent": "valuation",
+      "ticker": "ACME",
+      "as_of": "2026-09-19",
+      "model": "mock",
+      "summary": "At $50 the market already prices double-digit FCF growth for a decade; guidance does not support that.",
+      "findings": [
+        {
+          "claim": "The current price implies roughly double-digit annual FCF growth for a decade at a nine percent discount rate; guidance implies less.",
+          "trend": "structurally_negative",
+          "evidence": [
+            {
+              "quote": "we expect revenue growth of 8% to 10% and operating margin of 16% to 17%",
+              "source_id": "src:edgar:0001234567-26-000010:mdna"
+            }
+          ],
+          "numbers": [
+            {
+              "value": 0.1161030155,
+              "unit": "fraction",
+              "type": "fact",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "market.enterprise_value",
+                "cash_flow.fcf"
+              ]
+            }
+          ],
+          "confidence": "medium"
+        }
+      ]
+    },
+    "red_team": {
+      "schema_version": "2.0.0",
+      "agent": "red_team",
+      "ticker": "ACME",
+      "as_of": "2026-09-19",
+      "model": "mock",
+      "summary": "Even the base case underperforms the S&P; the stock is exposed to multiple compression and a 2027 refinancing.",
+      "findings": [
+        {
+          "claim": "A de-rating toward the peer median alone would cut the price by roughly a third even if guidance is met.",
+          "trend": "structurally_negative",
+          "evidence": [
+            {
+              "quote": "we expect revenue growth of 8% to 10% and operating margin of 16% to 17%",
+              "source_id": "src:edgar:0001234567-26-000010:mdna"
+            }
+          ],
+          "numbers": [
+            {
+              "value": 33.7837837838,
+              "unit": "multiple",
+              "type": "fact",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "market.price",
+                "financials.FY2025.eps_diluted"
+              ]
+            }
+          ],
+          "confidence": "medium"
+        },
+        {
+          "claim": "Senior notes mature in fiscal 2027 and may be refinanced on worse terms.",
+          "trend": "temporarily_negative",
+          "evidence": [
+            {
+              "quote": "consisting of $400 million of 4.25% senior notes due fiscal 2027",
+              "source_id": "src:edgar:0001234567-26-000010:debt_note"
+            }
+          ],
+          "numbers": [],
+          "confidence": "low"
+        }
+      ]
+    }
+  },
+  "scenario_result": {
+    "schema_version": "2.0.0",
+    "ticker": "ACME",
+    "as_of": "2026-09-19",
+    "scenarios": {
+      "bear": {
+        "probability": 0.3,
+        "price_target": {
+          "value": 23.4789685934,
+          "unit": "usd_per_share",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenarios.bear.eps_at_horizon",
+            "scenarios.bear.exit_multiple"
+          ]
+        },
+        "annualized_return": {
+          "value": -0.1403101443,
+          "unit": "fraction",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenario_result.scenarios.bear.price_target",
+            "market.price"
+          ]
+        }
+      },
+      "base": {
+        "probability": 0.5,
+        "price_target": {
+          "value": 51.1474963443,
+          "unit": "usd_per_share",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenarios.base.eps_at_horizon",
+            "scenarios.base.exit_multiple"
+          ]
+        },
+        "annualized_return": {
+          "value": 0.0045484205,
+          "unit": "fraction",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenario_result.scenarios.base.price_target",
+            "market.price"
+          ]
+        }
+      },
+      "bull": {
+        "probability": 0.2,
+        "price_target": {
+          "value": 81.2015661626,
+          "unit": "usd_per_share",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenarios.bull.eps_at_horizon",
+            "scenarios.bull.exit_multiple"
+          ]
+        },
+        "annualized_return": {
+          "value": 0.1018408773,
+          "unit": "fraction",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenario_result.scenarios.bull.price_target",
+            "market.price"
+          ]
+        }
+      }
+    },
+    "weights": {
+      "bear": 0.3,
+      "base": 0.5,
+      "bull": 0.2,
+      "clamps": [
+        {
+          "scenario": "bear",
+          "requested": 0.3,
+          "clamped_to": 0.3,
+          "applied": 0.3,
+          "default_weight": 0.3,
+          "band": 0.15,
+          "was_clamped": false,
+          "was_renormalized": false,
+          "reason": "Competitor bundling is already visible in the mid-market risk disclosure."
+        },
+        {
+          "scenario": "base",
+          "requested": 0.5,
+          "clamped_to": 0.5,
+          "applied": 0.5,
+          "default_weight": 0.5,
+          "band": 0.15,
+          "was_clamped": false,
+          "was_renormalized": false,
+          "reason": "Management guidance has been met in each of the last three years."
+        },
+        {
+          "scenario": "bull",
+          "requested": 0.2,
+          "clamped_to": 0.2,
+          "applied": 0.2,
+          "default_weight": 0.2,
+          "band": 0.15,
+          "was_clamped": false,
+          "was_renormalized": false,
+          "reason": "Software mix shift would have to accelerate beyond the guided range."
+        }
+      ],
+      "any_clamped": false,
+      "renormalized": false
+    },
+    "expected_annualized_return": {
+      "value": -0.0194506576,
+      "unit": "fraction",
+      "type": "estimate",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "scenario_result.scenarios.*.annualized_return",
+        "scenario_result.weights"
+      ]
+    },
+    "sp500_expected_return": {
+      "value": 0.07,
+      "unit": "fraction",
+      "type": "assumption",
+      "status": "ok",
+      "source_id": "src:config:calc_assumptions"
+    },
+    "expected_return_vs_sp500": {
+      "short_term": {
+        "value": -0.0894506576,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      },
+      "medium_term": {
+        "value": -0.0894506576,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      },
+      "long_term": {
+        "value": -0.0894506576,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      }
+    },
+    "excess_vs_sp500": {
+      "short_term": {
+        "value": -0.0894506576,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      },
+      "medium_term": {
+        "value": -0.0894506576,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      },
+      "long_term": {
+        "value": -0.0894506576,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      }
+    },
+    "p_beat_sp500": {
+      "short_term": 0.37,
+      "medium_term": 0.34,
+      "long_term": 0.32
+    },
+    "prior": {
+      "base_rate": {
+        "short_term": 0.47,
+        "medium_term": 0.44,
+        "long_term": 0.42
+      },
+      "requested_shift": -0.1,
+      "applied_shift": -0.1,
+      "cap": 0.15,
+      "shift_reasons": [
+        "scenario: stock trades at a 27% P/E premium to peers with decelerating guided growth."
+      ]
+    },
+    "scores": {
+      "short_term": 3,
+      "medium_term": 3,
+      "long_term": 4
+    },
+    "consistency": {
+      "ok": true,
+      "issues": []
+    }
+  },
+  "verification": {
+    "schema_version": "2.0.0",
+    "passed": true,
+    "issues": [
+      {
+        "issue_type": "recompute_mismatch",
+        "severity": "warn",
+        "path": "sections.earnings_quality",
+        "message": "Mock warning: EPS-growth attribution was rounded by the agent rather than recomputed by calc/.",
+        "claim_id": "claim:financial:buyback-eps",
+        "expected": "2.44 points of the 24.37% EPS growth",
+        "actual": "about 2.4 points",
+        "checked_by_llm": false
+      }
+    ],
+    "claims_checked": 16,
+    "claims_verified": 16,
+    "claims_unverified": 0,
+    "llm_checks_run": 4,
+    "retries_issued": []
+  },
+  "data_quality": {
+    "overall": "ok",
+    "gaps": []
+  },
+  "redacted": false
+}

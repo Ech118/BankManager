@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bankmanager.local/schema/filing.json",
+  "title": "Filing",
+  "description": "GENERATED from schema/contracts/filings.py. One SEC submission.",
+  "$defs": {
+    "FilingType": {
+      "enum": [
+        "10-K",
+        "10-Q",
+        "8-K"
+      ],
+      "title": "FilingType",
+      "type": "string"
+    }
+  },
+  "additionalProperties": true,
+  "properties": {
+    "accession": {
+      "description": "SEC accession number, dashed form.",
+      "minLength": 1,
+      "title": "Accession",
+      "type": "string"
+    },
+    "company_id": {
+      "pattern": "^[A-Z]{1,5}([.-][A-Z])?$",
+      "title": "Company Id",
+      "type": "string"
+    },
+    "cik": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cik"
+    },
+    "form": {
+      "$ref": "#/$defs/FilingType"
+    },
+    "fiscal_period": {
+      "pattern": "^(FY\\d{4}|Q[1-4]-\\d{4})$",
+      "title": "Fiscal Period",
+      "type": "string"
+    },
+    "period_end": {
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "title": "Period End",
+      "type": "string"
+    },
+    "filed_at": {
+      "description": "Filing date. A run with as_of=D must not see filings after D.",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "title": "Filed At",
+      "type": "string"
+    },
+    "retrieved_at": {
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+      "title": "Retrieved At",
+      "type": "string"
+    },
+    "source_url": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Source Url"
+    },
+    "section_ids": {
+      "description": "Sections parsed out of this filing.",
+      "items": {
+        "pattern": "^sec:[A-Za-z0-9._:-]+$",
+        "type": "string"
+      },
+      "title": "Section Ids",
+      "type": "array"
+    }
+  },
+  "required": [
+    "accession",
+    "company_id",
+    "form",
+    "fiscal_period",
+    "period_end",
+    "filed_at",
+    "retrieved_at"
+  ],
+  "type": "object"
+}

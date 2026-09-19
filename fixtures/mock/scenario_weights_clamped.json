@@ -1,0 +1,42 @@
+{
+  "bear": 0.45,
+  "base": 0.35,
+  "bull": 0.2,
+  "clamps": [
+    {
+      "scenario": "bear",
+      "requested": 0.55,
+      "clamped_to": 0.45,
+      "applied": 0.45,
+      "default_weight": 0.3,
+      "band": 0.15,
+      "was_clamped": true,
+      "was_renormalized": false,
+      "reason": "Competitor bundling is already visible in the mid-market risk disclosure."
+    },
+    {
+      "scenario": "base",
+      "requested": 0.3,
+      "clamped_to": 0.35,
+      "applied": 0.35,
+      "default_weight": 0.5,
+      "band": 0.15,
+      "was_clamped": true,
+      "was_renormalized": false,
+      "reason": "Management guidance has been met in each of the last three years."
+    },
+    {
+      "scenario": "bull",
+      "requested": 0.15,
+      "clamped_to": 0.15,
+      "applied": 0.2,
+      "default_weight": 0.2,
+      "band": 0.15,
+      "was_clamped": false,
+      "was_renormalized": true,
+      "reason": "Software mix shift would have to accelerate beyond the guided range."
+    }
+  ],
+  "any_clamped": true,
+  "renormalized": true
+}

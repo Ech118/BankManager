@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bankmanager.local/schema/company_profile.json",
+  "title": "Company profile",
+  "description": "GENERATED from schema/contracts/market.py. Identity and SIC classification.",
+  "additionalProperties": true,
+  "properties": {
+    "ticker": {
+      "pattern": "^[A-Z]{1,5}([.-][A-Z])?$",
+      "title": "Ticker",
+      "type": "string"
+    },
+    "company_name": {
+      "minLength": 1,
+      "title": "Company Name",
+      "type": "string"
+    },
+    "cik": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cik"
+    },
+    "sic": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "SEC SIC code; 6xxx implies financials.",
+      "title": "Sic"
+    },
+    "sic_description": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Sic Description"
+    },
+    "exchange": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Exchange"
+    },
+    "fiscal_year_end": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "MM-DD, e.g. \"12-31\". Drives Q4 derivation.",
+      "title": "Fiscal Year End"
+    },
+    "as_of": {
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "title": "As Of",
+      "type": "string"
+    },
+    "retrieved_at": {
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+      "title": "Retrieved At",
+      "type": "string"
+    },
+    "source_id": {
+      "pattern": "^src:[a-z0-9_]+:[A-Za-z0-9._:-]+$",
+      "title": "Source Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "ticker",
+    "company_name",
+    "as_of",
+    "retrieved_at",
+    "source_id"
+  ],
+  "type": "object"
+}

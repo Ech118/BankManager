@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "2.0.0",
   "ticker": "ACME",
   "as_of": "2026-09-19",
   "latest_annual_period": "FY2025",
@@ -417,6 +417,11 @@
     {
       "flag": "buyback_flatters_eps",
       "detail": "Diluted share count fell 2.4%, adding roughly 2.4 points to the 24.4% EPS growth.",
+      "severity": "low"
+    },
+    {
+      "flag": "restated_prior_period",
+      "detail": "FY2024 operating cash flow was restated from $690M to $700M by the FY2025 10-K.",
       "severity": "low"
     }
   ],

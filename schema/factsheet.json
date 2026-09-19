@@ -2,168 +2,909 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://bankmanager.local/schema/factsheet.json",
   "title": "Fact sheet",
-  "description": "FROZEN CONTRACT. PRODUCED BY P1 (data.api.build_factsheet). CONSUMED BY P2 and P3. Contains REPORTED facts only: P1 never computes margins, FCF or ratios. Filing TEXT is not inlined; fetch with data.api.get_section_text(source_id).",
-  "type": "object",
-  "required": [
-    "schema_version", "ticker", "company_name", "as_of", "built_at", "mode",
-    "scope", "data_quality", "market", "financials", "peers", "sp500_baseline",
-    "filing_sections", "news", "sources"
-  ],
-  "properties": {
-    "schema_version": { "$ref": "common.json#/$defs/schema_version" },
-    "ticker": { "$ref": "common.json#/$defs/ticker" },
-    "company_name": { "type": "string", "minLength": 1 },
-    "as_of": { "$ref": "common.json#/$defs/date" },
-    "built_at": { "$ref": "common.json#/$defs/timestamp" },
-    "mode": { "enum": ["live", "mock", "backtest"] },
-    "scope": {
-      "type": "object",
-      "required": ["in_scope", "reason"],
+  "description": "GENERATED from schema/contracts/factsheet.py. PRODUCED BY P1 (data.api.build_factsheet). Reported values only.",
+  "$defs": {
+    "Consensus": {
+      "additionalProperties": true,
+      "description": "Sell-side forecasts. Always type 'estimate', never 'fact'.",
       "properties": {
-        "in_scope": { "type": "boolean" },
-        "reason": { "type": ["string", "null"] }
-      }
+        "revenue_next_fy": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ValueObject"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "eps_next_fy": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ValueObject"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "Consensus",
+      "type": "object"
     },
-    "data_quality": { "$ref": "common.json#/$defs/data_quality" },
-    "market": {
-      "type": "object",
-      "required": ["price", "market_cap", "shares_outstanding", "enterprise_value"],
+    "DataQuality": {
+      "additionalProperties": true,
+      "description": "Run-level data health, surfaced as a banner in the report (error E).",
       "properties": {
-        "price": { "$ref": "common.json#/$defs/value" },
-        "market_cap": { "$ref": "common.json#/$defs/value" },
-        "shares_outstanding": { "$ref": "common.json#/$defs/value" },
-        "enterprise_value": { "$ref": "common.json#/$defs/value" }
-      }
+        "overall": {
+          "description": "ok | partial | degraded",
+          "title": "Overall",
+          "type": "string"
+        },
+        "gaps": {
+          "description": "Human-readable description of each gap.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Gaps",
+          "type": "array"
+        }
+      },
+      "required": [
+        "overall"
+      ],
+      "title": "DataQuality",
+      "type": "object"
+    },
+    "FilingSection": {
+      "additionalProperties": true,
+      "description": "One structural chunk of a filing: an Item, or a note within the financials.\n\n`text` is plain text with HTML stripped, returned as filed. Agents receive it\nwrapped as DATA - never as instructions (prompt-injection rule, ADR 0005).",
+      "properties": {
+        "section_id": {
+          "description": "Repository key, e.g. sec:<accession>:mdna.",
+          "pattern": "^sec:[A-Za-z0-9._:-]+$",
+          "title": "Section Id",
+          "type": "string"
+        },
+        "source_id": {
+          "description": "Citation key used by Evidence, e.g. src:edgar:<accession>:mdna. Evidence cites this; the repository is keyed on section_id.",
+          "pattern": "^src:[a-z0-9_]+:[A-Za-z0-9._:-]+$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "accession": {
+          "minLength": 1,
+          "title": "Accession",
+          "type": "string"
+        },
+        "company_id": {
+          "pattern": "^[A-Z]{1,5}([.-][A-Z])?$",
+          "title": "Company Id",
+          "type": "string"
+        },
+        "form": {
+          "$ref": "#/$defs/FilingType"
+        },
+        "fiscal_period": {
+          "pattern": "^(FY\\d{4}|Q[1-4]-\\d{4})$",
+          "title": "Fiscal Period",
+          "type": "string"
+        },
+        "filed_at": {
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "title": "Filed At",
+          "type": "string"
+        },
+        "item": {
+          "$ref": "#/$defs/ItemCode",
+          "description": "Canonical section name, not the filer's heading."
+        },
+        "heading_path": {
+          "description": "Headings from document root down, e.g. [\"Part I\", \"Item 1. Business\"].",
+          "items": {
+            "type": "string"
+          },
+          "title": "Heading Path",
+          "type": "array"
+        },
+        "char_start": {
+          "description": "Offset into the source document.",
+          "minimum": 0,
+          "title": "Char Start",
+          "type": "integer"
+        },
+        "char_end": {
+          "minimum": 0,
+          "title": "Char End",
+          "type": "integer"
+        },
+        "char_count": {
+          "minimum": 0,
+          "title": "Char Count",
+          "type": "integer"
+        },
+        "text": {
+          "default": "",
+          "description": "Verbatim plain text. Never summarised.",
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "section_id",
+        "source_id",
+        "accession",
+        "company_id",
+        "form",
+        "fiscal_period",
+        "filed_at",
+        "item",
+        "char_start",
+        "char_end",
+        "char_count"
+      ],
+      "title": "FilingSection",
+      "type": "object"
+    },
+    "FilingType": {
+      "enum": [
+        "10-K",
+        "10-Q",
+        "8-K"
+      ],
+      "title": "FilingType",
+      "type": "string"
+    },
+    "FinancialPeriod": {
+      "additionalProperties": true,
+      "description": "One reported fiscal period. Every line item is as-filed, never computed.\n\nSign conventions (CLAUDE.md): capex is POSITIVE meaning cash spent;\nFCF = op_cash_flow - capex is calc/'s job, not this model's.",
+      "properties": {
+        "period": {
+          "pattern": "^(FY\\d{4}|Q[1-4]-\\d{4})$",
+          "title": "Period",
+          "type": "string"
+        },
+        "period_end": {
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "title": "Period End",
+          "type": "string"
+        },
+        "form": {
+          "$ref": "#/$defs/FilingType"
+        },
+        "filed_date": {
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "title": "Filed Date",
+          "type": "string"
+        },
+        "accession": {
+          "title": "Accession",
+          "type": "string"
+        },
+        "revenue": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "cost_of_revenue": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "gross_profit": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "operating_income": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "pretax_income": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "net_income": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "eps_diluted": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "shares_diluted": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "depreciation_amortization": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "op_cash_flow": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "capex": {
+          "$ref": "#/$defs/ValueObject",
+          "description": "POSITIVE number meaning cash spent."
+        },
+        "sbc": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "cash": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "total_debt": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "interest_expense": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "total_assets": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "total_equity": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "current_assets": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "current_liabilities": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "receivables": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "inventory": {
+          "$ref": "#/$defs/ValueObject"
+        }
+      },
+      "required": [
+        "period",
+        "period_end",
+        "form",
+        "filed_date",
+        "accession",
+        "revenue",
+        "cost_of_revenue",
+        "gross_profit",
+        "operating_income",
+        "pretax_income",
+        "net_income",
+        "eps_diluted",
+        "shares_diluted",
+        "depreciation_amortization",
+        "op_cash_flow",
+        "capex",
+        "sbc",
+        "cash",
+        "total_debt",
+        "interest_expense",
+        "total_assets",
+        "total_equity",
+        "current_assets",
+        "current_liabilities",
+        "receivables",
+        "inventory"
+      ],
+      "title": "FinancialPeriod",
+      "type": "object"
+    },
+    "ItemCode": {
+      "description": "Canonical filing sections. Parsed by structure, never chunk-and-embed (ADR 0006).",
+      "enum": [
+        "business",
+        "risk_factors",
+        "mdna",
+        "financial_statements",
+        "debt_note",
+        "sbc_note",
+        "segments_note",
+        "revenue_note",
+        "controls",
+        "other"
+      ],
+      "title": "ItemCode",
+      "type": "string"
+    },
+    "MarketSnapshot": {
+      "additionalProperties": true,
+      "description": "Price, share count and the EV bridge, all observed at one instant.\n\n`enterprise_value` is a derived convenience: market_cap + total_debt - cash.\ncalc/ recomputes it and the verifier raises RECOMPUTE_MISMATCH on drift.",
+      "properties": {
+        "ticker": {
+          "pattern": "^[A-Z]{1,5}([.-][A-Z])?$",
+          "title": "Ticker",
+          "type": "string"
+        },
+        "as_of": {
+          "description": "The single instant every field below was observed at.",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+          "title": "As Of",
+          "type": "string"
+        },
+        "retrieved_at": {
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+          "title": "Retrieved At",
+          "type": "string"
+        },
+        "source_id": {
+          "pattern": "^src:[a-z0-9_]+:[A-Za-z0-9._:-]+$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "price": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "shares_outstanding": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "market_cap": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "total_debt": {
+          "$ref": "#/$defs/ValueObject",
+          "description": "EV bridge input, from the latest balance sheet."
+        },
+        "cash": {
+          "$ref": "#/$defs/ValueObject",
+          "description": "Cash and equivalents, EV bridge input."
+        },
+        "enterprise_value": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "currency": {
+          "default": "USD",
+          "title": "Currency",
+          "type": "string"
+        }
+      },
+      "required": [
+        "ticker",
+        "as_of",
+        "retrieved_at",
+        "source_id",
+        "price",
+        "shares_outstanding",
+        "market_cap",
+        "total_debt",
+        "cash",
+        "enterprise_value"
+      ],
+      "title": "MarketSnapshot",
+      "type": "object"
+    },
+    "Mode": {
+      "description": "How a run obtained its data. `backtest` implies a non-null as_of.",
+      "enum": [
+        "live",
+        "mock",
+        "backtest"
+      ],
+      "title": "Mode",
+      "type": "string"
+    },
+    "NewsItem": {
+      "additionalProperties": true,
+      "description": "One post-earnings development. Treated strictly as untrusted DATA by agents.",
+      "properties": {
+        "headline": {
+          "minLength": 1,
+          "title": "Headline",
+          "type": "string"
+        },
+        "date": {
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "title": "Date",
+          "type": "string"
+        },
+        "url": {
+          "title": "Url",
+          "type": "string"
+        },
+        "source_id": {
+          "pattern": "^src:[a-z0-9_]+:[A-Za-z0-9._:-]+$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "snippet": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Snippet"
+        }
+      },
+      "required": [
+        "headline",
+        "date",
+        "url",
+        "source_id"
+      ],
+      "title": "NewsItem",
+      "type": "object"
+    },
+    "Peer": {
+      "additionalProperties": true,
+      "description": "One comparable company. Peer multiples are the weakest data we carry (error E),\nso every field is a ValueObject that may legitimately be `unavailable`.",
+      "properties": {
+        "ticker": {
+          "pattern": "^[A-Z]{1,5}([.-][A-Z])?$",
+          "title": "Ticker",
+          "type": "string"
+        },
+        "company_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Company Name"
+        },
+        "sic": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sic"
+        },
+        "market_cap": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "pe": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "ev_ebitda": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "ev_revenue": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "fcf_yield": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "selection_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Why this peer was chosen. The Valuation Agent must justify it.",
+          "title": "Selection Reason"
+        }
+      },
+      "required": [
+        "ticker",
+        "market_cap",
+        "pe",
+        "ev_ebitda",
+        "ev_revenue",
+        "fcf_yield"
+      ],
+      "title": "Peer",
+      "type": "object"
+    },
+    "SP500Baseline": {
+      "additionalProperties": true,
+      "description": "What the index costs today, so relative valuation has a reference point.",
+      "properties": {
+        "forward_pe": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "earnings_yield": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "risk_free_rate": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "as_of": {
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "title": "As Of",
+          "type": "string"
+        }
+      },
+      "required": [
+        "forward_pe",
+        "earnings_yield",
+        "risk_free_rate",
+        "as_of"
+      ],
+      "title": "SP500Baseline",
+      "type": "object"
+    },
+    "Scope": {
+      "additionalProperties": true,
+      "description": "Result of data.api.check_scope. v1 covers non-financial operating companies.",
+      "properties": {
+        "in_scope": {
+          "title": "In Scope",
+          "type": "boolean"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Why the ticker was rejected; null when in scope.",
+          "title": "Reason"
+        }
+      },
+      "required": [
+        "in_scope"
+      ],
+      "title": "Scope",
+      "type": "object"
+    },
+    "SourceRef": {
+      "additionalProperties": true,
+      "description": "Registry entry describing where one source_id came from.",
+      "properties": {
+        "kind": {
+          "description": "edgar_xbrl | edgar_text | market | fred | news | config | mock",
+          "title": "Kind",
+          "type": "string"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Url"
+        },
+        "accession": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Accession"
+        },
+        "fetched_at": {
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+          "title": "Fetched At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "fetched_at"
+      ],
+      "title": "SourceRef",
+      "type": "object"
+    },
+    "Unit": {
+      "description": "Unit of a ValueObject. `fraction` is never a percent (0.25 means 25%).",
+      "enum": [
+        "usd",
+        "usd_per_share",
+        "shares",
+        "fraction",
+        "multiple",
+        "count",
+        "days",
+        "ratio"
+      ],
+      "title": "Unit",
+      "type": "string"
+    },
+    "ValueObject": {
+      "additionalProperties": true,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "ok"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "value"
+            ]
+          },
+          "title": "status ok requires a numeric value"
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "ok"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "anyOf": [
+              {
+                "properties": {
+                  "source_id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "source_id"
+                ]
+              },
+              {
+                "properties": {
+                  "derived_from": {
+                    "minItems": 1,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "derived_from"
+                ]
+              }
+            ]
+          },
+          "title": "status ok requires a source_id or a non-empty derived_from"
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "unavailable"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          },
+          "title": "status unavailable requires a null value"
+        },
+        {
+          "if": {
+            "properties": {
+              "unit": {
+                "const": "fraction"
+              }
+            },
+            "required": [
+              "unit"
+            ]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "anyOf": [
+                  {
+                    "maximum": 10.0,
+                    "minimum": -10.0,
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          "title": "fractions are fractions, not percents"
+        }
+      ],
+      "description": "Every reported or computed financial number in the system.\n\nFractions, not percents. Money in full USD. Missing data is\n{\"value\": null, \"status\": \"unavailable\"} - never 0, never \"N/A\", never an\nomitted key.\n\nA value computed in code from facts has type \"fact\" and lists `derived_from`.\nDiscount rate, terminal growth and exit multiples are \"assumption\".\nConsensus numbers and scenario outputs are \"estimate\".",
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "The number in full units, or null when status is unavailable.",
+          "title": "Value"
+        },
+        "unit": {
+          "$ref": "#/$defs/Unit"
+        },
+        "type": {
+          "$ref": "#/$defs/ValueType"
+        },
+        "status": {
+          "$ref": "#/$defs/ValueStatus"
+        },
+        "source_id": {
+          "anyOf": [
+            {
+              "pattern": "^src:[a-z0-9_]+:[A-Za-z0-9._:-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Where the number came from. Required unless derived_from is set.",
+          "title": "Source Id"
+        },
+        "derived_from": {
+          "description": "Dotted paths or fact_ids this value was computed from.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Derived From",
+          "type": "array"
+        }
+      },
+      "required": [
+        "value",
+        "unit",
+        "type",
+        "status"
+      ],
+      "title": "ValueObject",
+      "type": "object"
+    },
+    "ValueStatus": {
+      "description": "`unavailable` is the ONLY way to express missing data. Never 0, never \"N/A\".",
+      "enum": [
+        "ok",
+        "unavailable"
+      ],
+      "title": "ValueStatus",
+      "type": "string"
+    },
+    "ValueType": {
+      "description": "Epistemic status of a number, rendered as a colour in the report.\n\nfact       reported in a filing, or computed in code from reported values\nestimate   a forecast: consensus, or a scenario output\nassumption a chosen constant: discount rate, terminal growth, exit multiple",
+      "enum": [
+        "fact",
+        "estimate",
+        "assumption"
+      ],
+      "title": "ValueType",
+      "type": "string"
+    }
+  },
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "ticker": {
+      "pattern": "^[A-Z]{1,5}([.-][A-Z])?$",
+      "title": "Ticker",
+      "type": "string"
+    },
+    "company_name": {
+      "minLength": 1,
+      "title": "Company Name",
+      "type": "string"
+    },
+    "as_of": {
+      "description": "AUTHORITATIVE for the run. Functions taking a factsheet must not also take an as_of (decision: amendment 2).",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "title": "As Of",
+      "type": "string"
+    },
+    "built_at": {
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+      "title": "Built At",
+      "type": "string"
+    },
+    "mode": {
+      "$ref": "#/$defs/Mode"
+    },
+    "scope": {
+      "$ref": "#/$defs/Scope"
+    },
+    "data_quality": {
+      "$ref": "#/$defs/DataQuality"
+    },
+    "market": {
+      "$ref": "#/$defs/MarketSnapshot"
     },
     "financials": {
       "description": "One entry per period, NEWEST FIRST.",
-      "type": "array",
+      "items": {
+        "$ref": "#/$defs/FinancialPeriod"
+      },
       "minItems": 1,
-      "items": { "$ref": "#/$defs/financial_period" }
+      "title": "Financials",
+      "type": "array"
     },
     "peers": {
-      "type": "array",
       "items": {
-        "type": "object",
-        "required": ["ticker", "market_cap", "pe", "ev_ebitda", "ev_revenue", "fcf_yield"],
-        "properties": {
-          "ticker": { "$ref": "common.json#/$defs/ticker" },
-          "market_cap": { "$ref": "common.json#/$defs/value" },
-          "pe": { "$ref": "common.json#/$defs/value" },
-          "ev_ebitda": { "$ref": "common.json#/$defs/value" },
-          "ev_revenue": { "$ref": "common.json#/$defs/value" },
-          "fcf_yield": { "$ref": "common.json#/$defs/value" }
-        }
-      }
+        "$ref": "#/$defs/Peer"
+      },
+      "title": "Peers",
+      "type": "array"
     },
     "sp500_baseline": {
-      "type": "object",
-      "required": ["forward_pe", "earnings_yield", "risk_free_rate", "as_of"],
-      "properties": {
-        "forward_pe": { "$ref": "common.json#/$defs/value" },
-        "earnings_yield": { "$ref": "common.json#/$defs/value" },
-        "risk_free_rate": { "$ref": "common.json#/$defs/value" },
-        "as_of": { "$ref": "common.json#/$defs/date" }
-      }
+      "$ref": "#/$defs/SP500Baseline"
     },
     "consensus": {
-      "description": "Optional. Values are type 'estimate'.",
-      "type": "object",
-      "properties": {
-        "revenue_next_fy": { "$ref": "common.json#/$defs/value" },
-        "eps_next_fy": { "$ref": "common.json#/$defs/value" }
-      }
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Consensus"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
     },
     "filing_sections": {
-      "type": "array",
+      "description": "Section metadata only. Text is fetched by section_id.",
       "items": {
-        "type": "object",
-        "required": ["name", "source_id", "accession", "form", "char_count"],
-        "properties": {
-          "name": {
-            "description": "Canonical section name.",
-            "enum": ["business", "risk_factors", "mdna", "debt_note", "sbc_note", "segments_note", "other"]
-          },
-          "source_id": { "$ref": "common.json#/$defs/source_id" },
-          "accession": { "type": "string" },
-          "form": { "enum": ["10-K", "10-Q"] },
-          "period": { "$ref": "common.json#/$defs/period" },
-          "char_count": { "type": "integer", "minimum": 0 }
-        }
-      }
+        "$ref": "#/$defs/FilingSection"
+      },
+      "title": "Filing Sections",
+      "type": "array"
     },
     "news": {
-      "type": "array",
       "items": {
-        "type": "object",
-        "required": ["headline", "date", "url", "source_id"],
-        "properties": {
-          "headline": { "type": "string" },
-          "date": { "$ref": "common.json#/$defs/date" },
-          "url": { "type": "string" },
-          "source_id": { "$ref": "common.json#/$defs/source_id" }
-        }
-      }
+        "$ref": "#/$defs/NewsItem"
+      },
+      "title": "News",
+      "type": "array"
     },
     "sources": {
-      "description": "Registry of every source_id used in this fact sheet.",
-      "type": "object",
-      "propertyNames": { "$ref": "common.json#/$defs/source_id" },
-      "additionalProperties": {
-        "type": "object",
-        "required": ["kind", "fetched_at"],
-        "properties": {
-          "kind": { "enum": ["edgar_xbrl", "edgar_text", "market", "fred", "news", "config", "mock"] },
-          "url": { "type": ["string", "null"] },
-          "accession": { "type": ["string", "null"] },
-          "fetched_at": { "$ref": "common.json#/$defs/timestamp" }
+      "description": "Registry of every source_id used anywhere in this fact sheet.",
+      "patternProperties": {
+        "^src:[a-z0-9_]+:[A-Za-z0-9._:-]+$": {
+          "$ref": "#/$defs/SourceRef"
         }
-      }
+      },
+      "title": "Sources",
+      "type": "object"
     }
   },
-  "$defs": {
-    "financial_period": {
-      "type": "object",
-      "required": [
-        "period", "period_end", "form", "filed_date", "accession",
-        "revenue", "cost_of_revenue", "gross_profit", "operating_income",
-        "pretax_income", "net_income", "eps_diluted", "shares_diluted",
-        "depreciation_amortization", "op_cash_flow", "capex", "sbc",
-        "cash", "total_debt", "interest_expense", "total_assets",
-        "total_equity", "current_assets", "current_liabilities",
-        "receivables", "inventory"
-      ],
-      "properties": {
-        "period": { "$ref": "common.json#/$defs/period" },
-        "period_end": { "$ref": "common.json#/$defs/date" },
-        "form": { "enum": ["10-K", "10-Q"] },
-        "filed_date": { "$ref": "common.json#/$defs/date" },
-        "accession": { "type": "string" },
-        "revenue": { "$ref": "common.json#/$defs/value" },
-        "cost_of_revenue": { "$ref": "common.json#/$defs/value" },
-        "gross_profit": { "$ref": "common.json#/$defs/value" },
-        "operating_income": { "$ref": "common.json#/$defs/value" },
-        "pretax_income": { "$ref": "common.json#/$defs/value" },
-        "net_income": { "$ref": "common.json#/$defs/value" },
-        "eps_diluted": { "$ref": "common.json#/$defs/value" },
-        "shares_diluted": { "$ref": "common.json#/$defs/value" },
-        "depreciation_amortization": { "$ref": "common.json#/$defs/value" },
-        "op_cash_flow": { "$ref": "common.json#/$defs/value" },
-        "capex": {
-          "description": "POSITIVE number meaning cash spent.",
-          "$ref": "common.json#/$defs/value"
-        },
-        "sbc": { "$ref": "common.json#/$defs/value" },
-        "cash": { "$ref": "common.json#/$defs/value" },
-        "total_debt": { "$ref": "common.json#/$defs/value" },
-        "interest_expense": { "$ref": "common.json#/$defs/value" },
-        "total_assets": { "$ref": "common.json#/$defs/value" },
-        "total_equity": { "$ref": "common.json#/$defs/value" },
-        "current_assets": { "$ref": "common.json#/$defs/value" },
-        "current_liabilities": { "$ref": "common.json#/$defs/value" },
-        "receivables": { "$ref": "common.json#/$defs/value" },
-        "inventory": { "$ref": "common.json#/$defs/value" }
-      }
-    }
-  }
+  "required": [
+    "schema_version",
+    "ticker",
+    "company_name",
+    "as_of",
+    "built_at",
+    "mode",
+    "scope",
+    "data_quality",
+    "market",
+    "financials",
+    "sp500_baseline",
+    "sources"
+  ],
+  "type": "object"
 }

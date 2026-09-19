@@ -1,0 +1,12 @@
+{
+  "ticker": "ACME",
+  "company_name": "Acme Corporation (fictional mock)",
+  "cik": "0001234567",
+  "sic": "3823",
+  "sic_description": "Industrial instruments for measurement and control (fictional)",
+  "exchange": "MOCK",
+  "fiscal_year_end": "12-31",
+  "as_of": "2026-09-19",
+  "retrieved_at": "2026-09-19T12:00:00Z",
+  "source_id": "src:market:profile"
+}

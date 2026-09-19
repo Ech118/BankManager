@@ -1,24 +1,250 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://bankmanager.local/schema/audit.json",
-  "title": "Audit report",
-  "description": "FROZEN CONTRACT. PRODUCED BY P2 (audit.api.run_audit). passed is false if ANY issue has severity 'error'.",
-  "type": "object",
-  "required": ["schema_version", "passed", "issues"],
-  "properties": {
-    "schema_version": { "$ref": "common.json#/$defs/schema_version" },
-    "passed": { "type": "boolean" },
-    "issues": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["severity", "path", "message"],
-        "properties": {
-          "severity": { "enum": ["error", "warn"] },
-          "path": { "description": "Dotted path into the audited artifact.", "type": "string" },
-          "message": { "type": "string" }
+  "title": "Verification result",
+  "description": "GENERATED from schema/contracts/verification.py. PRODUCED BY P2 (audit.api.run_audit).",
+  "$defs": {
+    "AgentName": {
+      "description": "The P3 agent roster (docs/pipeline.md).\n\nfinancial and business run in parallel; valuation, then scenario, then\nred_team, then synthesizer. `verifier` is the LLM half of audit/.",
+      "enum": [
+        "financial",
+        "business",
+        "valuation",
+        "scenario",
+        "red_team",
+        "synthesizer",
+        "verifier"
+      ],
+      "title": "AgentName",
+      "type": "string"
+    },
+    "IssueType": {
+      "description": "Every check the verifier can raise. Routing table: docs/verification.md.\n\nunresolved_fact            a cited fact_id does not exist\nrecompute_mismatch         a number does not match recomputation from its inputs\nprose_number_mismatch      a number in claim text disagrees with its ValueObject\nsuperseded_fact            a cited fact has a non-null superseded_by\nfuture_fact                a cited fact was filed after the run's as_of\nadjusted_as_gaap           a non-GAAP figure is presented as GAAP\nunsupported_claim          a qualitative claim's quote is not in the cited section\ncross_agent_contradiction  two sections assert incompatible things",
+      "enum": [
+        "unresolved_fact",
+        "recompute_mismatch",
+        "prose_number_mismatch",
+        "superseded_fact",
+        "future_fact",
+        "adjusted_as_gaap",
+        "unsupported_claim",
+        "cross_agent_contradiction"
+      ],
+      "title": "IssueType",
+      "type": "string"
+    },
+    "RetryDirective": {
+      "additionalProperties": true,
+      "description": "An instruction to re-run ONE agent for ONE section, with the reasons.\n\nTargeted, not a whole-pipeline rerun: re-running everything would re-roll\nagents that already passed and would make cost unpredictable (error K).",
+      "properties": {
+        "target_agent": {
+          "$ref": "#/$defs/AgentName"
+        },
+        "section_key": {
+          "description": "The section to redo.",
+          "minLength": 1,
+          "title": "Section Key",
+          "type": "string"
+        },
+        "issues": {
+          "description": "Why. Passed back into the agent's prompt.",
+          "items": {
+            "$ref": "#/$defs/VerificationIssue"
+          },
+          "minItems": 1,
+          "title": "Issues",
+          "type": "array"
+        },
+        "attempt": {
+          "description": "1-based attempt number.",
+          "minimum": 1,
+          "title": "Attempt",
+          "type": "integer"
+        },
+        "max_attempts": {
+          "default": 2,
+          "minimum": 1,
+          "title": "Max Attempts",
+          "type": "integer"
         }
-      }
+      },
+      "required": [
+        "target_agent",
+        "section_key",
+        "issues",
+        "attempt"
+      ],
+      "title": "RetryDirective",
+      "type": "object"
+    },
+    "Severity": {
+      "description": "Verification issue severity. A single `error` fails the whole audit.",
+      "enum": [
+        "error",
+        "warn"
+      ],
+      "title": "Severity",
+      "type": "string"
+    },
+    "VerificationIssue": {
+      "additionalProperties": true,
+      "description": "One failed check, with enough detail to route a retry and to show the reader.",
+      "properties": {
+        "issue_type": {
+          "$ref": "#/$defs/IssueType"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "path": {
+          "description": "Dotted path into the audited object, e.g. sections.valuation.",
+          "minLength": 1,
+          "title": "Path",
+          "type": "string"
+        },
+        "message": {
+          "description": "What is wrong, in one sentence.",
+          "minLength": 1,
+          "title": "Message",
+          "type": "string"
+        },
+        "claim_id": {
+          "anyOf": [
+            {
+              "pattern": "^claim:[A-Za-z0-9._:-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Claim Id"
+        },
+        "fact_id": {
+          "anyOf": [
+            {
+              "pattern": "^fact:[A-Za-z0-9._:-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fact Id"
+        },
+        "section_id": {
+          "anyOf": [
+            {
+              "pattern": "^sec:[A-Za-z0-9._:-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Section Id"
+        },
+        "expected": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "What the check computed.",
+          "title": "Expected"
+        },
+        "actual": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "What the claim asserted.",
+          "title": "Actual"
+        },
+        "checked_by_llm": {
+          "default": false,
+          "description": "True only for the qualitative-claim check.",
+          "title": "Checked By Llm",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "issue_type",
+        "severity",
+        "path",
+        "message"
+      ],
+      "title": "VerificationIssue",
+      "type": "object"
     }
-  }
+  },
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "passed": {
+      "title": "Passed",
+      "type": "boolean"
+    },
+    "issues": {
+      "items": {
+        "$ref": "#/$defs/VerificationIssue"
+      },
+      "title": "Issues",
+      "type": "array"
+    },
+    "claims_checked": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Claims Checked",
+      "type": "integer"
+    },
+    "claims_verified": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Claims Verified",
+      "type": "integer"
+    },
+    "claims_unverified": {
+      "default": 0,
+      "description": "Shipped marked unverified after the retry cap.",
+      "minimum": 0,
+      "title": "Claims Unverified",
+      "type": "integer"
+    },
+    "llm_checks_run": {
+      "default": 0,
+      "description": "Cost tracking; keep this number small.",
+      "minimum": 0,
+      "title": "Llm Checks Run",
+      "type": "integer"
+    },
+    "retries_issued": {
+      "items": {
+        "$ref": "#/$defs/RetryDirective"
+      },
+      "title": "Retries Issued",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "passed"
+  ],
+  "type": "object"
 }

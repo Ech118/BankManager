@@ -1,0 +1,8 @@
+# P3 (agents/, prompts/, orchestrator/, web/) Python dependencies.
+-r ../schema/contracts/requirements.txt
+
+anthropic>=0.40   # Claude, for every agent
+mcp>=1.2          # MCP client: in-memory transport for mock, stdio for live
+fastapi>=0.115    # orchestrator/server.py
+uvicorn>=0.32     # ASGI server
+sse-starlette>=2.1  # per-agent progress events for the UI lanes

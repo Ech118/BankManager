@@ -1,10 +1,11 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "2.0.0",
   "ticker": "ACME",
   "as_of": "2026-09-19",
   "scenarios": {
     "bear": {
       "probability": 0.3,
+      "probability_rationale": "Competitor bundling is already visible in the mid-market risk disclosure.",
       "horizon_years": 5,
       "revenue_cagr": {
         "value": 0.03,
@@ -49,6 +50,7 @@
     },
     "base": {
       "probability": 0.5,
+      "probability_rationale": "Management guidance has been met in each of the last three years.",
       "horizon_years": 5,
       "revenue_cagr": {
         "value": 0.08,
@@ -93,6 +95,7 @@
     },
     "bull": {
       "probability": 0.2,
+      "probability_rationale": "Software mix shift would have to accelerate beyond the guided range.",
       "horizon_years": 5,
       "revenue_cagr": {
         "value": 0.12,
@@ -138,6 +141,7 @@
   },
   "prior_shift": {
     "value": -0.1,
-    "reason": "Stock trades at a 27% P/E premium to peers with decelerating guided growth."
+    "reason": "Stock trades at a 27% P/E premium to peers with decelerating guided growth.",
+    "source": "scenario"
   }
 }

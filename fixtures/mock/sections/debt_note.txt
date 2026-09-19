@@ -1,0 +1,10 @@
+ACME CORPORATION (FICTIONAL MOCK COMPANY - NOT REAL DATA)
+FORM 10-K, FISCAL YEAR 2025 - NOTES TO THE FINANCIAL STATEMENTS - NOTE 9. DEBT
+
+Total debt outstanding was $1.2 billion at December 31, 2025, consisting of $400 million of 4.25% senior notes due fiscal 2027, $500 million of 5.00% senior notes due fiscal 2030, and $300 million drawn on our revolving credit facility.
+
+Interest expense was $60 million in fiscal 2025 compared with $65 million in fiscal 2024. The weighted average interest rate on total debt was 4.9%.
+
+Our revolving credit facility contains a covenant requiring net debt to adjusted EBITDA below 3.5 times. At December 31, 2025 our ratio under that covenant was 0.2 times, and we were in compliance with all covenants.
+
+We expect to refinance the fiscal 2027 maturity in the ordinary course. A one percentage point increase in our refinancing rate would raise annual interest expense by approximately $4 million.

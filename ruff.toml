@@ -1,0 +1,58 @@
+# FROZEN (Step 0). Shared lint config, changed only by the coordinator.
+#
+# A root ruff.toml rather than a pyproject.toml: a root pyproject would become a
+# shared dependency manifest, which is exactly the file three people editing in
+# parallel would collide on. Dependencies stay per-partition
+# (data/requirements.txt, calc/requirements.txt, agents/requirements.txt,
+# schema/contracts/requirements.txt).
+
+line-length = 100
+target-version = "py311"
+
+exclude = [
+    "archive",
+    ".venv",
+    "web",
+]
+
+[lint]
+select = [
+    "E",    # pycodestyle errors
+    "F",    # pyflakes
+    "I",    # import sorting
+    "UP",   # pyupgrade
+    "B",    # bugbear
+    "C4",   # comprehensions
+]
+
+ignore = [
+    "E501",  # line length: enforced by the formatter, not the linter
+    "B008",  # function call in default argument: pydantic Field() needs it
+]
+
+[lint.per-file-ignores]
+# Contract modules re-export names for convenience; unused imports are the point.
+"schema/contracts/__init__.py" = ["F401"]
+# Test placeholders are empty bodies with docstrings, and fixtures shadow names.
+"**/test_placeholders.py" = ["D"]
+# The fixture generator uses short local names (v, p, d) for readability in
+# dense numeric code, and dict(key=value) for the period tables - quoting 20
+# keys per period would bury the numbers a human has to hand-check.
+"scripts/gen_mock_fixtures.py" = ["E741", "C408"]
+
+[lint.isort]
+known-first-party = [
+    "schema",
+    "data",
+    "mcp_server",
+    "calc",
+    "audit",
+    "backtest",
+    "predictions",
+    "agents",
+    "orchestrator",
+]
+
+[format]
+quote-style = "double"
+indent-style = "space"

@@ -1,0 +1,59 @@
+# Code owners.
+#
+# Replace the placeholders with real GitHub handles once the team is set up:
+#   P1_OWNER  Data & MCP
+#   P2_OWNER  Calc, audit & eval
+#   P3_OWNER  Agents, orchestrator & web (default coordinator)
+#
+# Last match wins, so the shared-contract rules sit at the bottom.
+
+# --- P1: Data & MCP ------------------------------------------------------
+/data/              @P1_OWNER
+/mcp_server/        @P1_OWNER
+/fixtures/real/     @P1_OWNER
+/docs/p1/           @P1_OWNER
+
+# --- P2: Calc, audit & eval ---------------------------------------------
+/calc/              @P2_OWNER
+/audit/             @P2_OWNER
+/backtest/          @P2_OWNER
+/predictions/       @P2_OWNER
+/docs/p2/           @P2_OWNER
+
+# --- P3: Agents, orchestrator & web -------------------------------------
+/agents/            @P3_OWNER
+/prompts/           @P3_OWNER
+/orchestrator/      @P3_OWNER
+/web/               @P3_OWNER
+/tests/e2e/         @P3_OWNER
+/docs/p3/           @P3_OWNER
+
+# --- Shared: ALL THREE must approve --------------------------------------
+# Changing any of these changes everyone's world. See CONTRIBUTING.md
+# "Contract change process".
+/schema/            @P1_OWNER @P2_OWNER @P3_OWNER
+/fixtures/mock/     @P1_OWNER @P2_OWNER @P3_OWNER
+/tests/contracts/   @P1_OWNER @P2_OWNER @P3_OWNER
+/scripts/           @P1_OWNER @P2_OWNER @P3_OWNER
+/docs/adr/          @P1_OWNER @P2_OWNER @P3_OWNER
+
+# The api.py files are the cross-partition interfaces. The owning partition
+# writes the implementation; all three approve a signature change.
+/data/api.py          @P1_OWNER @P2_OWNER @P3_OWNER
+/calc/api.py          @P1_OWNER @P2_OWNER @P3_OWNER
+/audit/api.py         @P1_OWNER @P2_OWNER @P3_OWNER
+/orchestrator/api.py  @P1_OWNER @P2_OWNER @P3_OWNER
+
+# The one sanctioned cross-partition import (ADR 0007). P2 reviews it because
+# it calls into calc/; arithmetic appearing here is a defect.
+/mcp_server/tools/calculate_valuation.py  @P1_OWNER @P2_OWNER
+
+# Root config and project-wide docs.
+/Makefile           @P1_OWNER @P2_OWNER @P3_OWNER
+/ruff.toml          @P1_OWNER @P2_OWNER @P3_OWNER
+/.env.example       @P1_OWNER @P2_OWNER @P3_OWNER
+/.gitignore         @P1_OWNER @P2_OWNER @P3_OWNER
+/CLAUDE.md          @P1_OWNER @P2_OWNER @P3_OWNER
+/ARCHITECTURE.md    @P1_OWNER @P2_OWNER @P3_OWNER
+/CONTRIBUTING.md    @P1_OWNER @P2_OWNER @P3_OWNER
+/README.md          @P3_OWNER

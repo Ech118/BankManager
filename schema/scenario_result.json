@@ -2,97 +2,610 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://bankmanager.local/schema/scenario_result.json",
   "title": "Scenario result (computed)",
-  "description": "FROZEN CONTRACT. PRODUCED BY P2 (calc.api.evaluate_scenarios + derive_scores). CONSUMED BY P3 Synthesizer and audit. P(beat S&P) comes from a base-rate prior plus a CAPPED shift (error C). Scores come from a fixed rubric.",
-  "type": "object",
-  "required": [
-    "schema_version", "ticker", "as_of", "scenarios", "expected_annualized_return",
-    "sp500_expected_return", "excess_vs_sp500", "p_beat_sp500", "prior", "scores", "consistency"
-  ],
-  "properties": {
-    "schema_version": { "$ref": "common.json#/$defs/schema_version" },
-    "ticker": { "$ref": "common.json#/$defs/ticker" },
-    "as_of": { "$ref": "common.json#/$defs/date" },
-    "scenarios": {
-      "type": "object",
-      "required": ["bear", "base", "bull"],
-      "additionalProperties": false,
+  "description": "GENERATED from schema/contracts/scenario_result.py. PRODUCED BY P2 (calc.api.evaluate_scenarios). Records every weight clamp and the prior cap.",
+  "$defs": {
+    "Consistency": {
+      "additionalProperties": true,
+      "description": "Whether score, P(beat S&P), expected return and verdict agree.",
       "properties": {
-        "bear": { "$ref": "#/$defs/scenario_out" },
-        "base": { "$ref": "#/$defs/scenario_out" },
-        "bull": { "$ref": "#/$defs/scenario_out" }
-      }
+        "ok": {
+          "title": "Ok",
+          "type": "boolean"
+        },
+        "issues": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Issues",
+          "type": "array"
+        }
+      },
+      "required": [
+        "ok"
+      ],
+      "title": "Consistency",
+      "type": "object"
     },
-    "expected_annualized_return": {
-      "description": "Probability-weighted annualized return over the scenario horizon.",
-      "$ref": "common.json#/$defs/value"
-    },
-    "sp500_expected_return": {
-      "description": "Assumed annual S&P 500 return (type 'assumption').",
-      "$ref": "common.json#/$defs/value"
-    },
-    "excess_vs_sp500": {
-      "type": "object",
-      "required": ["1y", "3y", "5y"],
+    "HorizonProbabilities": {
+      "additionalProperties": true,
+      "description": "A bare probability per horizon (documented exception to the ValueObject rule).",
       "properties": {
-        "1y": { "$ref": "common.json#/$defs/value" },
-        "3y": { "$ref": "common.json#/$defs/value" },
-        "5y": { "$ref": "common.json#/$defs/value" }
-      }
+        "short_term": {
+          "description": "0-12m.",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Short Term",
+          "type": "number"
+        },
+        "medium_term": {
+          "description": "1-3y.",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Medium Term",
+          "type": "number"
+        },
+        "long_term": {
+          "description": "3-5y.",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Long Term",
+          "type": "number"
+        }
+      },
+      "required": [
+        "short_term",
+        "medium_term",
+        "long_term"
+      ],
+      "title": "HorizonProbabilities",
+      "type": "object"
     },
-    "p_beat_sp500": {
-      "type": "object",
-      "required": ["1y", "3y", "5y"],
+    "HorizonValues": {
+      "additionalProperties": true,
+      "description": "A ValueObject per horizon. Keys match Scores so returns and scores align.",
       "properties": {
-        "1y": { "$ref": "common.json#/$defs/probability" },
-        "3y": { "$ref": "common.json#/$defs/probability" },
-        "5y": { "$ref": "common.json#/$defs/probability" }
-      }
+        "short_term": {
+          "$ref": "#/$defs/ValueObject",
+          "description": "0-12m."
+        },
+        "medium_term": {
+          "$ref": "#/$defs/ValueObject",
+          "description": "1-3y."
+        },
+        "long_term": {
+          "$ref": "#/$defs/ValueObject",
+          "description": "3-5y."
+        }
+      },
+      "required": [
+        "short_term",
+        "medium_term",
+        "long_term"
+      ],
+      "title": "HorizonValues",
+      "type": "object"
     },
-    "prior": {
-      "type": "object",
-      "required": ["base_rate", "requested_shift", "applied_shift", "cap"],
+    "Prior": {
+      "additionalProperties": true,
+      "description": "The base rate for P(beat S&P), and how far the agents were allowed to move it.\n\nHistorically only about 40-45% of individual stocks beat the index over five\nyears. Starting from that and capping the LLM's tilt is what stops\nP(beat S&P) from being a number the model simply made up (error C).",
       "properties": {
         "base_rate": {
-          "type": "object",
-          "required": ["1y", "3y", "5y"],
-          "properties": {
-            "1y": { "$ref": "common.json#/$defs/probability" },
-            "3y": { "$ref": "common.json#/$defs/probability" },
-            "5y": { "$ref": "common.json#/$defs/probability" }
-          }
+          "$ref": "#/$defs/HorizonProbabilities"
         },
-        "requested_shift": { "type": "number" },
-        "applied_shift": { "type": "number" },
-        "cap": { "type": "number", "minimum": 0, "maximum": 1 }
-      }
+        "requested_shift": {
+          "description": "Sum of every agent's requested shift.",
+          "title": "Requested Shift",
+          "type": "number"
+        },
+        "applied_shift": {
+          "description": "After the cap. |applied| <= cap.",
+          "title": "Applied Shift",
+          "type": "number"
+        },
+        "cap": {
+          "description": "Hard cap from calc/config.py.",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Cap",
+          "type": "number"
+        },
+        "shift_reasons": {
+          "description": "One entry per requesting agent.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Shift Reasons",
+          "type": "array"
+        }
+      },
+      "required": [
+        "base_rate",
+        "requested_shift",
+        "applied_shift",
+        "cap"
+      ],
+      "title": "Prior",
+      "type": "object"
     },
-    "scores": {
-      "type": "object",
-      "required": ["short_term", "medium_term", "long_term"],
-      "properties": {
-        "short_term": { "$ref": "common.json#/$defs/score" },
-        "medium_term": { "$ref": "common.json#/$defs/score" },
-        "long_term": { "$ref": "common.json#/$defs/score" }
-      }
+    "ScenarioName": {
+      "enum": [
+        "bear",
+        "base",
+        "bull"
+      ],
+      "title": "ScenarioName",
+      "type": "string"
     },
-    "consistency": {
-      "type": "object",
-      "required": ["ok", "issues"],
+    "ScenarioOut": {
+      "additionalProperties": true,
+      "description": "One evaluated scenario: what the price would be, and what that returns.",
       "properties": {
-        "ok": { "type": "boolean" },
-        "issues": { "type": "array", "items": { "type": "string" } }
-      }
+        "probability": {
+          "description": "The APPLIED weight, after bounding.",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Probability",
+          "type": "number"
+        },
+        "price_target": {
+          "$ref": "#/$defs/ValueObject"
+        },
+        "annualized_return": {
+          "$ref": "#/$defs/ValueObject"
+        }
+      },
+      "required": [
+        "probability",
+        "price_target",
+        "annualized_return"
+      ],
+      "title": "ScenarioOut",
+      "type": "object"
+    },
+    "ScenarioWeights": {
+      "additionalProperties": true,
+      "description": "The bounded weights actually used to compute expected value.\n\nCarries one WeightClamp per scenario, always all three, so that a reader can\nreconstruct exactly what the agent asked for and what code did with it.",
+      "properties": {
+        "bear": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Bear",
+          "type": "number"
+        },
+        "base": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Base",
+          "type": "number"
+        },
+        "bull": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Bull",
+          "type": "number"
+        },
+        "clamps": {
+          "description": "One per scenario. Never fewer.",
+          "items": {
+            "$ref": "#/$defs/WeightClamp"
+          },
+          "maxItems": 3,
+          "minItems": 3,
+          "title": "Clamps",
+          "type": "array"
+        },
+        "any_clamped": {
+          "description": "True when at least one weight was overruled.",
+          "title": "Any Clamped",
+          "type": "boolean"
+        },
+        "renormalized": {
+          "description": "True when clamping forced a rescale.",
+          "title": "Renormalized",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "bear",
+        "base",
+        "bull",
+        "clamps",
+        "any_clamped",
+        "renormalized"
+      ],
+      "title": "ScenarioWeights",
+      "type": "object"
+    },
+    "Scores": {
+      "additionalProperties": true,
+      "description": "Buyability 1..10 per horizon, from calc/'s fixed rubric (docs/p2 rubric).",
+      "properties": {
+        "short_term": {
+          "description": "0-12m.",
+          "maximum": 10,
+          "minimum": 1,
+          "title": "Short Term",
+          "type": "integer"
+        },
+        "medium_term": {
+          "description": "1-3y.",
+          "maximum": 10,
+          "minimum": 1,
+          "title": "Medium Term",
+          "type": "integer"
+        },
+        "long_term": {
+          "description": "3-5y.",
+          "maximum": 10,
+          "minimum": 1,
+          "title": "Long Term",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "short_term",
+        "medium_term",
+        "long_term"
+      ],
+      "title": "Scores",
+      "type": "object"
+    },
+    "Unit": {
+      "description": "Unit of a ValueObject. `fraction` is never a percent (0.25 means 25%).",
+      "enum": [
+        "usd",
+        "usd_per_share",
+        "shares",
+        "fraction",
+        "multiple",
+        "count",
+        "days",
+        "ratio"
+      ],
+      "title": "Unit",
+      "type": "string"
+    },
+    "ValueObject": {
+      "additionalProperties": true,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "ok"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "value"
+            ]
+          },
+          "title": "status ok requires a numeric value"
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "ok"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "anyOf": [
+              {
+                "properties": {
+                  "source_id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "source_id"
+                ]
+              },
+              {
+                "properties": {
+                  "derived_from": {
+                    "minItems": 1,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "derived_from"
+                ]
+              }
+            ]
+          },
+          "title": "status ok requires a source_id or a non-empty derived_from"
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "unavailable"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          },
+          "title": "status unavailable requires a null value"
+        },
+        {
+          "if": {
+            "properties": {
+              "unit": {
+                "const": "fraction"
+              }
+            },
+            "required": [
+              "unit"
+            ]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "anyOf": [
+                  {
+                    "maximum": 10.0,
+                    "minimum": -10.0,
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          "title": "fractions are fractions, not percents"
+        }
+      ],
+      "description": "Every reported or computed financial number in the system.\n\nFractions, not percents. Money in full USD. Missing data is\n{\"value\": null, \"status\": \"unavailable\"} - never 0, never \"N/A\", never an\nomitted key.\n\nA value computed in code from facts has type \"fact\" and lists `derived_from`.\nDiscount rate, terminal growth and exit multiples are \"assumption\".\nConsensus numbers and scenario outputs are \"estimate\".",
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "The number in full units, or null when status is unavailable.",
+          "title": "Value"
+        },
+        "unit": {
+          "$ref": "#/$defs/Unit"
+        },
+        "type": {
+          "$ref": "#/$defs/ValueType"
+        },
+        "status": {
+          "$ref": "#/$defs/ValueStatus"
+        },
+        "source_id": {
+          "anyOf": [
+            {
+              "pattern": "^src:[a-z0-9_]+:[A-Za-z0-9._:-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Where the number came from. Required unless derived_from is set.",
+          "title": "Source Id"
+        },
+        "derived_from": {
+          "description": "Dotted paths or fact_ids this value was computed from.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Derived From",
+          "type": "array"
+        }
+      },
+      "required": [
+        "value",
+        "unit",
+        "type",
+        "status"
+      ],
+      "title": "ValueObject",
+      "type": "object"
+    },
+    "ValueStatus": {
+      "description": "`unavailable` is the ONLY way to express missing data. Never 0, never \"N/A\".",
+      "enum": [
+        "ok",
+        "unavailable"
+      ],
+      "title": "ValueStatus",
+      "type": "string"
+    },
+    "ValueType": {
+      "description": "Epistemic status of a number, rendered as a colour in the report.\n\nfact       reported in a filing, or computed in code from reported values\nestimate   a forecast: consensus, or a scenario output\nassumption a chosen constant: discount rate, terminal growth, exit multiple",
+      "enum": [
+        "fact",
+        "estimate",
+        "assumption"
+      ],
+      "title": "ValueType",
+      "type": "string"
+    },
+    "WeightClamp": {
+      "additionalProperties": true,
+      "description": "Audit record for ONE scenario weight, from request to applied value.\n\nThe pipeline is: requested -> clamped_to (band around default) -> applied\n(after renormalizing so the three weights sum to 1). Both steps are recorded\nseparately so a reader can see whether the agent was overruled, or merely\nrescaled because another weight was overruled.",
+      "properties": {
+        "scenario": {
+          "$ref": "#/$defs/ScenarioName"
+        },
+        "requested": {
+          "description": "What the Scenario Agent asked for.",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Requested",
+          "type": "number"
+        },
+        "clamped_to": {
+          "description": "After the band clamp.",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Clamped To",
+          "type": "number"
+        },
+        "applied": {
+          "description": "After renormalization. Used in the EV.",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Applied",
+          "type": "number"
+        },
+        "default_weight": {
+          "description": "Configured default for this scenario.",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Default Weight",
+          "type": "number"
+        },
+        "band": {
+          "description": "Configured +/- band around the default.",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Band",
+          "type": "number"
+        },
+        "was_clamped": {
+          "description": "True when the band overruled the request.",
+          "title": "Was Clamped",
+          "type": "boolean"
+        },
+        "was_renormalized": {
+          "description": "True when rescaling changed the clamped value.",
+          "title": "Was Renormalized",
+          "type": "boolean"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The agent's rationale for the requested weight.",
+          "title": "Reason"
+        }
+      },
+      "required": [
+        "scenario",
+        "requested",
+        "clamped_to",
+        "applied",
+        "default_weight",
+        "band",
+        "was_clamped",
+        "was_renormalized"
+      ],
+      "title": "WeightClamp",
+      "type": "object"
     }
   },
-  "$defs": {
-    "scenario_out": {
-      "type": "object",
-      "required": ["probability", "price_target", "annualized_return"],
-      "properties": {
-        "probability": { "$ref": "common.json#/$defs/probability" },
-        "price_target": { "$ref": "common.json#/$defs/value" },
-        "annualized_return": { "$ref": "common.json#/$defs/value" }
-      }
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "ticker": {
+      "pattern": "^[A-Z]{1,5}([.-][A-Z])?$",
+      "title": "Ticker",
+      "type": "string"
+    },
+    "as_of": {
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "title": "As Of",
+      "type": "string"
+    },
+    "scenarios": {
+      "additionalProperties": {
+        "$ref": "#/$defs/ScenarioOut"
+      },
+      "propertyNames": {
+        "$ref": "#/$defs/ScenarioName"
+      },
+      "title": "Scenarios",
+      "type": "object"
+    },
+    "weights": {
+      "$ref": "#/$defs/ScenarioWeights",
+      "description": "Bounded weights used for expected value, with the full clamp record."
+    },
+    "expected_annualized_return": {
+      "$ref": "#/$defs/ValueObject",
+      "description": "Weighted by the APPLIED weights, not the requested ones."
+    },
+    "sp500_expected_return": {
+      "$ref": "#/$defs/ValueObject",
+      "description": "Assumed index return (assumption)."
+    },
+    "expected_return_vs_sp500": {
+      "$ref": "#/$defs/HorizonValues",
+      "description": "Expected return minus the index, per horizon."
+    },
+    "excess_vs_sp500": {
+      "$ref": "#/$defs/HorizonValues"
+    },
+    "p_beat_sp500": {
+      "$ref": "#/$defs/HorizonProbabilities"
+    },
+    "prior": {
+      "$ref": "#/$defs/Prior"
+    },
+    "scores": {
+      "$ref": "#/$defs/Scores"
+    },
+    "consistency": {
+      "$ref": "#/$defs/Consistency"
     }
-  }
+  },
+  "required": [
+    "schema_version",
+    "ticker",
+    "as_of",
+    "scenarios",
+    "weights",
+    "expected_annualized_return",
+    "sp500_expected_return",
+    "expected_return_vs_sp500",
+    "excess_vs_sp500",
+    "p_beat_sp500",
+    "prior",
+    "scores",
+    "consistency"
+  ],
+  "type": "object"
 }

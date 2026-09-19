@@ -2,38 +2,385 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://bankmanager.local/schema/analysis.json",
   "title": "Agent analysis",
-  "description": "FROZEN CONTRACT. PRODUCED BY EACH P3 AGENT (one file/object per agent). A finding with empty evidence is INVALID and must be rejected by the orchestrator before it reaches the auditor (error I).",
-  "type": "object",
-  "required": ["schema_version", "agent", "ticker", "as_of", "model", "summary", "findings"],
-  "properties": {
-    "schema_version": { "$ref": "common.json#/$defs/schema_version" },
-    "agent": {
-      "enum": ["scout", "forensic", "business", "management", "balance_sheet", "valuation", "red_team", "synthesizer"]
+  "description": "GENERATED from schema/contracts/analysis.py. PRODUCED BY each P3 agent.",
+  "$defs": {
+    "AgentName": {
+      "description": "The P3 agent roster (docs/pipeline.md).\n\nfinancial and business run in parallel; valuation, then scenario, then\nred_team, then synthesizer. `verifier` is the LLM half of audit/.",
+      "enum": [
+        "financial",
+        "business",
+        "valuation",
+        "scenario",
+        "red_team",
+        "synthesizer",
+        "verifier"
+      ],
+      "title": "AgentName",
+      "type": "string"
     },
-    "ticker": { "$ref": "common.json#/$defs/ticker" },
-    "as_of": { "$ref": "common.json#/$defs/date" },
-    "model": { "description": "Model id used, or 'mock'.", "type": "string" },
-    "summary": { "type": "string", "minLength": 1 },
-    "findings": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["claim", "trend", "evidence", "numbers", "confidence"],
-        "properties": {
-          "claim": { "type": "string", "minLength": 1 },
-          "trend": { "$ref": "common.json#/$defs/trend" },
-          "evidence": {
-            "type": "array",
-            "minItems": 1,
-            "items": { "$ref": "common.json#/$defs/evidence" }
-          },
-          "numbers": {
-            "type": "array",
-            "items": { "$ref": "common.json#/$defs/value" }
-          },
-          "confidence": { "$ref": "common.json#/$defs/confidence" }
+    "Confidence": {
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "title": "Confidence",
+      "type": "string"
+    },
+    "Evidence": {
+      "additionalProperties": true,
+      "description": "A verbatim quote from a source, string-matched by the verifier.\n\nThe quote must appear in the text behind `source_id` after whitespace\nnormalization, or audit/ raises IssueType.UNSUPPORTED_CLAIM.",
+      "properties": {
+        "quote": {
+          "description": "Verbatim text, copied not paraphrased.",
+          "minLength": 8,
+          "title": "Quote",
+          "type": "string"
+        },
+        "source_id": {
+          "pattern": "^src:[a-z0-9_]+:[A-Za-z0-9._:-]+$",
+          "title": "Source Id",
+          "type": "string"
         }
-      }
+      },
+      "required": [
+        "quote",
+        "source_id"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "Finding": {
+      "additionalProperties": true,
+      "description": "One assertion by an agent, with the evidence that makes it checkable.",
+      "properties": {
+        "claim": {
+          "minLength": 1,
+          "title": "Claim",
+          "type": "string"
+        },
+        "trend": {
+          "$ref": "#/$defs/Trend"
+        },
+        "evidence": {
+          "description": "At least one verbatim quote. Empty evidence makes the finding invalid.",
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "minItems": 1,
+          "title": "Evidence",
+          "type": "array"
+        },
+        "numbers": {
+          "description": "Numbers cited by this finding. Never arithmetic done by the LLM.",
+          "items": {
+            "$ref": "#/$defs/ValueObject"
+          },
+          "title": "Numbers",
+          "type": "array"
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        }
+      },
+      "required": [
+        "claim",
+        "trend",
+        "evidence",
+        "confidence"
+      ],
+      "title": "Finding",
+      "type": "object"
+    },
+    "Trend": {
+      "description": "Whether a finding reflects a durable change or a passing one.",
+      "enum": [
+        "structurally_positive",
+        "temporarily_positive",
+        "structurally_negative",
+        "temporarily_negative",
+        "neutral"
+      ],
+      "title": "Trend",
+      "type": "string"
+    },
+    "Unit": {
+      "description": "Unit of a ValueObject. `fraction` is never a percent (0.25 means 25%).",
+      "enum": [
+        "usd",
+        "usd_per_share",
+        "shares",
+        "fraction",
+        "multiple",
+        "count",
+        "days",
+        "ratio"
+      ],
+      "title": "Unit",
+      "type": "string"
+    },
+    "ValueObject": {
+      "additionalProperties": true,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "ok"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "value"
+            ]
+          },
+          "title": "status ok requires a numeric value"
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "ok"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "anyOf": [
+              {
+                "properties": {
+                  "source_id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "source_id"
+                ]
+              },
+              {
+                "properties": {
+                  "derived_from": {
+                    "minItems": 1,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "derived_from"
+                ]
+              }
+            ]
+          },
+          "title": "status ok requires a source_id or a non-empty derived_from"
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "unavailable"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          },
+          "title": "status unavailable requires a null value"
+        },
+        {
+          "if": {
+            "properties": {
+              "unit": {
+                "const": "fraction"
+              }
+            },
+            "required": [
+              "unit"
+            ]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "anyOf": [
+                  {
+                    "maximum": 10.0,
+                    "minimum": -10.0,
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          "title": "fractions are fractions, not percents"
+        }
+      ],
+      "description": "Every reported or computed financial number in the system.\n\nFractions, not percents. Money in full USD. Missing data is\n{\"value\": null, \"status\": \"unavailable\"} - never 0, never \"N/A\", never an\nomitted key.\n\nA value computed in code from facts has type \"fact\" and lists `derived_from`.\nDiscount rate, terminal growth and exit multiples are \"assumption\".\nConsensus numbers and scenario outputs are \"estimate\".",
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "The number in full units, or null when status is unavailable.",
+          "title": "Value"
+        },
+        "unit": {
+          "$ref": "#/$defs/Unit"
+        },
+        "type": {
+          "$ref": "#/$defs/ValueType"
+        },
+        "status": {
+          "$ref": "#/$defs/ValueStatus"
+        },
+        "source_id": {
+          "anyOf": [
+            {
+              "pattern": "^src:[a-z0-9_]+:[A-Za-z0-9._:-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Where the number came from. Required unless derived_from is set.",
+          "title": "Source Id"
+        },
+        "derived_from": {
+          "description": "Dotted paths or fact_ids this value was computed from.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Derived From",
+          "type": "array"
+        }
+      },
+      "required": [
+        "value",
+        "unit",
+        "type",
+        "status"
+      ],
+      "title": "ValueObject",
+      "type": "object"
+    },
+    "ValueStatus": {
+      "description": "`unavailable` is the ONLY way to express missing data. Never 0, never \"N/A\".",
+      "enum": [
+        "ok",
+        "unavailable"
+      ],
+      "title": "ValueStatus",
+      "type": "string"
+    },
+    "ValueType": {
+      "description": "Epistemic status of a number, rendered as a colour in the report.\n\nfact       reported in a filing, or computed in code from reported values\nestimate   a forecast: consensus, or a scenario output\nassumption a chosen constant: discount rate, terminal growth, exit multiple",
+      "enum": [
+        "fact",
+        "estimate",
+        "assumption"
+      ],
+      "title": "ValueType",
+      "type": "string"
     }
-  }
+  },
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "agent": {
+      "$ref": "#/$defs/AgentName"
+    },
+    "ticker": {
+      "pattern": "^[A-Z]{1,5}([.-][A-Z])?$",
+      "title": "Ticker",
+      "type": "string"
+    },
+    "as_of": {
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "title": "As Of",
+      "type": "string"
+    },
+    "model": {
+      "description": "Model id used, or 'mock'.",
+      "minLength": 1,
+      "title": "Model",
+      "type": "string"
+    },
+    "summary": {
+      "minLength": 1,
+      "title": "Summary",
+      "type": "string"
+    },
+    "findings": {
+      "items": {
+        "$ref": "#/$defs/Finding"
+      },
+      "title": "Findings",
+      "type": "array"
+    },
+    "tokens_in": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Cost tracking (error K).",
+      "title": "Tokens In"
+    },
+    "tokens_out": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Tokens Out"
+    }
+  },
+  "required": [
+    "schema_version",
+    "agent",
+    "ticker",
+    "as_of",
+    "model",
+    "summary"
+  ],
+  "type": "object"
 }

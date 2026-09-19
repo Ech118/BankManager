@@ -1,42 +1,132 @@
 # BankManager
 
-AI equity-research web app (hackathon). Enter a ticker; the app pulls SEC filings
-and market data, computes every financial number in code, runs a panel of LLM
-analyst agents plus a red team, and produces an investment-committee verdict on
-whether the stock is likely to beat the S&P 500 over 1, 3 and 5 years.
+AI equity-research tool. Enter a ticker; the system pulls SEC filings and market
+data, computes every financial number in code, runs a panel of LLM analyst
+agents plus a red team, verifies the result, and produces a research report with
+a verdict on whether the stock is expected to beat the S&P 500 over **0-12
+months, 1-3 years and 3-5 years**.
 
 > AI-generated research for educational purposes only. Not investment advice.
 
-**Start here:** `plan.txt` (living planner context) and `CLAUDE.md` (rules for
-every Claude instance working in this repo).
+---
 
-## Team layout (three partitions, built in parallel)
-| Partition | Owns | Produces |
-|-----------|------|----------|
-| P1 Data & MCP | `data/` `mcp_server/` `fixtures/real/` | fact sheet (`schema/factsheet.json`) |
-| P2 Calc, audit & eval | `calc/` `audit/` `backtest/` `predictions/` | metrics, scenario results, audit |
-| P3 Agents, orchestrator & web | `agents/` `prompts/` `orchestrator/` `web/` | analyses, verdict, UI |
+## What makes it different from asking a chatbot
 
-Partitions talk only through `api.py` files and the JSON schemas in `schema/`.
+Six principles, each with an [ADR](docs/adr/) recording the reasoning *and the
+costs*:
+
+1. **Code computes, the LLM interprets.** No agent ever produces a number by
+   doing arithmetic.
+2. **Financial truth layer.** Every number carries provenance; agents cite
+   `fact_id`s, never bare numbers.
+3. **Point-in-time correctness.** Every query takes an `as_of` and returns only
+   what was filed before it.
+4. **The report is rendered from a structured object**, not from agent prose.
+5. **The verification gate is mostly deterministic code.** Failures route a
+   targeted, capped retry; after the cap the report ships with claims marked
+   unverified.
+6. **No naive chunk-and-embed RAG.** Filings are parsed by structure and
+   searched with scoped full-text search.
 
 ## Quickstart
-```
+
+```bash
 git clone https://github.com/Ech118/BankManager.git && cd BankManager
-cp .env.example .env          # add YOUR OWN keys (never commit .env)
-make install-deps
-make install-hooks            # pre-commit secret scan
-make check-contracts          # should pass on a fresh clone
+cp .env.example .env     # add YOUR OWN keys; never commit .env
+make setup               # deps + pre-commit secret scan
+make test-contracts      # should pass on a fresh clone
+make mock-run
 ```
-Everything runs in `BM_MODE=mock` by default using the fictional company ACME.
+
+Everything runs offline against the fictional company **ACME** — no API keys, no
+database.
+
+## Mock vs live
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `MODE` | `mock` | `mock` = ACME fixtures, no network, no DB. `live` = real implementations. |
+| `LLM_MODE` | `mock` | `mock` = canned agent outputs, no API calls. `live` = real Claude calls. |
+
+They are separate on purpose: P1 and P2 can build and test with no Anthropic key
+at all, and the whole contract suite runs offline.
+
+Live mode additionally needs `DATABASE_URL` and the keys in `.env.example`.
+
+> ACME is **fictional**. Its numbers are not market data.
+
+## Partitions
+
+Three people build in parallel, each confined to one set of directories.
+
+| Partition | Owns | Produces |
+|---|---|---|
+| **P1** Data & MCP | `data/` `mcp_server/` `fixtures/real/` | the fact sheet |
+| **P2** Calc, audit & eval | `calc/` `audit/` `backtest/` `predictions/` | metrics, scenario results, audit |
+| **P3** Agents, orchestrator & web | `agents/` `prompts/` `orchestrator/` `web/` | analyses, verdict, UI |
+
+Partitions talk only through `api.py` files, the MCP tools, and the contracts in
+`schema/`. Details: [ARCHITECTURE.md](ARCHITECTURE.md) and
+[ADR 0007](docs/adr/0007-partition-boundaries.md).
+
+## The pipeline
+
+```
+Ingest -> Financial || Business -> Valuation -> Scenario -> Red Team
+  -> calc (bounded weights, capped prior) -> Synthesizer
+  -> Verifier -> [retry x2] -> Report
+```
+
+Full specification: [docs/pipeline.md](docs/pipeline.md).
 
 ## Repo map
+
 ```
-plan.txt            planner context; section 15 = partition plan
-CLAUDE.md           rules for Claude instances
-schema/             FROZEN JSON contracts
-fixtures/mock/      FROZEN fictional ACME sample data (+ sections/*.txt filing text)
-tests/contracts/    FROZEN contract tests (make check-contracts)
-scripts/            check_ownership.sh, secret_scan.sh, gen_mock_fixtures.py
-docs/pN/            each partition's notes and STATUS.md
-docs/requests/      cross-partition requests (add new files only)
+schema/            THE CONTRACTS. contracts/*.py (pydantic, authoritative)
+                   -> *.json (generated by `make gen-schema`)
+data/              P1  EDGAR, XBRL, sections, market, news, store, repositories
+mcp_server/        P1  the ten MCP tools P3 talks to
+calc/              P2  all deterministic math; pure, no I/O, no LLM
+audit/             P2  the verification gate
+backtest/          P2  anonymized historical evaluation
+predictions/       P2  append-only forward prediction log
+agents/            P3  six agents
+prompts/           P3  one prompt per agent + shared rules
+orchestrator/      P3  coordinator, MCP client, FastAPI, report generator
+web/               P3  Next.js UI
+fixtures/mock/     ACME sample data (generated, contract-valid)
+tests/contracts/   the shared contract suite
+docs/              pipeline, data model, MCP tools, research state,
+                   verification, SEC pitfalls, roadmap, ADRs
+archive/           superseded material, kept for context
 ```
+
+## Make targets
+
+| Target | Does |
+|---|---|
+| `make setup` | install deps and the pre-commit secret scan |
+| `make lint` | ruff |
+| `make test-contracts` | the shared contract suite |
+| `make test` | lint + contracts + partition tests |
+| `make mock-run` | end-to-end mock run |
+| `make gen-schema` | regenerate `schema/*.json` from the models |
+| `make gen-mock` | regenerate the ACME fixtures |
+| `make db-up` | start Postgres (live mode only) |
+| `make check-ownership P=p1` | verify you only touched your paths |
+| `make check-live BM_TEST_TICKER=X` | live-mode contract check |
+
+## Status
+
+Step 0 (scaffold) is complete: contracts, generated schemas, ACME fixtures,
+`api.py` stubs, contract tests, docs. Every partition is still mock-backed.
+
+Next: [docs/roadmap.md](docs/roadmap.md) Step 1. Current state per partition:
+[docs/p1/STATUS.md](docs/p1/STATUS.md) ·
+[docs/p2/STATUS.md](docs/p2/STATUS.md) ·
+[docs/p3/STATUS.md](docs/p3/STATUS.md)
+
+## Contributing
+
+[CONTRIBUTING.md](CONTRIBUTING.md) — branch naming, PR rules, and the contract
+change process. Working with Claude in this repo: [CLAUDE.md](CLAUDE.md).

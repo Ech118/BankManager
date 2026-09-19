@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "2.0.0",
   "agent": "valuation",
   "ticker": "ACME",
   "as_of": "2026-09-19",
@@ -7,7 +7,7 @@
   "summary": "At $50 the market already prices double-digit FCF growth for a decade; guidance does not support that.",
   "findings": [
     {
-      "claim": "The current price implies about 11.6% annual FCF growth for ten years (9% discount rate, 3% terminal growth); guidance is 8-10% revenue growth.",
+      "claim": "The current price implies roughly double-digit annual FCF growth for a decade at a nine percent discount rate; guidance implies less.",
       "trend": "structurally_negative",
       "evidence": [
         {

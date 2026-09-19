@@ -1,0 +1,6 @@
+# P2 (calc/, audit/, backtest/, predictions/) dependencies.
+# Deliberately minimal: calc/ is pure, so it needs no client libraries at all.
+-r ../schema/contracts/requirements.txt
+
+# matplotlib is used ONLY by backtest/calibration.py to render the chart.
+matplotlib>=3.8
