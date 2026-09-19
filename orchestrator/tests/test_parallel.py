@@ -7,7 +7,7 @@ import time
 import pytest
 
 from agents import client
-from agents.tests.helpers import MDNA_ID, analysis_payload, finding
+from agents.tests.helpers import DEFAULT_PLAN, MDNA_ID, analysis_payload, finding
 from orchestrator import events
 from orchestrator.coordinator import Coordinator
 from orchestrator.mcp_client import InMemoryMcpClient
@@ -28,10 +28,13 @@ def install(monkeypatch, per_agent):
     calls = []
     lock = threading.Lock()
 
-    def fake(agent, system, user, max_tokens=4096, schema=None):
+    def fake(agent, system, user, max_tokens=4096, schema=None, kind="analysis"):
         with lock:
-            calls.append({"agent": agent.value, "system": system, "user": user})
-        out = per_agent[agent.value](system, user)
+            calls.append({"agent": agent.value, "system": system, "user": user, "kind": kind})
+        if kind == "plan":
+            out = DEFAULT_PLAN
+        else:
+            out = per_agent.get(agent.value, lambda s, u: fin())(system, user)
         text = out if isinstance(out, str) else json.dumps(out)
         return {"text": text, "model": "test", "tokens_in": 10, "tokens_out": 5, "seconds": 0.0}
 
@@ -69,7 +72,7 @@ def test_financial_and_business_agents_run_concurrently(mcp, monkeypatch):
 
     install(monkeypatch, {"financial": gated(fin()), "business": gated(biz())})
     state = Coordinator(mcp).run_state("ACME")
-    assert {a.value for a in state.agent_outputs} == {"financial", "business"}
+    assert {a.value for a in state.agent_outputs} == {"financial", "business", "valuation"}
 
 
 def test_both_lanes_are_running_before_either_finishes(mcp, monkeypatch):

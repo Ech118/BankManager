@@ -143,6 +143,7 @@ def test_composed_run_is_preliminary_until_a_verdict_exists(monkeypatch):
     assert rep["state"]["ticker"] == "ACME" and set(rep["state"]["agent_outputs"]) == {
         "financial",
         "business",
+        "valuation",
     }
 
 
@@ -168,7 +169,7 @@ def test_composed_run_reports_stats_from_the_coordinator(monkeypatch):
     run_id = api.post("/api/analyze", json={"ticker": "ACME"}).json()["run_id"]
     wait_done(api, run_id)
     stats = api.get(f"/api/runs/{run_id}/stats").json()
-    assert set(stats["agents"]) == {"financial", "business"} and "seconds" in stats
+    assert set(stats["agents"]) == {"financial", "business", "valuation"} and "seconds" in stats
 
 
 def test_composed_run_for_an_unknown_company_fails_with_the_reason(monkeypatch):

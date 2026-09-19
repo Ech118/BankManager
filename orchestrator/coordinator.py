@@ -53,6 +53,7 @@ from typing import Any
 from agents.base import Agent, section_id_for
 from agents.business_agent import BusinessAgent
 from agents.financial_agent import FinancialAgent
+from agents.valuation_agent import ValuationAgent
 from orchestrator import events
 from orchestrator.mcp_client import McpToolError
 from orchestrator.retry import Rerun, failing_claim_ids, retry_loop
@@ -85,6 +86,7 @@ SECTION_TITLES = {
 IMPLEMENTED: dict[AgentName, type[Agent]] = {
     AgentName.FINANCIAL: FinancialAgent,
     AgentName.BUSINESS: BusinessAgent,
+    AgentName.VALUATION: ValuationAgent,
 }
 """Agents that exist so far. Grows with the roadmap; `plan()` reads it."""
 
@@ -120,6 +122,7 @@ FACT_METRICS = [
     "current_liabilities",
     "receivables",
     "inventory",
+    "fcf",  # derived by calc; the valuation agent cites it. Absent metrics just return no rows.
 ]
 
 
@@ -330,6 +333,22 @@ class Coordinator:
             "wall_seconds": round(seconds, 3),
         }
 
+    @staticmethod
+    def _upstream_text(state: ResearchState) -> str:
+        """What the financial and business agents concluded, as plain text for later agents."""
+        lines: list[str] = []
+        for name in (AgentName.FINANCIAL, AgentName.BUSINESS):
+            analysis = state.agent_outputs.get(name)
+            if analysis is None:
+                continue
+            lines.append(f"[{name.value}] {analysis.summary}")
+            lines += [
+                f"- {claim.text}"
+                for section in state.sections.by_owner(name)
+                for claim in section.claims
+            ]
+        return "\n".join(lines)
+
     def run_agents(self, state: ResearchState, context: dict) -> ResearchState:
         """Run the implemented roster: the financial/business pair concurrently, then the rest.
 
@@ -338,18 +357,24 @@ class Coordinator:
         scheduled. If an agent fails, its stage still finishes (no orphaned threads) and the
         first failure in canonical order is raised.
 
-        TODO(roadmap Step 4-5, P3): valuation, scenario, red team, synthesizer join as later stages.
+        Later stages see what earlier ones found (`upstream_text`): the valuation agent reads the
+        financial and business claims. The pair themselves never do (independent readings).
+
+        TODO(roadmap Step 5, P3): scenario, red team, synthesizer join as later stages.
         """
         for stage in self.stages():
+            stage_context = {**context, "upstream_text": self._upstream_text(state)}
             outcomes: dict[AgentName, tuple[Agent, Any, float] | BaseException] = {}
             if len(stage) == 1:
                 try:
-                    outcomes[stage[0]] = self._execute(stage[0], context)
+                    outcomes[stage[0]] = self._execute(stage[0], stage_context)
                 except Exception as e:
                     outcomes[stage[0]] = e
             else:
                 with ThreadPoolExecutor(max_workers=len(stage), thread_name_prefix="agent") as pool:
-                    futures = {name: pool.submit(self._execute, name, context) for name in stage}
+                    futures = {
+                        name: pool.submit(self._execute, name, stage_context) for name in stage
+                    }
                     for name, future in futures.items():
                         try:
                             outcomes[name] = future.result()
@@ -444,8 +469,13 @@ class Coordinator:
                     detail=f"section {directive.section_key}, attempt {directive.attempt} of {directive.max_attempts}",
                 )
 
+            rerun_context = {**context, "upstream_text": self._upstream_text(state)}
             state, result = retry_loop(
-                state, result, lambda st: self._audit(st, context), self._rerun(context), on_retry
+                state,
+                result,
+                lambda st: self._audit(st, context),
+                self._rerun(rerun_context),
+                on_retry,
             )
         except Exception as e:
             self._emit("verify", "failed", detail=str(e))

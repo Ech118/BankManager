@@ -11,12 +11,20 @@ from tests.e2e.support.fake_mcp import build_fake_server
 
 def _assert_step1(state: ResearchState) -> None:
     ResearchState.model_validate(state.model_dump(mode="json"))
-    owned = {k for k, o in SECTION_OWNERS.items() if o in (AgentName.FINANCIAL, AgentName.BUSINESS)}
+    owned = {
+        k
+        for k, o in SECTION_OWNERS.items()
+        if o in (AgentName.FINANCIAL, AgentName.BUSINESS, AgentName.VALUATION)
+    }
     filled = {s.section_key for s in state.sections.as_list() if s.claims}
     assert (
         filled and filled <= owned
     )  # the financial and business agents' sections, and nothing else
-    assert set(state.agent_outputs) == {AgentName.FINANCIAL, AgentName.BUSINESS}
+    assert set(state.agent_outputs) == {
+        AgentName.FINANCIAL,
+        AgentName.BUSINESS,
+        AgentName.VALUATION,
+    }
     assert state.data_quality.overall == "ok" and state.ticker == "ACME"
 
 

@@ -3,7 +3,7 @@
 Update whenever a capability moves from mock to real, or when blocked.
 A PR that changes behaviour must update this file.
 
-**Step:** 3 built offline (Business Agent, parallel pair, live SSE lanes). **Blocked from finishing Step 3's live checkpoint** by P1's MCP server, live data and an API key. **Next:** Step 4 (Valuation Agent) once `calculate_valuation` exists; see [TO_BE_FIXED.md](TO_BE_FIXED.md).
+**Step:** 4 built offline (Valuation Agent; three agents, three stages). **Blocked from finishing the live checkpoints** (Steps 3 and 4) by P1's MCP server, live data, P2's real `calc/`, and an API key. **Next:** Step 5 (Scenario Agent, Red Team, Synthesizer) needs `calc.evaluate_scenarios` (P2); see [TO_BE_FIXED.md](TO_BE_FIXED.md).
 **Blockers:** the real mock MCP server (P1) - see
 [the request](../requests/2026-09-19-p3-to-p1-mock-mcp-server.md) - and where the report's inputs and the auditor's Factsheet come
 from - see [the report-inputs request](../requests/2026-09-19-p3-report-inputs.md). Everything up to that seam is tested against a
@@ -21,8 +21,9 @@ P3-owned MCP test double (`tests/e2e/support/fake_mcp.py`).
 | `agents/base.py` | **built, tested** | shared rules + role prompt, untrusted-text fence, verbatim-quote enforcement, fact_id -> ValueObject, retry once then fail loudly, `to_claims` |
 | Financial Agent | **built (mock LLM)** | live Anthropic path written in `agents/client.py`, **never run against the API** (no key here) |
 | Business Agent | **built (mock LLM)** | sections: company, management, competitive_position, catalysts. Reads `business`, `risk_factors`, `mdna` only. Live path never run (B8). |
-| Valuation, Scenario, Red Team, Synthesizer | stub | Steps 4-5 |
-| Parallel execution | **built, tested** | `Coordinator.stages()`: financial \|\| business in a `ThreadPoolExecutor`; results merged in canonical order (deterministic); a failing agent lets its partner finish, emits `failed`, and the first failure in canonical order is raised. Concurrency is proven by a two-party barrier. Neither agent sees the other's output. |
+| Valuation Agent | **built (mock LLM + MCP test double)** | sections: valuation, expectations. Three steps: PLAN (picks methods and peers with a reason each, from the deterministic default list) -> CALCULATE (code calls `calculate_valuation`) -> INTERPRET (findings cite calc results by path in `calc_refs` and inputs by `fact_id`). `reverse_dcf` is always computed. Numerals typed into a claim that no quote contains are dropped (the Claim contract alone would allow them beside a real fact_id). Reads the financial and business findings (`upstream_text`); the pair never see each other. Its plan and reasons are kept on the analysis as `valuation_plan`. First agent to call MCP tools itself, through an allowlist (`Agent.call_tool`). |
+| Scenario, Red Team, Synthesizer | stub | Step 5 |
+| Parallel execution | **built, tested** | `Coordinator.stages()`: [financial \|\| business], then [valuation]. The pair run in a `ThreadPoolExecutor`; results merged in canonical order (deterministic); a failing agent lets its partner finish, emits `failed`, and the first failure in canonical order is raised. Concurrency is proven by a two-party barrier. Neither agent sees the other's output. |
 | Report generator (`orchestrator/report/`) | **built, tested** | deterministic Jinja render: card first, case against, sections; unverified claims marked, pending claims marked `unchecked`, `unavailable` never 0, fact/estimate/assumption carried, disclaimer top and bottom. Without a synthesizer it renders a PRELIMINARY report with no card. `render()` needs `state.synthesis` (`agents/synthesis.py`) and raises `ReportInputError` rather than invent it. |
 | FastAPI server + SSE | **built, tested** | `POST /api/analyze`, `GET /api/runs/{id}` (verdict, or `409 preliminary`), `/report`, `/events` (SSE with a lane per agent, full replay for late subscribers), `/stats`, `/config`. `server.configure(mcp_factory, ...)` is the composition hook that puts the real Coordinator behind it. |
 | Demo composition | **built** | `uvicorn tests.e2e.support.dev_app:app` = real Coordinator + server over the MCP **test double** and mock LLM, with a per-call delay so the lanes are visible. |
@@ -58,4 +59,4 @@ cd web && npm run typecheck && npm test
 uvicorn orchestrator.server:app --port 8000     # then: cd web && npm run dev
 ```
 
-**Last updated:** 2026-09-19 (Step 3, offline)
+**Last updated:** 2026-09-19 (Step 4, offline)

@@ -84,9 +84,63 @@ _MOCK_VERIFIER = json.dumps(
 """The offline verifier never vouches for a claim: precision over recall (prompts/verifier.md)."""
 
 
-def _mock_text(agent: AgentName) -> str:
+_MDNA = "src:edgar:0001234567-26-000010:mdna"
+_GUIDANCE = "we expect revenue growth of 8% to 10% and operating margin of 16% to 17%"
+
+
+def _mock_valuation_plan() -> str:
+    """Methods and peers as the Valuation Agent's planning call would choose them (offline)."""
+    peers = json.loads((_MOCK_DIR / "peers.json").read_text(encoding="utf-8"))
+    return json.dumps(
+        {
+            "methods": [
+                {
+                    "name": "pe",
+                    "reason": "Earnings are representative and the peers are profitable.",
+                },
+                {"name": "p_fcf", "reason": "Free cash flow is the hardest figure to flatter."},
+                {"name": "peer_median", "reason": "Compare against the median, not a single peer."},
+                {
+                    "name": "reverse_dcf",
+                    "reason": "The expectations reading needs what the price implies.",
+                },
+            ],
+            "peers": [
+                {"ticker": p["ticker"], "reason": "Kept from the deterministic default list."}
+                for p in peers
+            ],
+            "notes": "Default peer set kept; no peer added or removed.",
+        }
+    )
+
+
+def _mock_valuation_analysis() -> str:
+    """analysis_valuation.json routed to `expectations`, plus a P/E-premium finding for `valuation`."""
+    data = json.loads((_MOCK_DIR / "analysis_valuation.json").read_text(encoding="utf-8"))
+    for f in data["findings"]:
+        f.pop("numbers", None)
+        f["section"] = "expectations"
+        f["calc_refs"] = ["reverse_dcf.implied_fcf_cagr"]
+        f["fact_ids"] = ["fact:ACME:fcf:FY2025"]
+    data["findings"].append(
+        {
+            "claim": "The shares trade at a premium to the peer median on trailing earnings.",
+            "trend": "structurally_negative",
+            "section": "valuation",
+            "evidence": [{"quote": _GUIDANCE, "source_id": _MDNA}],
+            "calc_refs": ["metrics.valuation.vs_peers.pe_premium"],
+            "fact_ids": ["fact:ACME:eps_diluted:FY2025"],
+            "confidence": "medium",
+        }
+    )
+    return json.dumps(data)
+
+
+def _mock_text(agent: AgentName, kind: str = "analysis") -> str:
     if agent is AgentName.VERIFIER:
         return _MOCK_VERIFIER
+    if agent is AgentName.VALUATION:
+        return _mock_valuation_plan() if kind == "plan" else _mock_valuation_analysis()
     path = _MOCK_DIR / f"analysis_{agent.value}.json"
     if not path.exists():
         raise LLMError(f"no mock fixture for agent {agent.value!r} ({path.name})")
@@ -104,6 +158,7 @@ def complete(
     user: str,
     max_tokens: int = 4096,
     schema: dict | None = None,
+    kind: str = "analysis",
 ) -> dict:
     """One model call. Returns {"text", "model", "tokens_in", "tokens_out", "seconds"}.
 
@@ -112,7 +167,7 @@ def complete(
     """
     if llm_mode() == "mock":
         return {
-            "text": _mock_text(agent),
+            "text": _mock_text(agent, kind),
             "model": "mock",
             "tokens_in": 0,
             "tokens_out": 0,

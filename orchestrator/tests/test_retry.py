@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 from agents import client
-from agents.tests.helpers import analysis_payload, finding
+from agents.tests.helpers import DEFAULT_PLAN, analysis_payload, finding
 from orchestrator import events
 from orchestrator.coordinator import Coordinator
 from orchestrator.mcp_client import InMemoryMcpClient
@@ -47,10 +47,13 @@ class Model:
         self.financial = financial or (lambda n: payload("financial"))
         monkeypatch.setattr(client, "complete", self)
 
-    def __call__(self, agent, system, user, max_tokens=4096, schema=None):
-        self.calls.append({"agent": agent.value, "user": user})
-        n = sum(1 for c in self.calls if c["agent"] == agent.value)
-        out = self.financial(n) if agent.value == "financial" else payload(agent.value)
+    def __call__(self, agent, system, user, max_tokens=4096, schema=None, kind="analysis"):
+        self.calls.append({"agent": agent.value, "user": user, "kind": kind})
+        n = sum(1 for c in self.calls if c["agent"] == agent.value and c["kind"] == kind)
+        if kind == "plan":
+            out = DEFAULT_PLAN
+        else:
+            out = self.financial(n) if agent.value == "financial" else payload(agent.value)
         return {
             "text": json.dumps(out),
             "model": "t",

@@ -20,7 +20,7 @@ def mcp():
 
 
 def test_plan_lists_implemented_agents_in_canonical_order(mcp):
-    assert Coordinator(mcp).plan("ACME", None) == ["financial", "business"]
+    assert Coordinator(mcp).plan("ACME", None) == ["financial", "business", "valuation"]
 
 
 def test_empty_state_has_all_fourteen_sections_with_canonical_owners():
@@ -32,11 +32,15 @@ def test_empty_state_has_all_fourteen_sections_with_canonical_owners():
 def test_mock_run_builds_a_valid_state_with_claims_only_in_the_running_agents_sections(mcp):
     st = Coordinator(mcp, run_id="t1").run_state("ACME")
     ResearchState.model_validate(st.model_dump(mode="json"))  # every contract validator passes
-    owned = {k for k, o in SECTION_OWNERS.items() if o in (AgentName.FINANCIAL, AgentName.BUSINESS)}
+    owned = {
+        k
+        for k, o in SECTION_OWNERS.items()
+        if o in (AgentName.FINANCIAL, AgentName.BUSINESS, AgentName.VALUATION)
+    }
     filled = {s.section_key for s in st.sections.as_list() if s.claims}
     assert filled and filled <= owned
     assert (
-        set(st.agent_outputs) == {AgentName.FINANCIAL, AgentName.BUSINESS}
+        set(st.agent_outputs) == {AgentName.FINANCIAL, AgentName.BUSINESS, AgentName.VALUATION}
         and st.mode is Mode.MOCK
         and st.as_of == "2026-09-19"
     )
@@ -116,7 +120,9 @@ def test_stats_record_tokens_per_agent_and_a_run_log_line(mcp, tmp_path, monkeyp
     coord = Coordinator(mcp)
     coord.run_state("ACME")
     assert coord.stats["agents"]["financial"]["tokens_in"] == 100
-    assert coord.stats["agents"]["business"]["tokens_out"] == 20 and coord.stats["tokens_out"] == 40
+    assert coord.stats["agents"]["business"]["tokens_out"] == 20
+    # valuation makes TWO model calls (plan, then interpret): 4 calls x 20 output tokens in all
+    assert coord.stats["agents"]["valuation"]["calls"] == 2 and coord.stats["tokens_out"] == 80
     assert (tmp_path / "runs.jsonl").read_text().count("\n") == 1
 
 

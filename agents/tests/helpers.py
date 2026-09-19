@@ -49,13 +49,22 @@ def finding(
     return f
 
 
+DEFAULT_PLAN = {
+    "methods": [{"name": "pe", "reason": "Earnings are representative."}],
+    "peers": [{"ticker": "PRAA", "reason": "Kept from the default list."}],
+    "notes": "default kept",
+}
+
+
 def script_model(monkeypatch, responder):
     """Replace client.complete. `responder(system, user, attempt) -> dict|str`. Returns the call log."""
     calls = []
 
-    def fake(agent, system, user, max_tokens=4096, schema=None):
-        calls.append({"agent": agent, "system": system, "user": user, "schema": schema})
-        out = responder(system, user, len(calls))
+    def fake(agent, system, user, max_tokens=4096, schema=None, kind="analysis"):
+        calls.append(
+            {"agent": agent, "system": system, "user": user, "schema": schema, "kind": kind}
+        )
+        out = DEFAULT_PLAN if kind == "plan" else responder(system, user, len(calls))
         text = out if isinstance(out, str) else json.dumps(out)
         return {
             "text": text,

@@ -28,14 +28,17 @@ Legend: **Owner** is who must act. **Verify** is how we'll know it's fixed.
 
 | ID | What | Roadmap step | Notes |
 |---|---|---|---|
-| N1 | Valuation Agent (peers, methods, expectations reading) | Step 4 | Needs `calculate_valuation` (B6). |
+| N1 | **Step 4 live checkpoint**: the valuation section passes the deterministic checks on a real ticker | Step 4 | Agent is built and tested offline. Needs real `calculate_valuation` (B6 P2), real peers and market data (B7 P1), an API key (B8), and the auditor (B3). The agent indexes `metrics.valuation.*` and `reverse_dcf.*` exactly as `CalculateValuationResponse` defines them; P2's real response must match. |
+| N16 | Show the valuation plan (method and peer choices with reasons) in the report | Step 4 | Kept on `agent_outputs.valuation.valuation_plan`, but reasons are not filing claims so they are not Claims, and the report renders only Claims. Needs a small deterministic template block (or a contract decision). |
+| N17 | A valuation retry re-plans (2 model calls + a calc call per attempt) | Step 5 | Cache the plan across retries of the same run. |
+| N18 | Sensitivity grid is offered to the agent (`reverse_dcf.sensitivity_grid.*`) but not rendered in the UI | Step 6 | "Sensitivity output surfaced in the UI" is a roadmap Step 6 item. |
 | N2 | Scenario Agent, Red Team, Synthesizer | Step 5 | Prompts drafted by Step 0; agents are stubs. Red Team must get the RAW fact sheet (error J). |
 | N15 | Confirm the verifier and retry contract with P2 (argument meaning of `verify_claim`; `retries_issued` semantics) | before `audit/` goes live | [request](../requests/2026-09-19-p3-to-p2-verifier-and-retry-contract.md). P3's side is built against stubs. |
 | N5 | Full fifteen-section report, S&P comparison section | Step 5 | Needs N1-N2 and calc. |
 | N6 | `orchestrator.api.run_analysis` wired to the Coordinator | after B1/B2/N2 | Still returns the ACME verdict fixture in mock mode. |
 | N7 | Full prompt-injection e2e ("verdict must not move") with a control run | Step 5 | Guard is built and unit/e2e tested at the agent + coordinator level. The obedient-model test from the v1 branch (`p3-v1-backup`, `tests/e2e/test_e2e_injection.py`) needs the Synthesizer to port. |
 | N8 | Measured per-run cost/latency in live mode | Step 5 | Tokens and seconds are recorded; `$` uses assumed prices (`agents/client.py::PRICES`, copied from the claude-api skill 2026-06-24). |
-| N9 | Agents call MCP tools themselves (tool-use loop) | later (Step 3 did not need it) | Today the coordinator pre-fetches sections and facts and passes them in. `Agent.tools` already declares each agent's allowed set. |
+| N9 | Agents call MCP tools in a free tool-use loop | later | Financial and Business still get pre-fetched context. The Valuation Agent already calls `get_peer_companies` and `calculate_valuation` itself, through `Agent.call_tool`, which refuses any tool not in `Agent.tools`. |
 | N10 | Tune prompts against ACME, then one real filing | Steps 1/3 | `financial.md` and `business.md` still say `TODO(...): tune`. |
 | N13 | **Step 3 live checkpoint**: one real ticker in live mode, Financial + Business sections, schema-valid | Step 3 | Blocked by B1, B7, B8. `StdioMcpClient` is built and tested against the test double; it targets `python -m mcp_server.server` by default. |
 | N14 | Tune `business.md` against a real filing (wording-change comparison needs the PRIOR filing's text, which the coordinator does not fetch yet) | Step 3 | Today each agent sees only the latest section of each item. |
@@ -68,3 +71,7 @@ Legend: **Owner** is who must act. **Verify** is how we'll know it's fixed.
 - **S5 / S10** shared mock fixtures fixed (coordinator commit): 13 missing facts added, and `claim:financial:revenue` now says what its value is. The mock run logs zero unknown-fact warnings and the UI no longer shows a number beside the wrong fact.
 
 - **MCP SDK major-version compatibility (2026-09-19):** P3's MCP client and test double work on both mcp 1.x and 2.x (see B9 for the team decision that remains).
+
+### Resolved in Step 4 (offline, 2026-09-19)
+
+- **Valuation Agent** built (see STATUS): plan -> calculate -> interpret; code computes every number; `reverse_dcf` always included; typed numerals rejected; peers and upstream findings fenced as untrusted; a tool allowlist enforced in code; 25 tests (`agents/tests/test_valuation_agent.py`, `orchestrator/tests/test_valuation_stage.py`), including a valuation retry through the gate. The full P3 suite (162 tests) passes on mcp 1.30 and 2.2. Checked in Chrome: five lanes, valuation after the pair, Valuation and Expectations sections in the report.

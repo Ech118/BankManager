@@ -29,16 +29,22 @@ except ImportError:  # mcp 1.x
 from schema.contracts.enums import ItemCode
 from schema.contracts.facts import FinancialFact
 from schema.contracts.filings import Filing, FilingSection
-from schema.contracts.market import CompanyProfile, MarketSnapshot
+from schema.contracts.market import CompanyProfile, MarketSnapshot, Peer
+from schema.contracts.metrics import Metrics, ReverseDcf
 from schema.contracts.tools import (
+    CalculateValuationResponse,
     GetCompanyProfileResponse,
     GetFilingSectionResponse,
     GetFinancialFactsResponse,
     GetMarketSnapshotResponse,
+    GetPeerCompaniesResponse,
     ResolveFactResponse,
     SearchFilingsResponse,
 )
 
+VALUATION_METHODS = frozenset(
+    {"pe", "ev_ebitda", "ev_revenue", "p_fcf", "peer_median", "historical", "reverse_dcf"}
+)
 MOCK = Path(__file__).resolve().parents[3] / "fixtures" / "mock"
 
 
@@ -170,6 +176,41 @@ def build_fake_server(
         prof = CompanyProfile.model_validate(_load("company_profile.json"))
         return GetCompanyProfileResponse(
             profile=prof if prof.ticker == ticker else None, as_of=as_of
+        ).model_dump(mode="json")
+
+    @server.tool()
+    def get_peer_companies(ticker: str, as_of: str, limit: int = 6) -> dict:
+        """The deterministic default peers (SIC + market-cap band), each with a selection reason."""
+        refuse_if_out_of_scope(ticker)
+        peers = [Peer.model_validate(p) for p in _load("peers.json")][:limit]
+        return GetPeerCompaniesResponse(peers=peers, as_of=as_of).model_dump(mode="json")
+
+    @server.tool()
+    def calculate_valuation(
+        ticker: str,
+        methods: list[str],
+        peer_tickers: list[str] | None = None,
+        assumptions: dict[str, float] | None = None,
+    ) -> dict:
+        """Stands in for calc/: returns the frozen ACME valuation block and reverse DCF.
+
+        Real calc computes from the chosen methods and peers; this double only records them in
+        `notes` so a test can prove what the agent asked for. Unknown methods are refused."""
+        refuse_if_out_of_scope(ticker)
+        unknown = [m for m in methods if m not in VALUATION_METHODS]
+        if unknown:
+            raise ToolError(
+                f"unknown valuation method(s): {unknown}; use one of {sorted(VALUATION_METHODS)}"
+            )
+        metrics = _load("metrics.json")
+        return CalculateValuationResponse(
+            metrics=Metrics.model_validate(metrics),
+            reverse_dcf=ReverseDcf.model_validate(metrics["reverse_dcf"]),
+            notes=[
+                f"methods: {methods}",
+                f"peers: {peer_tickers or 'default'}",
+                f"assumptions: {assumptions or 'default'}",
+            ],
         ).model_dump(mode="json")
 
     return server

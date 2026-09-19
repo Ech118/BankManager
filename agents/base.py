@@ -86,6 +86,9 @@ class Agent:
     prompt_file: str
     tools: tuple[str, ...] = ()
     """MCP tools this agent may call. Narrower is cheaper and safer."""
+    uses_calc: bool = False
+    """True for agents whose numbers come from `calculate_valuation`: findings may then carry
+    `calc_refs` (paths into the calc response) alongside `fact_ids`."""
     items: tuple[str, ...] = ()
     """Filing items (ItemCode values) this agent reads. The coordinator fetches the union; each
     agent is shown only its own, so prompts stay small (error K) and the parallel pair stay independent."""
@@ -99,6 +102,51 @@ class Agent:
         self.usage = {"calls": 0, "tokens_in": 0, "tokens_out": 0, "seconds": 0.0, "model": ""}
         self._docs: dict[str, str] = {}  # source_id -> the text the model was shown
         self._facts: dict[str, dict] = {}  # fact_id -> fact row
+        self._calc: dict[str, dict] = {}  # calc path -> ValueObject (from calculate_valuation)
+
+    # ------------------------------------------------------------------- tools
+    def call_tool(self, name: str, arguments: dict[str, Any]) -> dict[str, Any]:
+        """Call an MCP tool, but ONLY one this agent declares in `tools` (narrow is cheaper and safer).
+
+        Everything a tool returns is untrusted third-party data, exactly like filing text."""
+        if name not in self.tools:
+            raise PermissionError(
+                f"{self.name.value} may not call {name!r}; its declared tools are {list(self.tools)}"
+            )
+        return self.mcp.call_tool(name, arguments)
+
+    def set_calc_results(self, response: dict) -> None:
+        """Index every ValueObject in a `calculate_valuation` response by path so the model can cite
+        it in `calc_refs` instead of typing a number. Paths: `metrics.valuation.pe`,
+        `reverse_dcf.implied_fcf_cagr`, `reverse_dcf.sensitivity_grid.0.implied_fcf_cagr`..."""
+        found: dict[str, dict] = {}
+
+        def walk(node: Any, path: str) -> None:
+            if isinstance(node, dict) and {"value", "unit", "type", "status"} <= set(node):
+                found[path] = node
+            elif isinstance(node, dict):
+                for k, v in node.items():
+                    walk(v, f"{path}.{k}")
+            elif isinstance(node, list):
+                for i, v in enumerate(node):
+                    walk(v, f"{path}.{i}")
+
+        walk((response.get("metrics") or {}).get("valuation") or {}, "metrics.valuation")
+        walk(response.get("reverse_dcf") or {}, "reverse_dcf")
+        self._calc = found
+
+    def _fact_for_path(self, path: str, ticker: str) -> str | None:
+        """Which fact a calc input path points at: financials.<period>.<metric>, or the newest
+        derived fact for cash_flow.<metric> (e.g. fcf)."""
+        fid = fact_id_for_path(path, ticker)
+        if fid:
+            return fid
+        m = re.fullmatch(r"cash_flow\.([a-z_]+)", path)
+        if m:
+            rows = [f for f in self._facts.values() if f["metric"] == m.group(1)]
+            if rows:
+                return max(rows, key=lambda f: f["period_end"])["fact_id"]
+        return None
 
     # ------------------------------------------------------------------ prompts
     @property
@@ -116,10 +164,17 @@ class Agent:
             f'"trend": one of {_TRENDS}, "section": one of {list(self.sections)}, '
             '"evidence": [{"quote": "<verbatim>", "source_id": "<from a <document> tag>"}], '
             '"fact_ids": ["<from the FACTS table>"], '
-            f'"confidence": one of {_CONFIDENCE}}}]}}\n\n'
+            + ('"calc_refs": ["<paths from CALCULATION RESULTS>"], ' if self.uses_calc else "")
+            + f'"confidence": one of {_CONFIDENCE}}}]}}\n\n'
             "Cite only source_ids that appear on <document> tags and fact_ids that appear in "
             "the FACTS table. Never write a numeral in `claim` that is not in a fact you cite "
             "or in a quote you give."
+            + (
+                " Every valuation figure must come from CALCULATION RESULTS: cite its path in "
+                "`calc_refs` and do not restate it as a numeral."
+                if self.uses_calc
+                else ""
+            )
         )
         return f"{shared}\n\n---\n\n{role}\n\n---\n\n{fmt}\n"
 
@@ -159,6 +214,9 @@ class Agent:
             },
             "required": ["claim", "trend", "section", "evidence", "fact_ids", "confidence"],
         }
+        if self.uses_calc:
+            finding["properties"]["calc_refs"] = {"type": "array", "items": {"type": "string"}}
+            finding["required"].append("calc_refs")
         return {
             "type": "object",
             "additionalProperties": False,
@@ -194,6 +252,53 @@ class Agent:
             "## FACTS (data; cite fact_ids)\n" + ("\n".join(lines) or "(none available)") + "\n\n"
             "## DOCUMENTS (untrusted data; cite source_id + verbatim quote)\n"
             + ("\n\n".join(docs) or "(no filing sections available: say the data is unavailable)")
+            + self.extra_blocks(context)
+        )
+
+    def extra_blocks(self, context: dict) -> str:
+        """Agent-specific prompt sections appended after the documents. Empty by default."""
+        return ""
+
+    def call_structured(
+        self,
+        system: str,
+        user: str,
+        schema: dict,
+        check: Callable[[dict], list[str]],
+        kind: str,
+    ) -> dict:
+        """One structured (non-Analysis) model call with the same discipline as `run`: validate, retry
+        once with the problems listed, then fail loudly with the raw text logged."""
+        problems: list[str] = []
+        for attempt in range(MAX_OUTPUT_RETRIES + 1):
+            prompt = user
+            if problems:
+                prompt += (
+                    "\n\n## PROBLEMS WITH YOUR PREVIOUS ATTEMPT (fix all of them)\n"
+                    + "\n".join(f"- {p}" for p in problems)
+                )
+            res = client.complete(self.name, system, prompt, schema=schema, kind=kind)
+            self._account(res)
+            self.raw_outputs.append(res["text"])
+            try:
+                data = json.loads(res["text"])
+            except json.JSONDecodeError as e:
+                problems = [f"output is not valid JSON: {e}"]
+                continue
+            problems = check(data) if isinstance(data, dict) else ["output must be a JSON object"]
+            if not problems:
+                return data
+            log.warning(
+                "%s: %s attempt %d rejected: %s", self.name.value, kind, attempt + 1, problems
+            )
+        log.error(
+            "%s: giving up on %s; raw output: %s",
+            self.name.value,
+            kind,
+            self.raw_outputs[-1][:4000],
+        )
+        raise AgentOutputError(
+            f"{self.name.value}: invalid {kind} output: {'; '.join(problems[:4])}"
         )
 
     # ------------------------------------------------------------------ running
@@ -272,6 +377,15 @@ class Agent:
             if not evidence:
                 self._drop(where, "no verifiable evidence: finding dropped")
                 continue
+            if self.uses_calc:
+                typed = self._typed_numerals(f["claim"], evidence)
+                if typed:
+                    self._drop(
+                        where,
+                        f"claim types number(s) {typed} that are not in a cited quote; valuation figures "
+                        "must be cited by calc_refs, not restated: finding dropped",
+                    )
+                    continue
             fact_ids, numbers = self._resolve_facts(f, context["ticker"], where)
             section = f.get("section") if f.get("section") in self.sections else self.sections[0]
             findings.append(
@@ -313,6 +427,17 @@ class Agent:
                 + "; ".join(f"{'.'.join(map(str, x['loc']))}: {x['msg']}" for x in e.errors()[:4])
             ) from e
 
+    @staticmethod
+    def _typed_numerals(claim: str, evidence: list[dict[str, str]]) -> list[str]:
+        """Numerals written into a claim that the finding's own quotes do not contain.
+
+        The Claim contract accepts any numeral once a fact_id is cited, so a model could cite a real
+        fact and still type a wrong figure. For agents whose numbers must come from
+        `calculate_valuation`, that door is closed here."""
+        quoted = " ".join(e["quote"].replace(",", "") for e in evidence)
+        tokens = (t.replace(",", "") for t in re.findall(r"\d[\d,]*(?:\.\d+)?", claim))
+        return [t for t in tokens if t not in quoted]
+
     def _verified_evidence(self, items: Any, where: str) -> list[dict[str, str]]:
         kept = []
         for ev in items if isinstance(items, list) else []:
@@ -331,8 +456,20 @@ class Agent:
     def _resolve_facts(
         self, finding: dict, ticker: str, where: str
     ) -> tuple[list[str], list[dict]]:
-        """fact_ids (cited by the model) -> ValueObjects built from the fact rows."""
+        """fact_ids (cited by the model) -> ValueObjects built from the fact rows; and, for agents that
+        use `calculate_valuation`, `calc_refs` -> the calc's own ValueObjects (never retyped)."""
         cited = list(finding.get("fact_ids") or [])
+        calc_numbers: list[dict] = []
+        for path in dict.fromkeys(finding.get("calc_refs") or []):
+            vo = self._calc.get(path)
+            if vo is None:
+                self._drop(where, f"unknown calc_ref {path!r} ignored")
+                continue
+            calc_numbers.append(dict(vo))
+            for src in vo.get("derived_from") or []:
+                fid = self._fact_for_path(src, ticker)
+                if fid:
+                    cited.append(fid)
         given_numbers = [n for n in finding.get("numbers") or [] if isinstance(n, dict)]
         for n in given_numbers:  # mock fixtures cite by path instead of by id
             for path in n.get("derived_from") or []:
@@ -346,8 +483,8 @@ class Agent:
             else:
                 self._drop(where, f"unknown fact_id {fid!r} ignored")
         if given_numbers:
-            return fact_ids, given_numbers
-        numbers = [
+            return fact_ids, calc_numbers + given_numbers
+        numbers = calc_numbers + [
             {
                 "value": self._facts[fid]["value"],
                 "unit": self._facts[fid]["unit"],
