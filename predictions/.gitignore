@@ -1,0 +1,3 @@
+# Nested .gitignore (plan.txt 15.5): predictions/log/ is runtime-generated
+# output (the append-only forward paper-trading log), not source.
+log/
