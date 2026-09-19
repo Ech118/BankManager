@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bankmanager.local/schema/metrics.json",
+  "title": "Computed metrics",
+  "description": "FROZEN CONTRACT. PRODUCED BY P2 (calc.api.compute_metrics). CONSUMED BY P3 and audit. Every leaf is a value object computed in code (type 'fact' with derived_from) or an explicit assumption. Flow metrics use the latest FULL YEAR (latest_annual_period); balance-sheet metrics use the latest reported balance sheet (latest_balance_period).",
+  "type": "object",
+  "required": [
+    "schema_version", "ticker", "as_of", "latest_annual_period",
+    "latest_balance_period", "margins", "growth", "cash_flow",
+    "balance_sheet", "per_share", "quality_flags", "valuation", "reverse_dcf"
+  ],
+  "properties": {
+    "schema_version": { "$ref": "common.json#/$defs/schema_version" },
+    "ticker": { "$ref": "common.json#/$defs/ticker" },
+    "as_of": { "$ref": "common.json#/$defs/date" },
+    "latest_annual_period": { "$ref": "common.json#/$defs/period" },
+    "latest_balance_period": { "$ref": "common.json#/$defs/period" },
+    "margins": {
+      "description": "period -> margins. Fractions.",
+      "type": "object",
+      "patternProperties": {
+        "^(FY\\d{4}|Q[1-4]-\\d{4})$": {
+          "type": "object",
+          "required": ["gross", "operating", "net", "fcf"],
+          "properties": {
+            "gross": { "$ref": "common.json#/$defs/value" },
+            "operating": { "$ref": "common.json#/$defs/value" },
+            "net": { "$ref": "common.json#/$defs/value" },
+            "fcf": { "$ref": "common.json#/$defs/value" }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "growth": {
+      "description": "period -> year-over-year growth. Only periods with a prior comparable period.",
+      "type": "object",
+      "patternProperties": {
+        "^(FY\\d{4}|Q[1-4]-\\d{4})$": {
+          "type": "object",
+          "required": ["revenue_yoy", "eps_yoy", "fcf_yoy"],
+          "properties": {
+            "revenue_yoy": { "$ref": "common.json#/$defs/value" },
+            "eps_yoy": { "$ref": "common.json#/$defs/value" },
+            "fcf_yoy": { "$ref": "common.json#/$defs/value" }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "cash_flow": {
+      "type": "object",
+      "required": ["fcf", "fcf_conversion", "fcf_yield", "capex_intensity", "ebitda"],
+      "properties": {
+        "fcf": { "$ref": "common.json#/$defs/value" },
+        "fcf_conversion": { "description": "FCF / net income.", "$ref": "common.json#/$defs/value" },
+        "fcf_yield": { "description": "FCF / market cap.", "$ref": "common.json#/$defs/value" },
+        "capex_intensity": { "description": "Capex / revenue.", "$ref": "common.json#/$defs/value" },
+        "ebitda": { "description": "Operating income + D&A (unadjusted).", "$ref": "common.json#/$defs/value" }
+      }
+    },
+    "balance_sheet": {
+      "type": "object",
+      "required": ["net_debt", "net_debt_to_ebitda", "interest_coverage", "current_ratio"],
+      "properties": {
+        "net_debt": { "description": "Positive when debt exceeds cash.", "$ref": "common.json#/$defs/value" },
+        "net_debt_to_ebitda": { "$ref": "common.json#/$defs/value" },
+        "interest_coverage": { "description": "Operating income / interest expense.", "$ref": "common.json#/$defs/value" },
+        "current_ratio": { "$ref": "common.json#/$defs/value" }
+      }
+    },
+    "per_share": {
+      "type": "object",
+      "required": ["dilution_yoy", "sbc_pct_revenue", "sbc_pct_fcf"],
+      "properties": {
+        "dilution_yoy": { "description": "Change in diluted shares; negative = shrinking share count.", "$ref": "common.json#/$defs/value" },
+        "sbc_pct_revenue": { "$ref": "common.json#/$defs/value" },
+        "sbc_pct_fcf": { "$ref": "common.json#/$defs/value" }
+      }
+    },
+    "quality_flags": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["flag", "detail", "severity"],
+        "properties": {
+          "flag": { "type": "string" },
+          "detail": { "type": "string" },
+          "severity": { "enum": ["low", "medium", "high"] }
+        }
+      }
+    },
+    "valuation": {
+      "type": "object",
+      "required": ["pe", "forward_pe", "ev_ebitda", "ev_revenue", "p_fcf", "vs_peers", "vs_sp500"],
+      "properties": {
+        "pe": { "$ref": "common.json#/$defs/value" },
+        "forward_pe": { "$ref": "common.json#/$defs/value" },
+        "ev_ebitda": { "$ref": "common.json#/$defs/value" },
+        "ev_revenue": { "$ref": "common.json#/$defs/value" },
+        "p_fcf": { "$ref": "common.json#/$defs/value" },
+        "vs_peers": {
+          "description": "Premium (+) or discount (-) to peer MEDIAN, as fractions.",
+          "type": "object",
+          "required": ["pe_premium", "ev_ebitda_premium"],
+          "properties": {
+            "pe_premium": { "$ref": "common.json#/$defs/value" },
+            "ev_ebitda_premium": { "$ref": "common.json#/$defs/value" }
+          }
+        },
+        "vs_sp500": {
+          "type": "object",
+          "required": ["forward_pe_premium"],
+          "properties": {
+            "forward_pe_premium": { "$ref": "common.json#/$defs/value" }
+          }
+        }
+      }
+    },
+    "reverse_dcf": {
+      "type": "object",
+      "required": ["implied_fcf_cagr", "assumptions", "sensitivity_grid"],
+      "properties": {
+        "implied_fcf_cagr": {
+          "description": "FCF growth (per year over the horizon) the current price implies under the stated assumptions.",
+          "$ref": "common.json#/$defs/value"
+        },
+        "assumptions": {
+          "type": "object",
+          "required": ["discount_rate", "terminal_growth", "horizon_years"],
+          "properties": {
+            "discount_rate": { "$ref": "common.json#/$defs/value" },
+            "terminal_growth": { "$ref": "common.json#/$defs/value" },
+            "horizon_years": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "sensitivity_grid": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["discount_rate", "terminal_growth", "implied_fcf_cagr"],
+            "properties": {
+              "discount_rate": { "type": "number" },
+              "terminal_growth": { "type": "number" },
+              "implied_fcf_cagr": { "$ref": "common.json#/$defs/value" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

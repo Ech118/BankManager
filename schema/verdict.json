@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bankmanager.local/schema/verdict.json",
+  "title": "Final verdict",
+  "description": "FROZEN CONTRACT. PRODUCED BY P3 (orchestrator.api.run_analysis). CONSUMED BY web/ and audit. The disclaimer is REQUIRED and non-empty (error M). All numbers in card come from scenario_result / metrics, never from LLM arithmetic.",
+  "type": "object",
+  "required": [
+    "schema_version", "ticker", "as_of", "generated_at", "mode", "disclaimer",
+    "card", "sections", "red_team", "agent_outputs", "scenario_result", "audit", "data_quality"
+  ],
+  "properties": {
+    "schema_version": { "$ref": "common.json#/$defs/schema_version" },
+    "ticker": { "$ref": "common.json#/$defs/ticker" },
+    "as_of": { "$ref": "common.json#/$defs/date" },
+    "generated_at": { "$ref": "common.json#/$defs/timestamp" },
+    "mode": { "enum": ["live", "mock", "backtest"] },
+    "disclaimer": { "type": "string", "minLength": 20 },
+    "card": {
+      "type": "object",
+      "required": [
+        "company", "ticker", "price", "market_cap", "thesis", "scores",
+        "p_beat_sp500_5y", "expected_5y_return", "primary_catalyst", "biggest_risk",
+        "valuation", "business_quality", "financial_strength", "verdict",
+        "ten_thousand_dollar_answer"
+      ],
+      "properties": {
+        "company": { "type": "string" },
+        "ticker": { "$ref": "common.json#/$defs/ticker" },
+        "price": { "$ref": "common.json#/$defs/value" },
+        "market_cap": { "$ref": "common.json#/$defs/value" },
+        "thesis": { "description": "2-4 sentences.", "type": "string", "minLength": 1 },
+        "scores": {
+          "type": "object",
+          "required": ["short_term", "medium_term", "long_term"],
+          "properties": {
+            "short_term": { "$ref": "common.json#/$defs/score" },
+            "medium_term": { "$ref": "common.json#/$defs/score" },
+            "long_term": { "$ref": "common.json#/$defs/score" }
+          }
+        },
+        "p_beat_sp500_5y": { "$ref": "common.json#/$defs/probability" },
+        "expected_5y_return": { "$ref": "common.json#/$defs/value" },
+        "primary_catalyst": { "type": "string" },
+        "biggest_risk": { "type": "string" },
+        "valuation": { "enum": ["cheap", "reasonable", "expensive", "extremely_expensive"] },
+        "business_quality": { "enum": ["poor", "average", "good", "excellent"] },
+        "financial_strength": { "enum": ["weak", "average", "strong", "fortress"] },
+        "verdict": { "enum": ["strong_buy", "buy", "speculative_buy", "hold", "avoid", "sell"] },
+        "ten_thousand_dollar_answer": {
+          "type": "object",
+          "required": ["choice", "reason"],
+          "properties": {
+            "choice": { "enum": ["this_stock", "sp500"] },
+            "reason": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    },
+    "sections": {
+      "description": "The 15 sections of the original investment-committee prompt, rendered from agent outputs.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "body_markdown", "agent", "evidence"],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "body_markdown": { "type": "string" },
+          "agent": { "type": "string" },
+          "evidence": { "type": "array", "items": { "$ref": "common.json#/$defs/evidence" } }
+        }
+      }
+    },
+    "red_team": {
+      "type": "object",
+      "required": ["summary", "responses_by_synthesizer"],
+      "properties": {
+        "summary": { "type": "string" },
+        "responses_by_synthesizer": { "type": "string" }
+      }
+    },
+    "agent_outputs": {
+      "type": "object",
+      "additionalProperties": { "$ref": "analysis.json" }
+    },
+    "scenario_result": { "$ref": "scenario_result.json" },
+    "audit": { "$ref": "audit.json" },
+    "data_quality": { "$ref": "common.json#/$defs/data_quality" }
+  }
+}

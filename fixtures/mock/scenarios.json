@@ -1,0 +1,143 @@
+{
+  "schema_version": "1.0.0",
+  "ticker": "ACME",
+  "as_of": "2026-09-19",
+  "scenarios": {
+    "bear": {
+      "probability": 0.3,
+      "horizon_years": 5,
+      "revenue_cagr": {
+        "value": 0.03,
+        "unit": "fraction",
+        "type": "assumption",
+        "status": "ok",
+        "source_id": "src:llm:valuation"
+      },
+      "terminal_margin": {
+        "value": 0.1,
+        "unit": "fraction",
+        "type": "assumption",
+        "status": "ok",
+        "source_id": "src:llm:valuation"
+      },
+      "eps_at_horizon": {
+        "value": 1.4674355371,
+        "unit": "usd_per_share",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenarios.bear.revenue_cagr",
+          "scenarios.bear.terminal_margin",
+          "market.shares_outstanding"
+        ]
+      },
+      "exit_multiple": {
+        "value": 16.0,
+        "unit": "multiple",
+        "type": "assumption",
+        "status": "ok",
+        "source_id": "src:llm:valuation"
+      },
+      "rationale": "Bundled competitor pricing squeezes mid-market margin and the multiple compresses to 16x.",
+      "evidence": [
+        {
+          "quote": "could reduce our gross margin by up to 150 basis points",
+          "source_id": "src:edgar:0001234567-26-000010:risk_factors"
+        }
+      ]
+    },
+    "base": {
+      "probability": 0.5,
+      "horizon_years": 5,
+      "revenue_cagr": {
+        "value": 0.08,
+        "unit": "fraction",
+        "type": "assumption",
+        "status": "ok",
+        "source_id": "src:llm:valuation"
+      },
+      "terminal_margin": {
+        "value": 0.125,
+        "unit": "fraction",
+        "type": "assumption",
+        "status": "ok",
+        "source_id": "src:llm:valuation"
+      },
+      "eps_at_horizon": {
+        "value": 2.3248861975,
+        "unit": "usd_per_share",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenarios.base.revenue_cagr",
+          "scenarios.base.terminal_margin",
+          "market.shares_outstanding"
+        ]
+      },
+      "exit_multiple": {
+        "value": 22.0,
+        "unit": "multiple",
+        "type": "assumption",
+        "status": "ok",
+        "source_id": "src:llm:valuation"
+      },
+      "rationale": "Management guidance is delivered; multiple de-rates from 33x to 22x as growth normalises.",
+      "evidence": [
+        {
+          "quote": "we expect revenue growth of 8% to 10% and operating margin of 16% to 17%",
+          "source_id": "src:edgar:0001234567-26-000010:mdna"
+        }
+      ]
+    },
+    "bull": {
+      "probability": 0.2,
+      "horizon_years": 5,
+      "revenue_cagr": {
+        "value": 0.12,
+        "unit": "fraction",
+        "type": "assumption",
+        "status": "ok",
+        "source_id": "src:llm:valuation"
+      },
+      "terminal_margin": {
+        "value": 0.14,
+        "unit": "fraction",
+        "type": "assumption",
+        "status": "ok",
+        "source_id": "src:llm:valuation"
+      },
+      "eps_at_horizon": {
+        "value": 3.1231371601,
+        "unit": "usd_per_share",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenarios.bull.revenue_cagr",
+          "scenarios.bull.terminal_margin",
+          "market.shares_outstanding"
+        ]
+      },
+      "exit_multiple": {
+        "value": 26.0,
+        "unit": "multiple",
+        "type": "assumption",
+        "status": "ok",
+        "source_id": "src:llm:valuation"
+      },
+      "rationale": "Software mix and switching costs sustain double-digit growth and margin expansion.",
+      "evidence": [
+        {
+          "quote": "Customers who adopted our software platform renewed at a rate of 94%",
+          "source_id": "src:edgar:0001234567-26-000010:business"
+        }
+      ]
+    }
+  },
+  "prior_shift": {
+    "value": -0.1,
+    "reason": "Stock trades at a 27% P/E premium to peers with decelerating guided growth."
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bankmanager.local/schema/audit.json",
+  "title": "Audit report",
+  "description": "FROZEN CONTRACT. PRODUCED BY P2 (audit.api.run_audit). passed is false if ANY issue has severity 'error'.",
+  "type": "object",
+  "required": ["schema_version", "passed", "issues"],
+  "properties": {
+    "schema_version": { "$ref": "common.json#/$defs/schema_version" },
+    "passed": { "type": "boolean" },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["severity", "path", "message"],
+        "properties": {
+          "severity": { "enum": ["error", "warn"] },
+          "path": { "description": "Dotted path into the audited artifact.", "type": "string" },
+          "message": { "type": "string" }
+        }
+      }
+    }
+  }
+}

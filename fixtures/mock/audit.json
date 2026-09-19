@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0.0",
+  "passed": true,
+  "issues": [
+    {
+      "severity": "warn",
+      "path": "agent_outputs.forensic.findings[2]",
+      "message": "Mock warning: EPS-growth attribution (2.4 points) is derived by the agent, not by calc/."
+    }
+  ]
+}

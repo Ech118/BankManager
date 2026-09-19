@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bankmanager.local/schema/scenario_result.json",
+  "title": "Scenario result (computed)",
+  "description": "FROZEN CONTRACT. PRODUCED BY P2 (calc.api.evaluate_scenarios + derive_scores). CONSUMED BY P3 Synthesizer and audit. P(beat S&P) comes from a base-rate prior plus a CAPPED shift (error C). Scores come from a fixed rubric.",
+  "type": "object",
+  "required": [
+    "schema_version", "ticker", "as_of", "scenarios", "expected_annualized_return",
+    "sp500_expected_return", "excess_vs_sp500", "p_beat_sp500", "prior", "scores", "consistency"
+  ],
+  "properties": {
+    "schema_version": { "$ref": "common.json#/$defs/schema_version" },
+    "ticker": { "$ref": "common.json#/$defs/ticker" },
+    "as_of": { "$ref": "common.json#/$defs/date" },
+    "scenarios": {
+      "type": "object",
+      "required": ["bear", "base", "bull"],
+      "additionalProperties": false,
+      "properties": {
+        "bear": { "$ref": "#/$defs/scenario_out" },
+        "base": { "$ref": "#/$defs/scenario_out" },
+        "bull": { "$ref": "#/$defs/scenario_out" }
+      }
+    },
+    "expected_annualized_return": {
+      "description": "Probability-weighted annualized return over the scenario horizon.",
+      "$ref": "common.json#/$defs/value"
+    },
+    "sp500_expected_return": {
+      "description": "Assumed annual S&P 500 return (type 'assumption').",
+      "$ref": "common.json#/$defs/value"
+    },
+    "excess_vs_sp500": {
+      "type": "object",
+      "required": ["1y", "3y", "5y"],
+      "properties": {
+        "1y": { "$ref": "common.json#/$defs/value" },
+        "3y": { "$ref": "common.json#/$defs/value" },
+        "5y": { "$ref": "common.json#/$defs/value" }
+      }
+    },
+    "p_beat_sp500": {
+      "type": "object",
+      "required": ["1y", "3y", "5y"],
+      "properties": {
+        "1y": { "$ref": "common.json#/$defs/probability" },
+        "3y": { "$ref": "common.json#/$defs/probability" },
+        "5y": { "$ref": "common.json#/$defs/probability" }
+      }
+    },
+    "prior": {
+      "type": "object",
+      "required": ["base_rate", "requested_shift", "applied_shift", "cap"],
+      "properties": {
+        "base_rate": {
+          "type": "object",
+          "required": ["1y", "3y", "5y"],
+          "properties": {
+            "1y": { "$ref": "common.json#/$defs/probability" },
+            "3y": { "$ref": "common.json#/$defs/probability" },
+            "5y": { "$ref": "common.json#/$defs/probability" }
+          }
+        },
+        "requested_shift": { "type": "number" },
+        "applied_shift": { "type": "number" },
+        "cap": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "scores": {
+      "type": "object",
+      "required": ["short_term", "medium_term", "long_term"],
+      "properties": {
+        "short_term": { "$ref": "common.json#/$defs/score" },
+        "medium_term": { "$ref": "common.json#/$defs/score" },
+        "long_term": { "$ref": "common.json#/$defs/score" }
+      }
+    },
+    "consistency": {
+      "type": "object",
+      "required": ["ok", "issues"],
+      "properties": {
+        "ok": { "type": "boolean" },
+        "issues": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  },
+  "$defs": {
+    "scenario_out": {
+      "type": "object",
+      "required": ["probability", "price_target", "annualized_return"],
+      "properties": {
+        "probability": { "$ref": "common.json#/$defs/probability" },
+        "price_target": { "$ref": "common.json#/$defs/value" },
+        "annualized_return": { "$ref": "common.json#/$defs/value" }
+      }
+    }
+  }
+}

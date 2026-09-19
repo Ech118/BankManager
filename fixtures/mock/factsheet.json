@@ -1,0 +1,992 @@
+{
+  "schema_version": "1.0.0",
+  "ticker": "ACME",
+  "company_name": "Acme Corporation (fictional mock)",
+  "as_of": "2026-09-19",
+  "built_at": "2026-09-19T12:00:00Z",
+  "mode": "mock",
+  "scope": {
+    "in_scope": true,
+    "reason": null
+  },
+  "data_quality": {
+    "overall": "ok",
+    "gaps": []
+  },
+  "market": {
+    "price": {
+      "value": 50.0,
+      "unit": "usd_per_share",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:market:quote"
+    },
+    "market_cap": {
+      "value": 19750000000.0,
+      "unit": "usd",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:market:quote"
+    },
+    "shares_outstanding": {
+      "value": 395000000,
+      "unit": "shares",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:market:quote"
+    },
+    "enterprise_value": {
+      "value": 19900000000.0,
+      "unit": "usd",
+      "type": "fact",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "market.market_cap",
+        "financials.Q2-2026.total_debt",
+        "financials.Q2-2026.cash"
+      ]
+    }
+  },
+  "financials": [
+    {
+      "period": "Q2-2026",
+      "period_end": "2026-06-30",
+      "form": "10-Q",
+      "filed_date": "2026-08-05",
+      "accession": "0001234567-26-000090",
+      "revenue": {
+        "value": 1400000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000090:xbrl"
+      },
+      "cost_of_revenue": {
+        "value": 830000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000090:xbrl"
+      },
+      "gross_profit": {
+        "value": 570000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000090:xbrl"
+      },
+      "operating_income": {
+        "value": 235000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000090:xbrl"
+      },
+      "pretax_income": {
+        "value": 221000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000090:xbrl"
+      },
+      "net_income": {
+        "value": 176800000.0,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000090:xbrl"
+      },
+      "eps_diluted": {
+        "value": 0.45,
+        "unit": "usd_per_share",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000090:xbrl"
+      },
+      "shares_diluted": {
+        "value": 395000000,
+        "unit": "shares",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000090:xbrl"
+      },
+      "depreciation_amortization": {
+        "value": 52000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000090:xbrl"
+      },
+      "op_cash_flow": {
+        "value": 230000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000090:xbrl"
+      },
+      "capex": {
+        "value": 70000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000090:xbrl"
+      },
+      "sbc": {
+        "value": 27000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000090:xbrl"
+      },
+      "cash": {
+        "value": 1000000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000090:xbrl"
+      },
+      "total_debt": {
+        "value": 1150000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000090:xbrl"
+      },
+      "interest_expense": {
+        "value": 14000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000090:xbrl"
+      },
+      "total_assets": {
+        "value": 6200000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000090:xbrl"
+      },
+      "total_equity": {
+        "value": 3150000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000090:xbrl"
+      },
+      "current_assets": {
+        "value": 2500000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000090:xbrl"
+      },
+      "current_liabilities": {
+        "value": 1350000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000090:xbrl"
+      },
+      "receivables": {
+        "value": 760000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000090:xbrl"
+      },
+      "inventory": {
+        "value": 520000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000090:xbrl"
+      }
+    },
+    {
+      "period": "FY2025",
+      "period_end": "2025-12-31",
+      "form": "10-K",
+      "filed_date": "2026-02-20",
+      "accession": "0001234567-26-000010",
+      "revenue": {
+        "value": 5000000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000010:xbrl"
+      },
+      "cost_of_revenue": {
+        "value": 3000000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000010:xbrl"
+      },
+      "gross_profit": {
+        "value": 2000000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000010:xbrl"
+      },
+      "operating_income": {
+        "value": 800000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000010:xbrl"
+      },
+      "pretax_income": {
+        "value": 740000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000010:xbrl"
+      },
+      "net_income": {
+        "value": 592000000.0,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000010:xbrl"
+      },
+      "eps_diluted": {
+        "value": 1.48,
+        "unit": "usd_per_share",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000010:xbrl"
+      },
+      "shares_diluted": {
+        "value": 400000000,
+        "unit": "shares",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000010:xbrl"
+      },
+      "depreciation_amortization": {
+        "value": 200000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000010:xbrl"
+      },
+      "op_cash_flow": {
+        "value": 850000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000010:xbrl"
+      },
+      "capex": {
+        "value": 250000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000010:xbrl"
+      },
+      "sbc": {
+        "value": 100000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000010:xbrl"
+      },
+      "cash": {
+        "value": 900000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000010:xbrl"
+      },
+      "total_debt": {
+        "value": 1200000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000010:xbrl"
+      },
+      "interest_expense": {
+        "value": 60000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000010:xbrl"
+      },
+      "total_assets": {
+        "value": 6000000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000010:xbrl"
+      },
+      "total_equity": {
+        "value": 3000000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000010:xbrl"
+      },
+      "current_assets": {
+        "value": 2400000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000010:xbrl"
+      },
+      "current_liabilities": {
+        "value": 1300000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000010:xbrl"
+      },
+      "receivables": {
+        "value": 700000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000010:xbrl"
+      },
+      "inventory": {
+        "value": 500000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-26-000010:xbrl"
+      }
+    },
+    {
+      "period": "FY2024",
+      "period_end": "2024-12-31",
+      "form": "10-K",
+      "filed_date": "2025-02-21",
+      "accession": "0001234567-25-000010",
+      "revenue": {
+        "value": 4500000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-25-000010:xbrl"
+      },
+      "cost_of_revenue": {
+        "value": 2750000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-25-000010:xbrl"
+      },
+      "gross_profit": {
+        "value": 1750000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-25-000010:xbrl"
+      },
+      "operating_income": {
+        "value": 675000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-25-000010:xbrl"
+      },
+      "pretax_income": {
+        "value": 610000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-25-000010:xbrl"
+      },
+      "net_income": {
+        "value": 488000000.0,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-25-000010:xbrl"
+      },
+      "eps_diluted": {
+        "value": 1.19,
+        "unit": "usd_per_share",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-25-000010:xbrl"
+      },
+      "shares_diluted": {
+        "value": 410000000,
+        "unit": "shares",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-25-000010:xbrl"
+      },
+      "depreciation_amortization": {
+        "value": 190000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-25-000010:xbrl"
+      },
+      "op_cash_flow": {
+        "value": 700000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-25-000010:xbrl"
+      },
+      "capex": {
+        "value": 220000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-25-000010:xbrl"
+      },
+      "sbc": {
+        "value": 90000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-25-000010:xbrl"
+      },
+      "cash": {
+        "value": 700000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-25-000010:xbrl"
+      },
+      "total_debt": {
+        "value": 1300000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-25-000010:xbrl"
+      },
+      "interest_expense": {
+        "value": 65000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-25-000010:xbrl"
+      },
+      "total_assets": {
+        "value": 5500000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-25-000010:xbrl"
+      },
+      "total_equity": {
+        "value": 2700000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-25-000010:xbrl"
+      },
+      "current_assets": {
+        "value": 2100000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-25-000010:xbrl"
+      },
+      "current_liabilities": {
+        "value": 1200000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-25-000010:xbrl"
+      },
+      "receivables": {
+        "value": 600000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-25-000010:xbrl"
+      },
+      "inventory": {
+        "value": 450000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-25-000010:xbrl"
+      }
+    },
+    {
+      "period": "FY2023",
+      "period_end": "2023-12-31",
+      "form": "10-K",
+      "filed_date": "2024-02-22",
+      "accession": "0001234567-24-000010",
+      "revenue": {
+        "value": 4100000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-24-000010:xbrl"
+      },
+      "cost_of_revenue": {
+        "value": 2560000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-24-000010:xbrl"
+      },
+      "gross_profit": {
+        "value": 1540000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-24-000010:xbrl"
+      },
+      "operating_income": {
+        "value": 574000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-24-000010:xbrl"
+      },
+      "pretax_income": {
+        "value": 504000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-24-000010:xbrl"
+      },
+      "net_income": {
+        "value": 403200000.0,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-24-000010:xbrl"
+      },
+      "eps_diluted": {
+        "value": 0.97,
+        "unit": "usd_per_share",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-24-000010:xbrl"
+      },
+      "shares_diluted": {
+        "value": 415000000,
+        "unit": "shares",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-24-000010:xbrl"
+      },
+      "depreciation_amortization": {
+        "value": 180000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-24-000010:xbrl"
+      },
+      "op_cash_flow": {
+        "value": 600000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-24-000010:xbrl"
+      },
+      "capex": {
+        "value": 200000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-24-000010:xbrl"
+      },
+      "sbc": {
+        "value": 80000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-24-000010:xbrl"
+      },
+      "cash": {
+        "value": 550000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-24-000010:xbrl"
+      },
+      "total_debt": {
+        "value": 1400000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-24-000010:xbrl"
+      },
+      "interest_expense": {
+        "value": 70000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-24-000010:xbrl"
+      },
+      "total_assets": {
+        "value": 5100000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-24-000010:xbrl"
+      },
+      "total_equity": {
+        "value": 2400000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-24-000010:xbrl"
+      },
+      "current_assets": {
+        "value": 1900000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-24-000010:xbrl"
+      },
+      "current_liabilities": {
+        "value": 1100000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-24-000010:xbrl"
+      },
+      "receivables": {
+        "value": 520000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-24-000010:xbrl"
+      },
+      "inventory": {
+        "value": 420000000,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:edgar:0001234567-24-000010:xbrl"
+      }
+    }
+  ],
+  "peers": [
+    {
+      "ticker": "PRAA",
+      "market_cap": {
+        "value": 12000000000.0,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:market:peers"
+      },
+      "pe": {
+        "value": 22.0,
+        "unit": "multiple",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:market:peers"
+      },
+      "ev_ebitda": {
+        "value": 14.0,
+        "unit": "multiple",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:market:peers"
+      },
+      "ev_revenue": {
+        "value": 2.5,
+        "unit": "multiple",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:market:peers"
+      },
+      "fcf_yield": {
+        "value": 0.045,
+        "unit": "fraction",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:market:peers"
+      }
+    },
+    {
+      "ticker": "PRBB",
+      "market_cap": {
+        "value": 30000000000.0,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:market:peers"
+      },
+      "pe": {
+        "value": 25.0,
+        "unit": "multiple",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:market:peers"
+      },
+      "ev_ebitda": {
+        "value": 15.0,
+        "unit": "multiple",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:market:peers"
+      },
+      "ev_revenue": {
+        "value": 3.0,
+        "unit": "multiple",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:market:peers"
+      },
+      "fcf_yield": {
+        "value": 0.04,
+        "unit": "fraction",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:market:peers"
+      }
+    },
+    {
+      "ticker": "PRCC",
+      "market_cap": {
+        "value": 18000000000.0,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:market:peers"
+      },
+      "pe": {
+        "value": 28.0,
+        "unit": "multiple",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:market:peers"
+      },
+      "ev_ebitda": {
+        "value": 16.0,
+        "unit": "multiple",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:market:peers"
+      },
+      "ev_revenue": {
+        "value": 3.2,
+        "unit": "multiple",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:market:peers"
+      },
+      "fcf_yield": {
+        "value": 0.038,
+        "unit": "fraction",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:market:peers"
+      }
+    },
+    {
+      "ticker": "PRDD",
+      "market_cap": {
+        "value": 25000000000.0,
+        "unit": "usd",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:market:peers"
+      },
+      "pe": {
+        "value": 30.0,
+        "unit": "multiple",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:market:peers"
+      },
+      "ev_ebitda": {
+        "value": 18.0,
+        "unit": "multiple",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:market:peers"
+      },
+      "ev_revenue": {
+        "value": 3.6,
+        "unit": "multiple",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:market:peers"
+      },
+      "fcf_yield": {
+        "value": 0.033,
+        "unit": "fraction",
+        "type": "fact",
+        "status": "ok",
+        "source_id": "src:market:peers"
+      }
+    }
+  ],
+  "sp500_baseline": {
+    "forward_pe": {
+      "value": 22.0,
+      "unit": "multiple",
+      "type": "estimate",
+      "status": "ok",
+      "source_id": "src:market:sp500"
+    },
+    "earnings_yield": {
+      "value": 0.0454545455,
+      "unit": "fraction",
+      "type": "estimate",
+      "status": "ok",
+      "source_id": "src:market:sp500",
+      "derived_from": [
+        "sp500_baseline.forward_pe"
+      ]
+    },
+    "risk_free_rate": {
+      "value": 0.043,
+      "unit": "fraction",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:fred:DGS10"
+    },
+    "as_of": "2026-09-18"
+  },
+  "consensus": {
+    "revenue_next_fy": {
+      "value": 5450000000,
+      "unit": "usd",
+      "type": "estimate",
+      "status": "ok",
+      "source_id": "src:market:consensus"
+    },
+    "eps_next_fy": {
+      "value": 1.7,
+      "unit": "usd_per_share",
+      "type": "estimate",
+      "status": "ok",
+      "source_id": "src:market:consensus"
+    }
+  },
+  "filing_sections": [
+    {
+      "name": "business",
+      "source_id": "src:edgar:0001234567-26-000010:business",
+      "accession": "0001234567-26-000010",
+      "form": "10-K",
+      "period": "FY2025",
+      "char_count": 914
+    },
+    {
+      "name": "risk_factors",
+      "source_id": "src:edgar:0001234567-26-000010:risk_factors",
+      "accession": "0001234567-26-000010",
+      "form": "10-K",
+      "period": "FY2025",
+      "char_count": 751
+    },
+    {
+      "name": "mdna",
+      "source_id": "src:edgar:0001234567-26-000010:mdna",
+      "accession": "0001234567-26-000010",
+      "form": "10-K",
+      "period": "FY2025",
+      "char_count": 1152
+    }
+  ],
+  "news": [
+    {
+      "headline": "Acme wins multi-year sensor contract with European automaker (mock)",
+      "date": "2026-09-02",
+      "url": "https://example.com/mock-news-1",
+      "source_id": "src:news:1"
+    },
+    {
+      "headline": "Rival bundles software free with hardware in mid-market push (mock)",
+      "date": "2026-08-27",
+      "url": "https://example.com/mock-news-2",
+      "source_id": "src:news:2"
+    }
+  ],
+  "sources": {
+    "src:edgar:0001234567-26-000090:xbrl": {
+      "kind": "edgar_xbrl",
+      "url": null,
+      "accession": "0001234567-26-000090",
+      "fetched_at": "2026-09-19T12:00:00Z"
+    },
+    "src:edgar:0001234567-26-000010:xbrl": {
+      "kind": "edgar_xbrl",
+      "url": null,
+      "accession": "0001234567-26-000010",
+      "fetched_at": "2026-09-19T12:00:00Z"
+    },
+    "src:edgar:0001234567-25-000010:xbrl": {
+      "kind": "edgar_xbrl",
+      "url": null,
+      "accession": "0001234567-25-000010",
+      "fetched_at": "2026-09-19T12:00:00Z"
+    },
+    "src:edgar:0001234567-24-000010:xbrl": {
+      "kind": "edgar_xbrl",
+      "url": null,
+      "accession": "0001234567-24-000010",
+      "fetched_at": "2026-09-19T12:00:00Z"
+    },
+    "src:edgar:0001234567-26-000010:business": {
+      "kind": "edgar_text",
+      "url": null,
+      "accession": "0001234567-26-000010",
+      "fetched_at": "2026-09-19T12:00:00Z"
+    },
+    "src:edgar:0001234567-26-000010:risk_factors": {
+      "kind": "edgar_text",
+      "url": null,
+      "accession": "0001234567-26-000010",
+      "fetched_at": "2026-09-19T12:00:00Z"
+    },
+    "src:edgar:0001234567-26-000010:mdna": {
+      "kind": "edgar_text",
+      "url": null,
+      "accession": "0001234567-26-000010",
+      "fetched_at": "2026-09-19T12:00:00Z"
+    },
+    "src:market:quote": {
+      "kind": "market",
+      "url": null,
+      "accession": null,
+      "fetched_at": "2026-09-19T12:00:00Z"
+    },
+    "src:market:peers": {
+      "kind": "market",
+      "url": null,
+      "accession": null,
+      "fetched_at": "2026-09-19T12:00:00Z"
+    },
+    "src:market:sp500": {
+      "kind": "market",
+      "url": null,
+      "accession": null,
+      "fetched_at": "2026-09-19T12:00:00Z"
+    },
+    "src:market:consensus": {
+      "kind": "market",
+      "url": null,
+      "accession": null,
+      "fetched_at": "2026-09-19T12:00:00Z"
+    },
+    "src:fred:DGS10": {
+      "kind": "fred",
+      "url": null,
+      "accession": null,
+      "fetched_at": "2026-09-19T12:00:00Z"
+    },
+    "src:news:1": {
+      "kind": "news",
+      "url": null,
+      "accession": null,
+      "fetched_at": "2026-09-19T12:00:00Z"
+    },
+    "src:news:2": {
+      "kind": "news",
+      "url": null,
+      "accession": null,
+      "fetched_at": "2026-09-19T12:00:00Z"
+    }
+  }
+}

@@ -1,0 +1,29 @@
+# FROZEN (Step 0). A partition needing extra ignores creates a nested .gitignore
+# inside its own directory instead of editing this file.
+
+# secrets
+.env
+.env.*
+!.env.example
+*.pem
+id_rsa
+id_ed25519
+
+# python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+
+# node
+node_modules/
+.next/
+out/
+dist/
+
+# caches / local state
+.cache/
+.DS_Store
+.claude/settings.local.json

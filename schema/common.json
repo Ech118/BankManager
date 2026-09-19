@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bankmanager.local/schema/common.json",
+  "title": "Shared definitions",
+  "description": "FROZEN CONTRACT. Shared building blocks. See plan.txt sections 15.6 and 15.7. Consumers must tolerate unknown extra fields; only ADDITIVE changes are allowed without all-three sign-off (plan.txt 15.11).",
+  "$defs": {
+    "schema_version": {
+      "description": "Semantic version of the contract set. Bumped only on breaking changes.",
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "ticker": {
+      "description": "Uppercase ticker. Share classes use . or - (e.g. BRK.B).",
+      "type": "string",
+      "pattern": "^[A-Z]{1,5}([.-][A-Z])?$"
+    },
+    "date": {
+      "description": "ISO 8601 calendar date, YYYY-MM-DD.",
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "timestamp": {
+      "description": "UTC ISO 8601 timestamp, e.g. 2026-09-19T12:00:00Z.",
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+    },
+    "period": {
+      "description": "Fiscal period label: FY2025 (annual) or Q2-2026 (quarter).",
+      "type": "string",
+      "pattern": "^(FY\\d{4}|Q[1-4]-\\d{4})$"
+    },
+    "source_id": {
+      "description": "Stable id pointing into factsheet.sources. Examples: src:edgar:0001234567-26-000010:xbrl, src:market:quote, src:fred:DGS10, src:news:1.",
+      "type": "string",
+      "pattern": "^src:[a-z0-9_]+:[A-Za-z0-9._:-]+$"
+    },
+    "probability": {
+      "description": "Bare probability in [0,1]. One of the two documented exceptions to 'every number is a value object' (the other is a 1-10 score).",
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "score": {
+      "description": "Integer buyability score 1..10 (bare, documented exception).",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 10
+    },
+    "value": {
+      "description": "VALUE OBJECT. Every reported or computed number lives in one of these. Fractions, not percents (0.25 = 25%). Money in full USD. Missing data is {value:null,status:'unavailable'}, never 0. status 'ok' requires value != null and a source_id or non-empty derived_from.",
+      "type": "object",
+      "required": ["value", "unit", "type", "status", "source_id"],
+      "properties": {
+        "value": { "type": ["number", "null"] },
+        "unit": {
+          "enum": ["usd", "usd_per_share", "shares", "fraction", "multiple", "count", "days", "ratio"]
+        },
+        "type": { "enum": ["fact", "estimate", "assumption"] },
+        "status": { "enum": ["ok", "unavailable"] },
+        "source_id": {
+          "oneOf": [{ "$ref": "#/$defs/source_id" }, { "type": "null" }]
+        },
+        "derived_from": {
+          "description": "Dotted paths (in the producing artifacts) this value was computed from.",
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "status": { "const": "ok" } }, "required": ["status"] },
+          "then": {
+            "required": ["value"],
+            "properties": { "value": { "type": "number" } },
+            "anyOf": [
+              { "properties": { "source_id": { "type": "string" } }, "required": ["source_id"] },
+              { "required": ["derived_from"], "properties": { "derived_from": { "minItems": 1 } } }
+            ]
+          }
+        },
+        {
+          "if": { "properties": { "status": { "const": "unavailable" } }, "required": ["status"] },
+          "then": { "properties": { "value": { "type": "null" } } }
+        }
+      ]
+    },
+    "evidence": {
+      "description": "A verbatim quote from a source. The auditor string-matches quote inside the text behind source_id.",
+      "type": "object",
+      "required": ["quote", "source_id"],
+      "properties": {
+        "quote": { "type": "string", "minLength": 8 },
+        "source_id": { "$ref": "#/$defs/source_id" }
+      }
+    },
+    "trend": {
+      "enum": ["structurally_positive", "temporarily_positive", "structurally_negative", "temporarily_negative", "neutral"]
+    },
+    "confidence": { "enum": ["low", "medium", "high"] },
+    "data_quality": {
+      "type": "object",
+      "required": ["overall", "gaps"],
+      "properties": {
+        "overall": { "enum": ["ok", "partial", "degraded"] },
+        "gaps": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

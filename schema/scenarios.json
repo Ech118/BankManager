@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bankmanager.local/schema/scenarios.json",
+  "title": "Valuation scenarios (LLM proposal)",
+  "description": "FROZEN CONTRACT. PRODUCED BY THE P3 VALUATION AGENT. CONSUMED BY P2 calc.api.evaluate_scenarios. The LLM proposes scenario INPUTS; it never produces P(beat S&P) or scores. Scenario probabilities must sum to 1.0 (P2 validates in code and rejects otherwise).",
+  "type": "object",
+  "required": ["schema_version", "ticker", "as_of", "scenarios", "prior_shift"],
+  "properties": {
+    "schema_version": { "$ref": "common.json#/$defs/schema_version" },
+    "ticker": { "$ref": "common.json#/$defs/ticker" },
+    "as_of": { "$ref": "common.json#/$defs/date" },
+    "scenarios": {
+      "type": "object",
+      "required": ["bear", "base", "bull"],
+      "properties": {
+        "bear": { "$ref": "#/$defs/scenario" },
+        "base": { "$ref": "#/$defs/scenario" },
+        "bull": { "$ref": "#/$defs/scenario" }
+      }
+    },
+    "prior_shift": {
+      "description": "LLM's REQUESTED tilt to the base-rate prior for P(beat S&P). P2 applies it only within a hard cap (error C).",
+      "type": "object",
+      "required": ["value", "reason"],
+      "properties": {
+        "value": { "type": "number", "minimum": -1, "maximum": 1 },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    }
+  },
+  "$defs": {
+    "scenario": {
+      "type": "object",
+      "required": [
+        "probability", "horizon_years", "revenue_cagr", "terminal_margin",
+        "eps_at_horizon", "exit_multiple", "rationale", "evidence"
+      ],
+      "properties": {
+        "probability": { "$ref": "common.json#/$defs/probability" },
+        "horizon_years": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "revenue_cagr": { "$ref": "common.json#/$defs/value" },
+        "terminal_margin": { "description": "Net margin at the horizon.", "$ref": "common.json#/$defs/value" },
+        "eps_at_horizon": { "$ref": "common.json#/$defs/value" },
+        "exit_multiple": { "description": "P/E at the horizon.", "$ref": "common.json#/$defs/value" },
+        "rationale": { "type": "string", "minLength": 1 },
+        "evidence": {
+          "type": "array",
+          "items": { "$ref": "common.json#/$defs/evidence" }
+        }
+      }
+    }
+  }
+}

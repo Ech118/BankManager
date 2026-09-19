@@ -1,0 +1,158 @@
+{
+  "schema_version": "1.0.0",
+  "ticker": "ACME",
+  "as_of": "2026-09-19",
+  "scenarios": {
+    "bear": {
+      "probability": 0.3,
+      "price_target": {
+        "value": 23.4789685934,
+        "unit": "usd_per_share",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenarios.bear.eps_at_horizon",
+          "scenarios.bear.exit_multiple"
+        ]
+      },
+      "annualized_return": {
+        "value": -0.1403101443,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.scenarios.bear.price_target",
+          "market.price"
+        ]
+      }
+    },
+    "base": {
+      "probability": 0.5,
+      "price_target": {
+        "value": 51.1474963443,
+        "unit": "usd_per_share",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenarios.base.eps_at_horizon",
+          "scenarios.base.exit_multiple"
+        ]
+      },
+      "annualized_return": {
+        "value": 0.0045484205,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.scenarios.base.price_target",
+          "market.price"
+        ]
+      }
+    },
+    "bull": {
+      "probability": 0.2,
+      "price_target": {
+        "value": 81.2015661626,
+        "unit": "usd_per_share",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenarios.bull.eps_at_horizon",
+          "scenarios.bull.exit_multiple"
+        ]
+      },
+      "annualized_return": {
+        "value": 0.1018408773,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.scenarios.bull.price_target",
+          "market.price"
+        ]
+      }
+    }
+  },
+  "expected_annualized_return": {
+    "value": -0.0194506576,
+    "unit": "fraction",
+    "type": "estimate",
+    "status": "ok",
+    "source_id": null,
+    "derived_from": [
+      "scenario_result.scenarios.*.annualized_return"
+    ]
+  },
+  "sp500_expected_return": {
+    "value": 0.07,
+    "unit": "fraction",
+    "type": "assumption",
+    "status": "ok",
+    "source_id": "src:config:calc_assumptions"
+  },
+  "excess_vs_sp500": {
+    "1y": {
+      "value": -0.0894506576,
+      "unit": "fraction",
+      "type": "estimate",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "scenario_result.expected_annualized_return",
+        "scenario_result.sp500_expected_return"
+      ]
+    },
+    "3y": {
+      "value": -0.0894506576,
+      "unit": "fraction",
+      "type": "estimate",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "scenario_result.expected_annualized_return",
+        "scenario_result.sp500_expected_return"
+      ]
+    },
+    "5y": {
+      "value": -0.0894506576,
+      "unit": "fraction",
+      "type": "estimate",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "scenario_result.expected_annualized_return",
+        "scenario_result.sp500_expected_return"
+      ]
+    }
+  },
+  "p_beat_sp500": {
+    "1y": 0.37,
+    "3y": 0.34,
+    "5y": 0.32
+  },
+  "prior": {
+    "base_rate": {
+      "1y": 0.47,
+      "3y": 0.44,
+      "5y": 0.42
+    },
+    "requested_shift": -0.1,
+    "applied_shift": -0.1,
+    "cap": 0.15
+  },
+  "scores": {
+    "short_term": 3,
+    "medium_term": 3,
+    "long_term": 4
+  },
+  "consistency": {
+    "ok": true,
+    "issues": []
+  }
+}

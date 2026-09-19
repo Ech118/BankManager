@@ -1,0 +1,684 @@
+{
+  "schema_version": "1.0.0",
+  "ticker": "ACME",
+  "as_of": "2026-09-19",
+  "latest_annual_period": "FY2025",
+  "latest_balance_period": "Q2-2026",
+  "margins": {
+    "Q2-2026": {
+      "gross": {
+        "value": 0.4071428571,
+        "unit": "fraction",
+        "type": "fact",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "financials.Q2-2026.gross_profit",
+          "financials.Q2-2026.revenue"
+        ]
+      },
+      "operating": {
+        "value": 0.1678571429,
+        "unit": "fraction",
+        "type": "fact",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "financials.Q2-2026.operating_income",
+          "financials.Q2-2026.revenue"
+        ]
+      },
+      "net": {
+        "value": 0.1262857143,
+        "unit": "fraction",
+        "type": "fact",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "financials.Q2-2026.net_income",
+          "financials.Q2-2026.revenue"
+        ]
+      },
+      "fcf": {
+        "value": 0.1142857143,
+        "unit": "fraction",
+        "type": "fact",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "financials.Q2-2026.op_cash_flow",
+          "financials.Q2-2026.capex",
+          "financials.Q2-2026.revenue"
+        ]
+      }
+    },
+    "FY2025": {
+      "gross": {
+        "value": 0.4,
+        "unit": "fraction",
+        "type": "fact",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "financials.FY2025.gross_profit",
+          "financials.FY2025.revenue"
+        ]
+      },
+      "operating": {
+        "value": 0.16,
+        "unit": "fraction",
+        "type": "fact",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "financials.FY2025.operating_income",
+          "financials.FY2025.revenue"
+        ]
+      },
+      "net": {
+        "value": 0.1184,
+        "unit": "fraction",
+        "type": "fact",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "financials.FY2025.net_income",
+          "financials.FY2025.revenue"
+        ]
+      },
+      "fcf": {
+        "value": 0.12,
+        "unit": "fraction",
+        "type": "fact",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "financials.FY2025.op_cash_flow",
+          "financials.FY2025.capex",
+          "financials.FY2025.revenue"
+        ]
+      }
+    },
+    "FY2024": {
+      "gross": {
+        "value": 0.3888888889,
+        "unit": "fraction",
+        "type": "fact",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "financials.FY2024.gross_profit",
+          "financials.FY2024.revenue"
+        ]
+      },
+      "operating": {
+        "value": 0.15,
+        "unit": "fraction",
+        "type": "fact",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "financials.FY2024.operating_income",
+          "financials.FY2024.revenue"
+        ]
+      },
+      "net": {
+        "value": 0.1084444444,
+        "unit": "fraction",
+        "type": "fact",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "financials.FY2024.net_income",
+          "financials.FY2024.revenue"
+        ]
+      },
+      "fcf": {
+        "value": 0.1066666667,
+        "unit": "fraction",
+        "type": "fact",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "financials.FY2024.op_cash_flow",
+          "financials.FY2024.capex",
+          "financials.FY2024.revenue"
+        ]
+      }
+    },
+    "FY2023": {
+      "gross": {
+        "value": 0.3756097561,
+        "unit": "fraction",
+        "type": "fact",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "financials.FY2023.gross_profit",
+          "financials.FY2023.revenue"
+        ]
+      },
+      "operating": {
+        "value": 0.14,
+        "unit": "fraction",
+        "type": "fact",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "financials.FY2023.operating_income",
+          "financials.FY2023.revenue"
+        ]
+      },
+      "net": {
+        "value": 0.0983414634,
+        "unit": "fraction",
+        "type": "fact",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "financials.FY2023.net_income",
+          "financials.FY2023.revenue"
+        ]
+      },
+      "fcf": {
+        "value": 0.0975609756,
+        "unit": "fraction",
+        "type": "fact",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "financials.FY2023.op_cash_flow",
+          "financials.FY2023.capex",
+          "financials.FY2023.revenue"
+        ]
+      }
+    }
+  },
+  "growth": {
+    "FY2025": {
+      "revenue_yoy": {
+        "value": 0.1111111111,
+        "unit": "fraction",
+        "type": "fact",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "financials.FY2025.revenue",
+          "financials.FY2024.revenue"
+        ]
+      },
+      "eps_yoy": {
+        "value": 0.243697479,
+        "unit": "fraction",
+        "type": "fact",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "financials.FY2025.eps_diluted",
+          "financials.FY2024.eps_diluted"
+        ]
+      },
+      "fcf_yoy": {
+        "value": 0.25,
+        "unit": "fraction",
+        "type": "fact",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "financials.FY2025.op_cash_flow",
+          "financials.FY2025.capex",
+          "financials.FY2024.op_cash_flow",
+          "financials.FY2024.capex"
+        ]
+      }
+    },
+    "FY2024": {
+      "revenue_yoy": {
+        "value": 0.0975609756,
+        "unit": "fraction",
+        "type": "fact",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "financials.FY2024.revenue",
+          "financials.FY2023.revenue"
+        ]
+      },
+      "eps_yoy": {
+        "value": 0.2268041237,
+        "unit": "fraction",
+        "type": "fact",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "financials.FY2024.eps_diluted",
+          "financials.FY2023.eps_diluted"
+        ]
+      },
+      "fcf_yoy": {
+        "value": 0.2,
+        "unit": "fraction",
+        "type": "fact",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "financials.FY2024.op_cash_flow",
+          "financials.FY2024.capex",
+          "financials.FY2023.op_cash_flow",
+          "financials.FY2023.capex"
+        ]
+      }
+    }
+  },
+  "cash_flow": {
+    "fcf": {
+      "value": 600000000,
+      "unit": "usd",
+      "type": "fact",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "financials.FY2025.op_cash_flow",
+        "financials.FY2025.capex"
+      ]
+    },
+    "fcf_conversion": {
+      "value": 1.0135135135,
+      "unit": "fraction",
+      "type": "fact",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "cash_flow.fcf",
+        "financials.FY2025.net_income"
+      ]
+    },
+    "fcf_yield": {
+      "value": 0.0303797468,
+      "unit": "fraction",
+      "type": "fact",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "cash_flow.fcf",
+        "market.market_cap"
+      ]
+    },
+    "capex_intensity": {
+      "value": 0.05,
+      "unit": "fraction",
+      "type": "fact",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "financials.FY2025.capex",
+        "financials.FY2025.revenue"
+      ]
+    },
+    "ebitda": {
+      "value": 1000000000,
+      "unit": "usd",
+      "type": "fact",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "financials.FY2025.operating_income",
+        "financials.FY2025.depreciation_amortization"
+      ]
+    }
+  },
+  "balance_sheet": {
+    "net_debt": {
+      "value": 150000000,
+      "unit": "usd",
+      "type": "fact",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "financials.Q2-2026.total_debt",
+        "financials.Q2-2026.cash"
+      ]
+    },
+    "net_debt_to_ebitda": {
+      "value": 0.15,
+      "unit": "multiple",
+      "type": "fact",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "balance_sheet.net_debt",
+        "cash_flow.ebitda"
+      ]
+    },
+    "interest_coverage": {
+      "value": 13.3333333333,
+      "unit": "multiple",
+      "type": "fact",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "financials.FY2025.operating_income",
+        "financials.FY2025.interest_expense"
+      ]
+    },
+    "current_ratio": {
+      "value": 1.8518518519,
+      "unit": "ratio",
+      "type": "fact",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "financials.Q2-2026.current_assets",
+        "financials.Q2-2026.current_liabilities"
+      ]
+    }
+  },
+  "per_share": {
+    "dilution_yoy": {
+      "value": -0.0243902439,
+      "unit": "fraction",
+      "type": "fact",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "financials.FY2025.shares_diluted",
+        "financials.FY2024.shares_diluted"
+      ]
+    },
+    "sbc_pct_revenue": {
+      "value": 0.02,
+      "unit": "fraction",
+      "type": "fact",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "financials.FY2025.sbc",
+        "financials.FY2025.revenue"
+      ]
+    },
+    "sbc_pct_fcf": {
+      "value": 0.1666666667,
+      "unit": "fraction",
+      "type": "fact",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "financials.FY2025.sbc",
+        "cash_flow.fcf"
+      ]
+    }
+  },
+  "quality_flags": [
+    {
+      "flag": "dso_rising",
+      "detail": "Days sales outstanding rose from 48.7 to 51.1 days (FY2024 to FY2025): receivables grew faster than revenue.",
+      "severity": "low"
+    },
+    {
+      "flag": "buyback_flatters_eps",
+      "detail": "Diluted share count fell 2.4%, adding roughly 2.4 points to the 24.4% EPS growth.",
+      "severity": "low"
+    }
+  ],
+  "valuation": {
+    "pe": {
+      "value": 33.7837837838,
+      "unit": "multiple",
+      "type": "fact",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "market.price",
+        "financials.FY2025.eps_diluted"
+      ]
+    },
+    "forward_pe": {
+      "value": 29.4117647059,
+      "unit": "multiple",
+      "type": "estimate",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "market.price",
+        "consensus.eps_next_fy"
+      ]
+    },
+    "ev_ebitda": {
+      "value": 19.9,
+      "unit": "multiple",
+      "type": "fact",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "market.enterprise_value",
+        "cash_flow.ebitda"
+      ]
+    },
+    "ev_revenue": {
+      "value": 3.98,
+      "unit": "multiple",
+      "type": "fact",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "market.enterprise_value",
+        "financials.FY2025.revenue"
+      ]
+    },
+    "p_fcf": {
+      "value": 32.9166666667,
+      "unit": "multiple",
+      "type": "fact",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "market.market_cap",
+        "cash_flow.fcf"
+      ]
+    },
+    "vs_peers": {
+      "pe_premium": {
+        "value": 0.2748597654,
+        "unit": "fraction",
+        "type": "fact",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "valuation.pe",
+          "peers[*].pe"
+        ]
+      },
+      "ev_ebitda_premium": {
+        "value": 0.2838709677,
+        "unit": "fraction",
+        "type": "fact",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "valuation.ev_ebitda",
+          "peers[*].ev_ebitda"
+        ]
+      }
+    },
+    "vs_sp500": {
+      "forward_pe_premium": {
+        "value": 0.3368983957,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "valuation.forward_pe",
+          "sp500_baseline.forward_pe"
+        ]
+      }
+    }
+  },
+  "reverse_dcf": {
+    "implied_fcf_cagr": {
+      "value": 0.1161030155,
+      "unit": "fraction",
+      "type": "fact",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "market.enterprise_value",
+        "cash_flow.fcf"
+      ]
+    },
+    "assumptions": {
+      "discount_rate": {
+        "value": 0.09,
+        "unit": "fraction",
+        "type": "assumption",
+        "status": "ok",
+        "source_id": "src:config:calc_assumptions"
+      },
+      "terminal_growth": {
+        "value": 0.03,
+        "unit": "fraction",
+        "type": "assumption",
+        "status": "ok",
+        "source_id": "src:config:calc_assumptions"
+      },
+      "horizon_years": 10
+    },
+    "sensitivity_grid": [
+      {
+        "discount_rate": 0.08,
+        "terminal_growth": 0.02,
+        "implied_fcf_cagr": {
+          "value": 0.10669373,
+          "unit": "fraction",
+          "type": "fact",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "market.enterprise_value",
+            "cash_flow.fcf"
+          ]
+        }
+      },
+      {
+        "discount_rate": 0.08,
+        "terminal_growth": 0.03,
+        "implied_fcf_cagr": {
+          "value": 0.0902071285,
+          "unit": "fraction",
+          "type": "fact",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "market.enterprise_value",
+            "cash_flow.fcf"
+          ]
+        }
+      },
+      {
+        "discount_rate": 0.08,
+        "terminal_growth": 0.04,
+        "implied_fcf_cagr": {
+          "value": 0.0698945116,
+          "unit": "fraction",
+          "type": "fact",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "market.enterprise_value",
+            "cash_flow.fcf"
+          ]
+        }
+      },
+      {
+        "discount_rate": 0.09,
+        "terminal_growth": 0.02,
+        "implied_fcf_cagr": {
+          "value": 0.1300602683,
+          "unit": "fraction",
+          "type": "fact",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "market.enterprise_value",
+            "cash_flow.fcf"
+          ]
+        }
+      },
+      {
+        "discount_rate": 0.09,
+        "terminal_growth": 0.03,
+        "implied_fcf_cagr": {
+          "value": 0.1161030155,
+          "unit": "fraction",
+          "type": "fact",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "market.enterprise_value",
+            "cash_flow.fcf"
+          ]
+        }
+      },
+      {
+        "discount_rate": 0.09,
+        "terminal_growth": 0.04,
+        "implied_fcf_cagr": {
+          "value": 0.0994573408,
+          "unit": "fraction",
+          "type": "fact",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "market.enterprise_value",
+            "cash_flow.fcf"
+          ]
+        }
+      },
+      {
+        "discount_rate": 0.1,
+        "terminal_growth": 0.02,
+        "implied_fcf_cagr": {
+          "value": 0.1516915582,
+          "unit": "fraction",
+          "type": "fact",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "market.enterprise_value",
+            "cash_flow.fcf"
+          ]
+        }
+      },
+      {
+        "discount_rate": 0.1,
+        "terminal_growth": 0.03,
+        "implied_fcf_cagr": {
+          "value": 0.1395969813,
+          "unit": "fraction",
+          "type": "fact",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "market.enterprise_value",
+            "cash_flow.fcf"
+          ]
+        }
+      },
+      {
+        "discount_rate": 0.1,
+        "terminal_growth": 0.04,
+        "implied_fcf_cagr": {
+          "value": 0.1255042633,
+          "unit": "fraction",
+          "type": "fact",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "market.enterprise_value",
+            "cash_flow.fcf"
+          ]
+        }
+      }
+    ]
+  }
+}

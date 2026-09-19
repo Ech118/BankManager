@@ -1,0 +1,10 @@
+ACME CORPORATION (FICTIONAL MOCK COMPANY - NOT REAL DATA)
+FORM 10-K, FISCAL YEAR 2025 - ITEM 1A. RISK FACTORS
+
+Our largest ten customers accounted for 31% of fiscal 2025 revenue, and the loss of any one of them could materially reduce our revenue and operating margin.
+
+Approximately 22% of our cost of revenue is denominated in euros. A sustained strengthening of the euro against the U.S. dollar would compress our gross margin.
+
+Competitors bundling software with hardware at reduced prices may force us to lower prices in the mid-market segment, which could reduce our gross margin by up to 150 basis points.
+
+We carry $1.2 billion of debt, of which $400 million matures in fiscal 2027. We may need to refinance this debt on less favorable terms.

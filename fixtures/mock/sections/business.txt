@@ -1,0 +1,8 @@
+ACME CORPORATION (FICTIONAL MOCK COMPANY - NOT REAL DATA)
+FORM 10-K, FISCAL YEAR 2025 - ITEM 1. BUSINESS
+
+Acme Corporation designs and sells industrial sensors and monitoring software to manufacturers in North America and Europe. We generated revenue of $5.0 billion in fiscal 2025. Roughly 62% of revenue comes from hardware and 38% from recurring software subscriptions.
+
+Our customers rely on Acme sensors embedded in production lines, which makes replacement costly. Customers who adopted our software platform renewed at a rate of 94% in fiscal 2025. We believe our installed base of more than 40,000 factory sites gives us a distribution advantage over smaller competitors.
+
+We compete with three large diversified industrial groups and a number of venture-backed software entrants. Competitors have been offering bundled discounts in the mid-market segment, and we expect this pricing pressure to continue.

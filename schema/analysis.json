@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bankmanager.local/schema/analysis.json",
+  "title": "Agent analysis",
+  "description": "FROZEN CONTRACT. PRODUCED BY EACH P3 AGENT (one file/object per agent). A finding with empty evidence is INVALID and must be rejected by the orchestrator before it reaches the auditor (error I).",
+  "type": "object",
+  "required": ["schema_version", "agent", "ticker", "as_of", "model", "summary", "findings"],
+  "properties": {
+    "schema_version": { "$ref": "common.json#/$defs/schema_version" },
+    "agent": {
+      "enum": ["scout", "forensic", "business", "management", "balance_sheet", "valuation", "red_team", "synthesizer"]
+    },
+    "ticker": { "$ref": "common.json#/$defs/ticker" },
+    "as_of": { "$ref": "common.json#/$defs/date" },
+    "model": { "description": "Model id used, or 'mock'.", "type": "string" },
+    "summary": { "type": "string", "minLength": 1 },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["claim", "trend", "evidence", "numbers", "confidence"],
+        "properties": {
+          "claim": { "type": "string", "minLength": 1 },
+          "trend": { "$ref": "common.json#/$defs/trend" },
+          "evidence": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "$ref": "common.json#/$defs/evidence" }
+          },
+          "numbers": {
+            "type": "array",
+            "items": { "$ref": "common.json#/$defs/value" }
+          },
+          "confidence": { "$ref": "common.json#/$defs/confidence" }
+        }
+      }
+    }
+  }
+}

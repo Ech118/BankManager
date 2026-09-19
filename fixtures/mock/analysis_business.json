@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0.0",
+  "agent": "business",
+  "ticker": "ACME",
+  "as_of": "2026-09-19",
+  "model": "mock",
+  "summary": "Good business with real switching costs, but mid-market pricing pressure and customer concentration are live issues.",
+  "findings": [
+    {
+      "claim": "Embedded sensors and a subscription platform create switching costs, shown by high renewal rates.",
+      "trend": "structurally_positive",
+      "evidence": [
+        {
+          "quote": "Customers who adopted our software platform renewed at a rate of 94% in fiscal 2025.",
+          "source_id": "src:edgar:0001234567-26-000010:business"
+        }
+      ],
+      "numbers": [],
+      "confidence": "medium"
+    },
+    {
+      "claim": "Competitor bundling in the mid-market threatens pricing and gross margin.",
+      "trend": "temporarily_negative",
+      "evidence": [
+        {
+          "quote": "could reduce our gross margin by up to 150 basis points",
+          "source_id": "src:edgar:0001234567-26-000010:risk_factors"
+        }
+      ],
+      "numbers": [],
+      "confidence": "medium"
+    },
+    {
+      "claim": "Customer concentration raises the cost of any single contract loss.",
+      "trend": "structurally_negative",
+      "evidence": [
+        {
+          "quote": "Our largest ten customers accounted for 31% of fiscal 2025 revenue",
+          "source_id": "src:edgar:0001234567-26-000010:risk_factors"
+        }
+      ],
+      "numbers": [],
+      "confidence": "high"
+    }
+  ]
+}

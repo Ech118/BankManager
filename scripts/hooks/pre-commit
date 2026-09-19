@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# FROZEN (Step 0). Installed by `make install-hooks` (git config core.hooksPath scripts/hooks).
+root="$(git rev-parse --show-toplevel)"
+exec "$root/scripts/secret_scan.sh"

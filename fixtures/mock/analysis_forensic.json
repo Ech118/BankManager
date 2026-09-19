@@ -1,0 +1,82 @@
+{
+  "schema_version": "1.0.0",
+  "agent": "forensic",
+  "ticker": "ACME",
+  "as_of": "2026-09-19",
+  "model": "mock",
+  "summary": "Earnings growth is mostly real (volume, price, mix) but two items flatter it: buybacks and stretched receivables.",
+  "findings": [
+    {
+      "claim": "Gross margin expansion came from price and software mix; durable unless competitors' bundling forces price cuts.",
+      "trend": "temporarily_positive",
+      "evidence": [
+        {
+          "quote": "Gross margin improved to 40.0% from 38.9% as a result of price increases and a favorable product mix toward software subscriptions.",
+          "source_id": "src:edgar:0001234567-26-000010:mdna"
+        }
+      ],
+      "numbers": [
+        {
+          "value": 0.4,
+          "unit": "fraction",
+          "type": "fact",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "financials.FY2025.gross_profit",
+            "financials.FY2025.revenue"
+          ]
+        }
+      ],
+      "confidence": "medium"
+    },
+    {
+      "claim": "Receivables grew faster than revenue because two large customers received longer payment terms: a working-capital quality watch item.",
+      "trend": "temporarily_negative",
+      "evidence": [
+        {
+          "quote": "Accounts receivable increased to $700 million from $600 million, primarily due to longer payment terms granted to two large customers.",
+          "source_id": "src:edgar:0001234567-26-000010:mdna"
+        }
+      ],
+      "numbers": [
+        {
+          "value": 51.1,
+          "unit": "days",
+          "type": "fact",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "financials.FY2025.receivables",
+            "financials.FY2025.revenue"
+          ]
+        }
+      ],
+      "confidence": "high"
+    },
+    {
+      "claim": "Buybacks shrank the diluted share count 2.4%, contributing about 2.4 points of the 24.4% EPS growth.",
+      "trend": "neutral",
+      "evidence": [
+        {
+          "quote": "reduced diluted shares outstanding by 2.4%",
+          "source_id": "src:edgar:0001234567-26-000010:mdna"
+        }
+      ],
+      "numbers": [
+        {
+          "value": -0.0243902439,
+          "unit": "fraction",
+          "type": "fact",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "financials.FY2025.shares_diluted",
+            "financials.FY2024.shares_diluted"
+          ]
+        }
+      ],
+      "confidence": "high"
+    }
+  ]
+}
