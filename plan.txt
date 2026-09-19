@@ -1,0 +1,161 @@
+BANKMANAGER - PLANNER CONTEXT
+==============================
+Living document. Add and update as the project evolves. Newest decisions go in
+the CHANGELOG at the bottom.
+
+1. PROJECT SUMMARY
+------------------
+AI equity-research web app (hackathon). The user enters a ticker; the app pulls
+filings and market data from free APIs, computes all financial numbers in code,
+and uses structured LLM analyst passes plus a red-team and synthesizer to
+produce an "investment committee" verdict: is the stock likely to beat the
+S&P 500 over 0-12 months, 1-3 years and 3-5+ years?
+
+Origin: a 15-section investment-committee prompt (financial quality, income
+statement, balance sheet, FCF, guidance, moat, valuation, expectations vs
+reality, catalysts, risks, bull/base/bear, S&P outperformance probability,
+buyability scores, buy-more/sell triggers, final memo). The original prompt was
+pasted twice in full; only one copy should ever be used.
+
+Core principle: code computes the numbers, the LLM interprets them. Every
+number shown must be labelled FACT / ESTIMATE / ASSUMPTION and carry a source.
+
+2. DECISIONS SO FAR
+-------------------
+- Deliverable: web app.
+- Data: ticker only, via free APIs (no user filing upload for v1).
+- Repo state at time of writing: empty apart from README.md.
+
+3. PROBLEMS WITH THE ORIGINAL SINGLE-PROMPT APPROACH (and the fix)
+-------------------------------------------------------------------
+1. One prompt asks for 15 sections at once -> shallow output, invented numbers.
+   Fix: pipeline (extract -> compute -> analyst passes -> red team -> synthesis).
+2. "Use current market data" - an LLM has no live data and its knowledge is
+   stale. Fix: fetch price, market cap, consensus, peers via API and inject
+   them. If unavailable, say "unavailable", never guess.
+3. LLM does arithmetic. Fix: code computes margins, FCF yield, EV, implied CAGR.
+4. Outperformance probabilities and 1-10 scores are unanchored. Fix: bull/base/
+   bear scenarios with probabilities; code derives expected return, excess vs
+   S&P, and P(beat S&P) at 1/3/5y; a fixed rubric maps excess return to score.
+5. "Take a position / don't be conservative" biases toward BUY. Fix: red-team
+   agent argues the opposite; synthesizer must answer it.
+6. FACT/ESTIMATE/ASSUMPTION labels only requested. Fix: JSON schema where every
+   number has `type` and `source`; UI colour-codes by label.
+7. Verdict was last and sections overlapped (3+4, 9+10). Fix: verdict card
+   first; merge overlapping sections.
+8. "Expectations vs Reality" was only prose. Fix: reverse DCF in code solves
+   for the growth/margins the current price implies; LLM judges plausibility.
+9. No validation. Fix: backtest on 2020-2023 filings vs realized S&P-relative
+   returns; show a calibration chart in the demo.
+10. Add a "not investment advice" disclaimer. Reconsider the name "BankManager"
+    (it does not describe an equity-research tool).
+
+4. DATA LAYER (deterministic, not an agent)
+-------------------------------------------
+Builds one FACT SHEET JSON per ticker; agents read slices of it.
+
+Need                                   Source
+-------------------------------------  ---------------------------------------
+Structured financials (5+ years)       SEC EDGAR XBRL `companyfacts` (free,
+                                       exact; use instead of parsing PDFs)
+Filing text (business, risks, MD&A,    EDGAR submissions API, split by 10-K /
+notes)                                 10-Q item; cache by accession number
+Price, market cap, shares, peers,      yfinance or FMP (FMP better for
+historical multiples, consensus        consensus and historical multiples)
+S&P 500 baseline (fwd P/E, earnings    FRED (10-year yield) + hard-coded or
+yield) and risk-free rate              scraped S&P multiple
+Guidance and wording changes           8-K press releases (EX-99.1) and prior
+                                       quarter MD&A (transcripts mostly paywalled)
+Post-earnings developments             News search API (e.g. Tavily), last
+                                       30-60 days
+
+Design choices:
+- Give agents whole filing sections (MD&A, risk factors), not embeddings/RAG.
+- Agent tools: get_section(ticker, "MD&A", period), get_xbrl(metric, periods).
+- Every fetched item gets a `source_id` for citation and verification.
+
+5. AGENTS
+---------
+ #  Agent                          Job                                         Runs
+ 1  Data/Peer Scout (light)        Confirm ticker, pick 4-6 peers (SIC code +   First
+                                   judgement), list data gaps
+ 2  Forensic Accountant            Earnings quality: SBC, non-GAAP gaps,        Parallel
+                                   one-time items, working capital (DSO,
+                                   inventory), EPS gains from buybacks/tax
+                                   vs real growth
+ 3  Business & Moat Analyst        Pricing power, share, competition,           Parallel
+                                   industry, what changed since last filing
+ 4  Management Credibility Analyst Guidance wording changes; past guidance      Parallel
+                                   vs actual results
+ 5  Capital Allocation & Balance   Debt maturities, buyback capacity, best      Parallel
+    Sheet Analyst                  use of FCF
+ 6  Valuation Analyst              Choose methods, read reverse DCF, build      After 2-5
+                                   bull/base/bear
+ 7  Red Team                       Argue against the leading view; strongest    After 6
+                                   30%+ drawdown path
+ 8  Synthesizer (PM)               Write verdict, addressing the red team       Last
+ 9  Auditor (mostly code + small   Check every number vs fact sheet, flag       Final gate
+    LLM check)                     unsourced claims, check score / probability
+                                   / return consistency
+
+Done in CODE, not by agents: ratio math, reverse DCF, scenario-to-return
+conversion, score rubric.
+
+Hackathon cut: merge 3+4, merge 5 into 2 or 6 -> about five LLM agents
+(Forensic, Business, Valuation, Red Team, Synthesizer) plus scout and auditor.
+
+Parallelism: agents 2-5 are independent; wall-clock is roughly slowest one +
+valuation + red team + synthesis. Show each agent's output in its own tab/lane
+in the UI (good demo visual).
+
+6. PIPELINE / ARCHITECTURE
+--------------------------
+1. Ingest (data/): ticker -> filings + financials + market data. Missing data
+   marked `unavailable`.
+2. Compute (calc/): margins, FCF, FCF yield/conversion, EV, net debt, dilution
+   and SBC, multiples vs peers, reverse DCF.
+3. Analyst passes (LLM, structured JSON, every number tagged type + source).
+4. Red team.
+5. Synthesizer: scenarios with probabilities -> code derives expected return,
+   excess vs S&P, P(beat S&P) at 1/3/5y, scores via rubric.
+6. Auditor gate.
+7. UI: verdict card first, expandable sections, fact/estimate/assumption
+   colour-coding, disclaimer.
+8. Backtest (demo): 2020-2023 filings vs realized S&P-relative returns,
+   calibration chart.
+
+7. RISKS / GOTCHAS
+------------------
+- XBRL tags vary by company (e.g. revenue appears under several tags) -> need a
+  small tag-mapping layer.
+- Free APIs rate-limit and go down -> cache aggressively; keep 2-3 pre-fetched
+  demo tickers so the demo never depends on live calls.
+- Banks and insurers break standard FCF and EV logic -> scope decision pending
+  (see Open Questions).
+
+8. OPEN QUESTIONS
+-----------------
+- Are financials-sector companies (banks, insurers) in scope for v1 or
+  excluded? Affects the valuation agent.
+- Product name (BankManager vs something matching equity research).
+- Stack: Next.js + Python/FastAPI, or all-TypeScript?
+- LLM: Claude via the API (model choice TBD).
+- Which 2-3 tickers to use for the demo / backtest?
+
+9. NEXT STEPS
+-------------
+- Scaffold the data layer: EDGAR XBRL fetch + fact-sheet JSON schema.
+- Write unit tests for calc/ against hand-checked filings.
+- Draft per-stage prompts (split from the original 15-section prompt).
+
+10. VERIFICATION PLAN
+---------------------
+- Unit tests for calc/ against known filings.
+- End-to-end run on 3 tickers; every displayed number has a source and label.
+- Consistency check: score, P(beat S&P) and expected return must agree.
+- Backtest calibration chart renders.
+
+CHANGELOG
+---------
+2026-09-19  Initial version: project summary, decisions, agent roster, data
+            sources, pipeline, risks, open questions.
