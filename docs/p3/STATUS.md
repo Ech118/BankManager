@@ -13,7 +13,9 @@ P3-owned MCP test double (`tests/e2e/support/fake_mcp.py`).
 |---|---|---|
 | `run_analysis` (`orchestrator/api.py`) | mock | still returns the ACME verdict fixture; signature unchanged. Wire it to the Coordinator once a server exists and the report generator (Step 2) can render a Verdict. |
 | Coordinator | **Step 2 built** | `run_state()`: ingest via MCP -> financial agent -> (optional) verify -> validated `ResearchState`, with `company_name` and `market` stored on it. Sequential. `run()` raises `NotImplementedError` (Step 5). |
-| Verifier wiring (`verify()`) | **built, tested with a stub auditor** | one pass; marks claims `verified`/`failed`; auditor and factsheet are **injected** (P3 can't import `audit/` or `data/`). Retry loop is Step 5. |
+| Verifier wiring (`verify()`) | **built, tested with a stub auditor** | audit -> targeted retries -> re-audit -> mark; auditor, factsheet and `verify_claim` are **injected** (P3 can't import `audit/` or `data/`). |
+| Retry loop (`orchestrator/retry.py`) | **built, tested** | executes `retries_issued`: re-runs ONE agent for ONE section with the gate's reasons, max 2, then claims ship `unverified` with a visible marker. Never drops a claim. Contract details to confirm with P2: [request](../requests/2026-09-19-p3-to-p2-verifier-and-retry-contract.md). |
+| LLM `verify_claim` (`agents/verifier.py`) | **built, tested (mock/scripted)** | fails closed; cheap model; passage sanitised and fenced; counts its own tokens. Live path never run (B8). |
 | MCP client (in-memory) | **built, tested** | real MCP SDK session; args validated against `TOOL_REQUESTS`, responses against `TOOL_RESPONSES`; server is **injected** (P3 may not import `mcp_server/`) |
 | MCP client (stdio) | **built, tested** | spawns any server command; tested against the test double as a subprocess |
 | `agents/base.py` | **built, tested** | shared rules + role prompt, untrusted-text fence, verbatim-quote enforcement, fact_id -> ValueObject, retry once then fail loudly, `to_claims` |
@@ -21,7 +23,6 @@ P3-owned MCP test double (`tests/e2e/support/fake_mcp.py`).
 | Business Agent | **built (mock LLM)** | sections: company, management, competitive_position, catalysts. Reads `business`, `risk_factors`, `mdna` only. Live path never run (B8). |
 | Valuation, Scenario, Red Team, Synthesizer | stub | Steps 4-5 |
 | Parallel execution | **built, tested** | `Coordinator.stages()`: financial \|\| business in a `ThreadPoolExecutor`; results merged in canonical order (deterministic); a failing agent lets its partner finish, emits `failed`, and the first failure in canonical order is raised. Concurrency is proven by a two-party barrier. Neither agent sees the other's output. |
-| Retry loop (`retry.py`) | not started | Step 5 |
 | Report generator (`orchestrator/report/`) | **built, tested** | deterministic Jinja render: card first, case against, sections; unverified claims marked, pending claims marked `unchecked`, `unavailable` never 0, fact/estimate/assumption carried, disclaimer top and bottom. Without a synthesizer it renders a PRELIMINARY report with no card. `render()` needs `state.synthesis` (`agents/synthesis.py`) and raises `ReportInputError` rather than invent it. |
 | FastAPI server + SSE | **built, tested** | `POST /api/analyze`, `GET /api/runs/{id}` (verdict, or `409 preliminary`), `/report`, `/events` (SSE with a lane per agent, full replay for late subscribers), `/stats`, `/config`. `server.configure(mcp_factory, ...)` is the composition hook that puts the real Coordinator behind it. |
 | Demo composition | **built** | `uvicorn tests.e2e.support.dev_app:app` = real Coordinator + server over the MCP **test double** and mock LLM, with a per-call delay so the lanes are visible. |

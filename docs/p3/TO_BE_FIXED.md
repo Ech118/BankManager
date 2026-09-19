@@ -29,15 +29,13 @@ Legend: **Owner** is who must act. **Verify** is how we'll know it's fixed.
 |---|---|---|---|
 | N1 | Valuation Agent (peers, methods, expectations reading) | Step 4 | Needs `calculate_valuation` (B6). |
 | N2 | Scenario Agent, Red Team, Synthesizer | Step 5 | Prompts drafted by Step 0; agents are stubs. Red Team must get the RAW fact sheet (error J). |
-| N3 | Retry loop (`orchestrator/retry.py`): targeted, max 2, then mark `unverified` | Step 5 | `verify()` today is a single pass; failed claims stay `failed` and render as UNVERIFIED. |
-| N4 | LLM `verify_claim` callable for the auditor (verifier prompt, cheaper model) | Step 5 | `prompts/verifier.md` exists; nobody has written the callable P2 will be handed. |
+| N15 | Confirm the verifier and retry contract with P2 (argument meaning of `verify_claim`; `retries_issued` semantics) | before `audit/` goes live | [request](../requests/2026-09-19-p3-to-p2-verifier-and-retry-contract.md). P3's side is built against stubs. |
 | N5 | Full fifteen-section report, S&P comparison section | Step 5 | Needs N1-N2 and calc. |
 | N6 | `orchestrator.api.run_analysis` wired to the Coordinator | after B1/B2/N2 | Still returns the ACME verdict fixture in mock mode. |
 | N7 | Full prompt-injection e2e ("verdict must not move") with a control run | Step 5 | Guard is built and unit/e2e tested at the agent + coordinator level. The obedient-model test from the v1 branch (`p3-v1-backup`, `tests/e2e/test_e2e_injection.py`) needs the Synthesizer to port. |
 | N8 | Measured per-run cost/latency in live mode | Step 5 | Tokens and seconds are recorded; `$` uses assumed prices (`agents/client.py::PRICES`, copied from the claude-api skill 2026-06-24). |
 | N9 | Agents call MCP tools themselves (tool-use loop) | later (Step 3 did not need it) | Today the coordinator pre-fetches sections and facts and passes them in. `Agent.tools` already declares each agent's allowed set. |
 | N10 | Tune prompts against ACME, then one real filing | Steps 1/3 | `financial.md` and `business.md` still say `TODO(...): tune`. |
-| N11 | Generate `web/lib/types.ts` from `schema/*.json` | Step 3 | Hand-maintained; a test checks it against the fixture. |
 | N13 | **Step 3 live checkpoint**: one real ticker in live mode, Financial + Business sections, schema-valid | Step 3 | Blocked by B1, B7, B8. `StdioMcpClient` is built and tested against the test double; it targets `python -m mcp_server.server` by default. |
 | N14 | Tune `business.md` against a real filing (wording-change comparison needs the PRIOR filing's text, which the coordinator does not fetch yet) | Step 3 | Today each agent sees only the latest section of each item. |
 | N12 | Backtest `redact` hook supplied by P2 | Step 6 | P3's side (applied centrally before any model call) is done and tested. |
@@ -47,16 +45,9 @@ Legend: **Owner** is who must act. **Verify** is how we'll know it's fixed.
 | ID | What | Fix |
 |---|---|---|
 | S1 | The disclaimer shows twice on a report page (the report's own + site footer). Deliberate (the report's must travel with the Verdict). | Dedupe in CSS if it reads as noise. |
-| S2 | `agents/requirements.txt` lists `sse-starlette` (Step 0) but SSE is plain `StreamingResponse`. | Drop the dependency or use it. |
-| S3 | `web` has no `lint` script (Step 0's `next lint` had no ESLint config). | Add an ESLint flat config, or leave typecheck as the gate. |
-| S4 | The MCP SDK logs every request at INFO, which is noisy in test output. | Set the `mcp` logger level in test config. |
-| S5 | Fixture: `claim:financial:revenue` says "five billion dollars" but its value is `0.4`; `facts.json` lacks `gross_profit`, `receivables`, `sbc` (FY2025) that the mock analysis cites; the mock `ResearchState` has no synthesizer output. | Coordinator: fix in `scripts/gen_mock_fixtures.py`, regenerate, run contract tests. |
 | S6 | Default model is `claude-sonnet-5` (Step 0 decision); the claude-api skill's default is `claude-opus-5`. Not measured. | Revisit at Step 5 with real cost and quality numbers. |
 | S7 | v1 P3 work is preserved only on branch `p3-v1-backup`. | Delete the branch once N7 is ported. |
 | S9 | The demo composition (`tests/e2e/support/dev_app.py`) serves the MCP **test double**; swap in the real server when B1 lands. | Change one line in `dev_app.py`. |
-| S10 | Mock-path only: mock analysis fixtures carry `numbers` by `derived_from` path, and only the paths whose facts exist in `facts.json` become `fact_ids`. The UI can therefore show "40.0%" beside `fact:ACME:revenue:FY2025` (really gross margin). The live path builds numbers from the cited fact rows, so it cannot do this, and the P2 verifier's `prose_number_mismatch` should catch it. | Fix with S5 (add the missing facts to the fixture). |
-| S11 | The HTTP API grew beyond `docs/pipeline.md`'s three endpoints: `GET /api/runs/{id}/report`, `/stats`, `/api/config`, and a `409 {"status":"preliminary"}` on `GET /api/runs/{id}`. | Coordinator: document in `docs/pipeline.md`. |
-| S12 | Origins allowed by CORS are hard-coded to `localhost:3000` / `127.0.0.1:3000`; a Next server on another port shows the browser's opaque "Failed to fetch" (the UI now explains that the server is unreachable). | Make it an env var if the demo needs another origin. |
 | S8 | `plan.txt` was archived by the restructure; the team's context now lives in `ARCHITECTURE.md`, `docs/` and `CLAUDE.md`. | Nothing; noted so nobody looks for it. |
 
 ---
@@ -65,4 +56,12 @@ Legend: **Owner** is who must act. **Verify** is how we'll know it's fixed.
 
 - **2026-09-19, Step 3 (offline parts):** Business Agent (each agent is shown only its own filing items); the financial/business pair run **concurrently** with a deterministic canonical-order merge (a barrier test fails if they run sequentially); per-agent progress events wired through the server via a composition hook (`server.configure`); preliminary-result path (`409` + `/report`) and UI support; a demo composition (`tests/e2e/support/dev_app.py`); friendlier unreachable-server message. Checked in a real browser: both lanes `running` at once, then the preliminary report.
 
-**Last updated:** 2026-09-19
+**Last updated:** 2026-09-19 (after the TO_BE_FIXED pass)
+
+### Resolved in the TO_BE_FIXED pass (2026-09-19)
+
+- **N3 retry loop** built (`orchestrator/retry.py`, wired into `Coordinator.verify`): targeted re-run of the owning agent for one section, max 2, re-audit after each, claims marked `unverified` after the cap and rendered with the marker, a retry that returns nothing never drops the originals, retry tokens counted, a `retrying` lane event. 9 tests.
+- **N4 `verify_claim`** built (`agents/verifier.py`): fails closed, fences and sanitises the passage, cheap tier, tiny budget, own stats. The composition hook carries it. 12 tests. Open follow-up: N15.
+- **N11** evaluated and closed differently: generating types from `schema/verdict.json` was tried and rejected (959 lines of auto-named aliases, and the contract types enum-like fields as plain `string`, so the generator is *less* precise than the hand-written literal unions). A drift test now fails if the schema gains a required field `web/lib/types.ts` lacks (mutation-checked).
+- **S2** `sse-starlette` dropped. **S3** ESLint flat config added (`npm run lint`), which also caught a real issue: nav used `<a>` instead of Next's `<Link>`. **S4** MCP INFO logging silenced in tests and the dev app. **S12** CORS origins from `BM_CORS_ORIGINS` (never `*`). **S11** API documented in [API.md](API.md).
+- **S5 / S10** shared mock fixtures fixed (coordinator commit): 13 missing facts added, and `claim:financial:revenue` now says what its value is. The mock run logs zero unknown-fact warnings and the UI no longer shows a number beside the wrong fact.

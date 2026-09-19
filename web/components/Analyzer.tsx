@@ -34,7 +34,6 @@ export function Analyzer() {
       setTicker(q.toUpperCase());
       void run(q);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- once, on mount
   }, []);
 
   function submit(e: React.FormEvent) {

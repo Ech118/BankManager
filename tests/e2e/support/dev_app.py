@@ -10,6 +10,7 @@ BM_DEV_DELAY=<seconds> sets the per-call delay (default 1.5; 0 disables it).
 
 from __future__ import annotations
 
+import logging
 import os
 import time
 
@@ -18,6 +19,7 @@ from orchestrator import server
 from orchestrator.mcp_client import InMemoryMcpClient
 from tests.e2e.support.fake_mcp import build_fake_server
 
+logging.getLogger("mcp").setLevel(logging.WARNING)
 _DELAY = float(os.environ.get("BM_DEV_DELAY", "1.5"))
 _real_complete = client.complete
 

@@ -209,14 +209,15 @@ def test_verify_marks_every_claim_and_stores_the_result(mcp):
     assert "Gross margin improved to 40.0%" in seen["text"]  # get_text is served through MCP
 
 
-def test_a_failed_claim_is_marked_failed_and_its_section_too(mcp):
+def test_a_claim_that_fails_and_cannot_be_retried_ends_up_unverified_with_its_section(mcp):
+    """The stub auditor issues no retry directive (like a non-retryable issue), so the claim is marked."""
     st = Coordinator(
         mcp, auditor=make_auditor(fail_first=True), factsheet=factsheet_provider
     ).run_state("ACME")
-    failed = [c for c in st.all_claims if c.verification_status is VerificationStatus.FAILED]
+    failed = [c for c in st.all_claims if c.verification_status is VerificationStatus.UNVERIFIED]
     assert len(failed) == 1 and st.verification.passed is False
     owner = next(s for s in st.sections.as_list() if failed[0] in s.claims)
-    assert owner.verification_status is VerificationStatus.FAILED
+    assert owner.verification_status is VerificationStatus.UNVERIFIED
 
 
 def test_get_text_for_the_auditor_applies_the_redact_hook(mcp):

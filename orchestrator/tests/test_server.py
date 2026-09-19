@@ -180,3 +180,52 @@ def test_composed_run_for_an_unknown_company_fails_with_the_reason(monkeypatch):
 
 def test_report_endpoint_404s_for_a_verdict_run_and_unknown_runs(api):
     assert api.get("/api/runs/nope/report").status_code == 404
+
+
+def test_cors_origins_default_to_local_dev_and_can_be_overridden(monkeypatch):
+    monkeypatch.delenv("BM_CORS_ORIGINS", raising=False)
+    assert server.cors_origins() == ["http://localhost:3000", "http://127.0.0.1:3000"]
+    monkeypatch.setenv("BM_CORS_ORIGINS", "https://a.example, https://b.example")
+    assert server.cors_origins() == ["https://a.example", "https://b.example"]
+    monkeypatch.setenv("BM_CORS_ORIGINS", "*")
+    with pytest.raises(ValueError, match="explicit origins"):
+        server.cors_origins()
+
+
+def test_cors_allows_the_configured_origin_only(monkeypatch):
+    monkeypatch.setenv("BM_CORS_ORIGINS", "https://app.example")
+    api = TestClient(server.create_app())
+    ok = api.options(
+        "/api/analyze",
+        headers={"Origin": "https://app.example", "Access-Control-Request-Method": "POST"},
+    )
+    bad = api.options(
+        "/api/analyze",
+        headers={"Origin": "http://evil.example", "Access-Control-Request-Method": "POST"},
+    )
+    assert ok.headers.get("access-control-allow-origin") == "https://app.example"
+    assert "access-control-allow-origin" not in bad.headers
+
+
+def test_composition_hands_the_verifier_callable_to_the_coordinator(monkeypatch):
+    seen = {}
+
+    class Spy:
+        def __init__(self, mcp, **kw):
+            seen.update(kw)
+            self.stats = {}
+
+        def run_state(self, ticker, as_of):
+            from orchestrator.coordinator import new_state
+            from schema.contracts.common import DataQuality
+            from schema.contracts.enums import Mode
+
+            return new_state(ticker, "2026-09-19", Mode.MOCK, False, DataQuality(overall="ok"))
+
+    monkeypatch.setattr("orchestrator.coordinator.Coordinator", Spy)
+    monkeypatch.setattr(server, "RUNNER", None)
+    verify = lambda claim, passage: False  # noqa: E731
+    server.configure(lambda: InMemoryMcpClient(build_fake_server()), verify_claim=verify)
+    server._coordinator_runner("ACME", None, "r1")
+    assert seen["verify_claim"] is verify
+    monkeypatch.setattr(server, "COMPOSITION", None)

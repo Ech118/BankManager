@@ -75,7 +75,18 @@ def estimate_cost(model: str, tokens_in: int, tokens_out: int) -> float:
     return 0.0 if not price else (tokens_in * price[0] + tokens_out * price[1]) / 1_000_000
 
 
+_MOCK_VERIFIER = json.dumps(
+    {
+        "verdict": "not_supported",
+        "reason": "mock verifier: no model available, so nothing is vouched for",
+    }
+)
+"""The offline verifier never vouches for a claim: precision over recall (prompts/verifier.md)."""
+
+
 def _mock_text(agent: AgentName) -> str:
+    if agent is AgentName.VERIFIER:
+        return _MOCK_VERIFIER
     path = _MOCK_DIR / f"analysis_{agent.value}.json"
     if not path.exists():
         raise LLMError(f"no mock fixture for agent {agent.value!r} ({path.name})")

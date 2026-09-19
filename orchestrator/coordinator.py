@@ -55,9 +55,10 @@ from agents.business_agent import BusinessAgent
 from agents.financial_agent import FinancialAgent
 from orchestrator import events
 from orchestrator.mcp_client import McpToolError
+from orchestrator.retry import Rerun, failing_claim_ids, retry_loop
 from schema.contracts import SCHEMA_VERSION
 from schema.contracts.common import DataQuality, ISODate, Ticker
-from schema.contracts.enums import AgentName, Mode, Severity, VerificationStatus
+from schema.contracts.enums import AgentName, Mode, VerificationStatus
 from schema.contracts.state import SECTION_OWNERS, ResearchSection, ResearchSections, ResearchState
 from schema.contracts.verdict import Verdict
 from schema.contracts.verification import VerificationResult
@@ -361,19 +362,8 @@ class Coordinator:
                 self._merge(state, name, outcome)
         return state
 
-    def verify(self, state: ResearchState, context: dict) -> ResearchState:
-        """Run the injected auditor once and mark every claim verified or failed.
-
-        Step 2: a single pass. Failed claims stay `failed` and render with the
-        UNVERIFIED marker. TODO(roadmap Step 5, P3): route RetryDirectives to the owning
-        agent, max 2 attempts, then ship the failures marked `unverified` (ADR 0005).
-        """
-        if self.auditor is None or self.factsheet is None:
-            raise VerifierUnavailable(
-                "verify() needs an injected `auditor` and `factsheet` provider; P3 may not import "
-                "audit/ or data/ itself (see docs/requests/2026-09-19-p3-report-inputs.md)"
-            )
-        self._emit("verify", "running")
+    def _audit(self, state: ResearchState, context: dict) -> VerificationResult:
+        """One pass of the injected auditor. Stores the result and marks every claim verified/failed."""
 
         def get_text(source_id: str) -> str:
             section_id = section_id_for(source_id)
@@ -387,16 +377,12 @@ class Coordinator:
                 raise KeyError(source_id) from e
             return self.redact(text) if self.redact else text
 
-        try:
-            raw = self.auditor(
-                state.model_dump(mode="json"), self.factsheet(context), get_text, self.verify_claim
-            )
-            result = VerificationResult.model_validate(raw)
-        except Exception as e:
-            self._emit("verify", "failed", detail=str(e))
-            raise
+        raw = self.auditor(
+            state.model_dump(mode="json"), self.factsheet(context), get_text, self.verify_claim
+        )
+        result = VerificationResult.model_validate(raw)
         state.verification = result
-        failed = {i.claim_id for i in result.issues if i.claim_id and i.severity is Severity.ERROR}
+        failed = failing_claim_ids(result)
         for section in state.sections.as_list():
             for claim in section.claims:
                 claim.verification_status = (
@@ -410,6 +396,60 @@ class Coordinator:
                     if any(c.claim_id in failed for c in section.claims)
                     else VerificationStatus.VERIFIED
                 )
+        return result
+
+    def _rerun(self, context: dict) -> Rerun:
+        """The callable retry.py uses to re-run ONE agent with the gate's feedback."""
+
+        def rerun(name: AgentName, feedback: list[str], id_prefix: str) -> list[Any]:
+            cls = IMPLEMENTED.get(name)
+            if (
+                cls is None
+            ):  # e.g. red_team before it exists: nothing to re-run, the claims stay marked
+                log.warning("cannot retry %s: agent not implemented yet", name.value)
+                return []
+            agent = cls(self.mcp, redact=self.redact)
+            analysis = agent.run(context, feedback=feedback)
+            slot = self.stats["agents"].setdefault(name.value, {})
+            slot["retries"] = slot.get("retries", 0) + 1
+            for key in ("tokens_in", "tokens_out"):
+                slot[key] = slot.get(key, 0) + agent.usage[key]
+            self.stats["tokens_in"] = self.stats.get("tokens_in", 0) + agent.usage["tokens_in"]
+            self.stats["tokens_out"] = self.stats.get("tokens_out", 0) + agent.usage["tokens_out"]
+            return agent.to_claims(analysis, id_prefix=id_prefix)
+
+        return rerun
+
+    def verify(self, state: ResearchState, context: dict) -> ResearchState:
+        """Audit, route retries to section owners, stop at the cap.
+
+        The injected auditor checks every claim. For each section it flags, the OWNING agent is
+        re-run for that section alone with the failures explained, at most twice (retry.py).
+        After the cap the run CONTINUES with the failing claims marked unverified: blocking the
+        report would trade a visible flaw for an invisible one (ADR 0005).
+        """
+        if self.auditor is None or self.factsheet is None:
+            raise VerifierUnavailable(
+                "verify() needs an injected `auditor` and `factsheet` provider; P3 may not import "
+                "audit/ or data/ itself (see docs/requests/2026-09-19-p3-report-inputs.md)"
+            )
+        self._emit("verify", "running")
+        try:
+            result = self._audit(state, context)
+
+            def on_retry(directive: Any) -> None:
+                self._emit(
+                    directive.target_agent,
+                    "retrying",
+                    detail=f"section {directive.section_key}, attempt {directive.attempt} of {directive.max_attempts}",
+                )
+
+            state, result = retry_loop(
+                state, result, lambda st: self._audit(st, context), self._rerun(context), on_retry
+            )
+        except Exception as e:
+            self._emit("verify", "failed", detail=str(e))
+            raise
         self._emit(
             "verify", "done", detail=f"{result.claims_verified}/{result.claims_checked} verified"
         )

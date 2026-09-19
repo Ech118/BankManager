@@ -1,6 +1,6 @@
 ## Financial quality
 
-- Revenue reached five billion dollars in the latest full year. (40.0% · assumption) _[fact:ACME:revenue:FY2025]_
+- Gross margin was 40.0% of revenue in the latest full year. (40.0% · assumption) _[fact:ACME:gross_profit:FY2025, fact:ACME:revenue:FY2025]_
 
 ## Earnings quality
 

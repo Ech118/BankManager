@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { Disclaimer } from "./Disclaimer";
 
@@ -6,13 +7,13 @@ export function SiteShell({ children }: { children: ReactNode }) {
   return (
     <div className="shell">
       <header className="site-header">
-        <a href="/" className="brand">
+        <Link href="/" className="brand">
           BankManager
-        </a>
+        </Link>
         <span className="tagline">AI equity research, checked</span>
         <nav>
-          <a href="/">Analyze</a>
-          <a href="/demo">ACME demo</a>
+          <Link href="/">Analyze</Link>
+          <Link href="/demo">ACME demo</Link>
         </nav>
       </header>
       <main>{children}</main>

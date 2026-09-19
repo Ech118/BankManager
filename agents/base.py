@@ -197,11 +197,20 @@ class Agent:
         )
 
     # ------------------------------------------------------------------ running
-    def run(self, context: dict) -> Analysis:
-        """Call the model, validate against Analysis, retry once on invalid output."""
+    def run(self, context: dict, feedback: list[str] | None = None) -> Analysis:
+        """Call the model, validate against Analysis, retry once on invalid output.
+
+        `feedback` is what the verification gate found wrong with an earlier pass (a targeted
+        retry, orchestrator/retry.py); it stays in the prompt on every attempt of this call."""
         self.dropped, self.guard_flags, self.raw_outputs = [], [], []
         system, user = self.system_prompt(), self.build_prompt(context)
-        feedback: list[str] = []
+        gate_feedback = list(feedback or [])
+        if gate_feedback:
+            user += (
+                "\n\n## THE VERIFICATION GATE REJECTED PART OF YOUR PREVIOUS OUTPUT (fix all of it)\n"
+                + "\n".join(f"- {line}" for line in gate_feedback)
+            )
+        feedback = []
         for attempt in range(MAX_OUTPUT_RETRIES + 1):
             prompt = user
             if feedback:
@@ -352,7 +361,7 @@ class Agent:
         return fact_ids, numbers
 
     # ------------------------------------------------------------------- claims
-    def to_claims(self, analysis: Analysis) -> list[Claim]:
+    def to_claims(self, analysis: Analysis, id_prefix: str = "") -> list[Claim]:
         """Convert findings into Claims for this agent's ResearchState sections.
 
         Where the no-bare-numbers rule bites: a finding whose number carries no
@@ -371,7 +380,7 @@ class Agent:
             try:
                 claims.append(
                     Claim(
-                        claim_id=f"claim:{self.name.value}:{i + 1}-{slug(f.claim)}",
+                        claim_id=f"claim:{self.name.value}:{id_prefix}{i + 1}-{slug(f.claim)}",
                         text=f.claim,
                         value=f.numbers[0] if f.numbers else None,
                         fact_ids=fact_ids,

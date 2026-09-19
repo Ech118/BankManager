@@ -42,22 +42,27 @@ DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 class Composition:
     """What the process that RUNS the server injects: P3 may not import mcp_server/ or audit/."""
 
-    def __init__(self, mcp_factory: Callable[[], Any], auditor=None, factsheet=None, redact=None):
-        self.mcp_factory, self.auditor, self.factsheet, self.redact = (
-            mcp_factory,
-            auditor,
-            factsheet,
-            redact,
-        )
+    def __init__(
+        self,
+        mcp_factory: Callable[[], Any],
+        auditor=None,
+        factsheet=None,
+        redact=None,
+        verify_claim=None,
+    ):
+        self.mcp_factory, self.auditor, self.factsheet = mcp_factory, auditor, factsheet
+        self.redact, self.verify_claim = redact, verify_claim
 
 
 COMPOSITION: Composition | None = None
 
 
-def configure(mcp_factory: Callable[[], Any], *, auditor=None, factsheet=None, redact=None) -> None:
+def configure(
+    mcp_factory: Callable[[], Any], *, auditor=None, factsheet=None, redact=None, verify_claim=None
+) -> None:
     """Wire the Coordinator to a data layer. Called once by the composition root (a script or test)."""
     global COMPOSITION
-    COMPOSITION = Composition(mcp_factory, auditor, factsheet, redact)
+    COMPOSITION = Composition(mcp_factory, auditor, factsheet, redact, verify_claim)
 
 
 RUNNER: Callable[[str, str | None, str], dict] | None = None
@@ -87,7 +92,12 @@ def _coordinator_runner(ticker: str, as_of: str | None, run_id: str) -> dict:
     mcp = comp.mcp_factory()
     try:
         coord = Coordinator(
-            mcp, redact=comp.redact, run_id=run_id, auditor=comp.auditor, factsheet=comp.factsheet
+            mcp,
+            redact=comp.redact,
+            run_id=run_id,
+            auditor=comp.auditor,
+            factsheet=comp.factsheet,
+            verify_claim=comp.verify_claim,
         )
         state = coord.run_state(ticker, as_of)
     finally:
@@ -143,6 +153,19 @@ def get_run(run_id: str) -> dict:
         return dict(_RESULTS[run_id])
 
 
+DEFAULT_CORS_ORIGINS = ("http://localhost:3000", "http://127.0.0.1:3000")
+
+
+def cors_origins() -> list[str]:
+    """Browser origins allowed to call the API. BM_CORS_ORIGINS="https://a.example,https://b.example"
+    overrides the local Next.js dev origins. Never "*": the API starts model runs that cost money."""
+    raw = os.environ.get("BM_CORS_ORIGINS", "")
+    origins = [o.strip() for o in raw.split(",") if o.strip()]
+    if "*" in origins:
+        raise ValueError('BM_CORS_ORIGINS must list explicit origins, not "*"')
+    return origins or list(DEFAULT_CORS_ORIGINS)
+
+
 def create_app() -> Any:
     """Build the FastAPI app."""
     from fastapi import FastAPI, HTTPException
@@ -152,7 +175,7 @@ def create_app() -> Any:
     app = FastAPI(title=APP_TITLE)
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+        allow_origins=cors_origins(),
         allow_methods=["GET", "POST"],
         allow_headers=["*"],
     )
