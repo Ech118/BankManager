@@ -8,16 +8,19 @@ derived (docs/sec-pitfalls.md).
 
 Errors: ValueError for an out-of-scope ticker.
 as_of: required.
-
-TODO(roadmap Step 3, P1).
 """
 
 from __future__ import annotations
 
 from typing import Any
 
+from mcp_server.backends import require_in_scope
 from schema.contracts.tools import GetCompanyProfileRequest, GetCompanyProfileResponse
 
 
 def run(request: GetCompanyProfileRequest, backends: Any) -> GetCompanyProfileResponse:
-    raise NotImplementedError("TODO(roadmap Step 3, P1)")
+    require_in_scope(request.ticker, request.as_of)
+
+    profile = backends.market.get_profile(request.ticker, request.as_of)
+
+    return GetCompanyProfileResponse(as_of=request.as_of, profile=profile)
