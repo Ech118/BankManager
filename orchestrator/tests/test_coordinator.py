@@ -135,9 +135,119 @@ def test_agent_failure_emits_a_failed_event_and_propagates(mcp, monkeypatch):
     assert any(e.status == "failed" for e in events.history(run_id))
 
 
-def test_step_two_and_five_entry_points_are_explicitly_not_yet_built(mcp):
-    coord = Coordinator(mcp)
-    with pytest.raises(NotImplementedError, match="Step 2"):
-        coord.run("ACME")
+def test_run_is_explicitly_not_built_until_the_synthesizer_exists(mcp):
     with pytest.raises(NotImplementedError, match="Step 5"):
-        coord.verify(None, {})
+        Coordinator(mcp).run("ACME")
+
+
+def test_verify_without_an_injected_auditor_fails_clearly(mcp):
+    from orchestrator.coordinator import VerifierUnavailable
+
+    with pytest.raises(VerifierUnavailable, match="injected"):
+        Coordinator(mcp).verify(None, {})
+
+
+# --------------------------------------------------------------------------- Step 2: verifier wiring
+import json  # noqa: E402
+from pathlib import Path  # noqa: E402
+
+from schema.contracts.enums import VerificationStatus  # noqa: E402
+
+_MOCK = Path(__file__).resolve().parents[2] / "fixtures" / "mock"
+
+
+def _audit_result(state: dict, fail_first: bool) -> dict:
+    claims = [c for sec in state["sections"].values() for c in sec["claims"]]
+    issues = []
+    if fail_first and claims:
+        issues.append(
+            {
+                "issue_type": "unresolved_fact",
+                "severity": "error",
+                "path": "sections.financials",
+                "message": "stub failure",
+                "claim_id": claims[0]["claim_id"],
+                "checked_by_llm": False,
+            }
+        )
+    n = len(claims)
+    return {
+        "schema_version": "2.0.0",
+        "passed": not issues,
+        "issues": issues,
+        "claims_checked": n,
+        "claims_verified": n - len(issues),
+        "claims_unverified": len(issues),
+        "llm_checks_run": 0,
+        "retries_issued": [],
+    }
+
+
+def make_auditor(fail_first=False, seen=None):
+    def auditor(state, factsheet, get_text, verify_claim):
+        if seen is not None:
+            seen.update(
+                state=state,
+                factsheet=factsheet,
+                text=get_text("src:edgar:0001234567-26-000010:mdna"),
+            )
+        return _audit_result(state, fail_first)
+
+    return auditor
+
+
+def factsheet_provider(context):
+    return json.loads((_MOCK / "factsheet.json").read_text())
+
+
+def test_verify_marks_every_claim_and_stores_the_result(mcp):
+    seen: dict = {}
+    st = Coordinator(mcp, auditor=make_auditor(seen=seen), factsheet=factsheet_provider).run_state(
+        "ACME"
+    )
+    assert st.verification is not None and st.verification.passed
+    assert st.all_claims and all(
+        c.verification_status is VerificationStatus.VERIFIED for c in st.all_claims
+    )
+    assert seen["state"]["ticker"] == "ACME" and seen["factsheet"]["ticker"] == "ACME"
+    assert "Gross margin improved to 40.0%" in seen["text"]  # get_text is served through MCP
+
+
+def test_a_failed_claim_is_marked_failed_and_its_section_too(mcp):
+    st = Coordinator(
+        mcp, auditor=make_auditor(fail_first=True), factsheet=factsheet_provider
+    ).run_state("ACME")
+    failed = [c for c in st.all_claims if c.verification_status is VerificationStatus.FAILED]
+    assert len(failed) == 1 and st.verification.passed is False
+    owner = next(s for s in st.sections.as_list() if failed[0] in s.claims)
+    assert owner.verification_status is VerificationStatus.FAILED
+
+
+def test_get_text_for_the_auditor_applies_the_redact_hook(mcp):
+    seen: dict = {}
+    Coordinator(
+        mcp,
+        redact=lambda t: t.replace("ACME", "COMPANY-X"),
+        auditor=make_auditor(seen=seen),
+        factsheet=factsheet_provider,
+    ).run_state("ACME")
+    assert "COMPANY-X" in seen["text"] and "ACME CORPORATION" not in seen["text"]
+
+
+def test_without_an_auditor_claims_stay_pending_and_the_report_says_unchecked(mcp):
+    from orchestrator.report import generator
+
+    st = Coordinator(mcp).run_state("ACME")
+    assert st.verification is None and all(
+        c.verification_status is VerificationStatus.PENDING for c in st.all_claims
+    )
+    md = generator.render_markdown(st)
+    assert "Preliminary report" in md and "_[unchecked]_" in md and "Verification has not run" in md
+
+
+def test_state_carries_the_company_and_market_the_report_needs(mcp):
+    st = Coordinator(mcp).run_state("ACME")
+    assert (
+        st.model_extra["company_name"].startswith("Acme")
+        and st.model_extra["market"]["price"]["value"] == 50.0
+    )

@@ -65,13 +65,15 @@ def build_fake_server(section_text_hook=None) -> FastMCP:
         rows = [
             f
             for f in facts
-            if f.company_id == ticker and f.metric in metrics and f.filed_at <= as_of
+            if f.company_id == ticker
+            and f.metric in metrics
+            and (f.filed_at is None or f.filed_at <= as_of)
         ]
         if period_type:
             rows = [f for f in rows if f.period_type.value == period_type]
         if not include_superseded:
             rows = [f for f in rows if f.superseded_by is None]
-        rows.sort(key=lambda f: (f.period_end, f.filed_at), reverse=True)
+        rows.sort(key=lambda f: (f.period_end, f.filed_at or ""), reverse=True)
         return GetFinancialFactsResponse(
             facts=rows[:periods] if periods else rows, as_of=as_of
         ).model_dump(mode="json")
@@ -84,7 +86,7 @@ def build_fake_server(section_text_hook=None) -> FastMCP:
             fact=fact,
             as_of=as_of,
             is_superseded=bool(fact and fact.superseded_by),
-            is_future=bool(fact and fact.filed_at > as_of),
+            is_future=bool(fact and fact.filed_at and fact.filed_at > as_of),
         ).model_dump(mode="json")
 
     @server.tool()

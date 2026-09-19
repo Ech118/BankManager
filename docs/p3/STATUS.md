@@ -3,15 +3,17 @@
 Update whenever a capability moves from mock to real, or when blocked.
 A PR that changes behaviour must update this file.
 
-**Step:** 1 built (offline-verified). **Next:** [roadmap](../roadmap.md) Step 2 (verifier wired, minimal report).
+**Step:** 2 backend built (offline-verified). **Next:** finish Step 2's `web/` UI, then Step 3 (Business Agent, parallelism, SSE lanes).
 **Blockers:** the real mock MCP server (P1) - see
-[the request](../requests/2026-09-19-p3-to-p1-mock-mcp-server.md). Everything up to that seam is tested against a
+[the request](../requests/2026-09-19-p3-to-p1-mock-mcp-server.md) - and where the report's inputs and the auditor's Factsheet come
+from - see [the report-inputs request](../requests/2026-09-19-p3-report-inputs.md). Everything up to that seam is tested against a
 P3-owned MCP test double (`tests/e2e/support/fake_mcp.py`).
 
 | Capability | State | Notes |
 |---|---|---|
 | `run_analysis` (`orchestrator/api.py`) | mock | still returns the ACME verdict fixture; signature unchanged. Wire it to the Coordinator once a server exists and the report generator (Step 2) can render a Verdict. |
-| Coordinator | **Step 1 built** | `run_state()`: ingest via MCP -> financial agent -> validated `ResearchState`. Sequential. `run()`/`verify()` raise `NotImplementedError` naming their step. |
+| Coordinator | **Step 2 built** | `run_state()`: ingest via MCP -> financial agent -> (optional) verify -> validated `ResearchState`, with `company_name` and `market` stored on it. Sequential. `run()` raises `NotImplementedError` (Step 5). |
+| Verifier wiring (`verify()`) | **built, tested with a stub auditor** | one pass; marks claims `verified`/`failed`; auditor and factsheet are **injected** (P3 can't import `audit/` or `data/`). Retry loop is Step 5. |
 | MCP client (in-memory) | **built, tested** | real MCP SDK session; args validated against `TOOL_REQUESTS`, responses against `TOOL_RESPONSES`; server is **injected** (P3 may not import `mcp_server/`) |
 | MCP client (stdio) | **built, tested** | spawns any server command; tested against the test double as a subprocess |
 | `agents/base.py` | **built, tested** | shared rules + role prompt, untrusted-text fence, verbatim-quote enforcement, fact_id -> ValueObject, retry once then fail loudly, `to_claims` |
@@ -19,9 +21,9 @@ P3-owned MCP test double (`tests/e2e/support/fake_mcp.py`).
 | Business, Valuation, Scenario, Red Team, Synthesizer | stub | Steps 3-5 |
 | Parallel execution | not started | Step 3 |
 | Retry loop (`retry.py`) | not started | Step 5 |
-| Report generator | not started | Step 2 |
+| Report generator (`orchestrator/report/`) | **built, tested** | deterministic Jinja render: card first, case against, sections; unverified claims marked, pending claims marked `unchecked`, `unavailable` never 0, fact/estimate/assumption carried, disclaimer top and bottom. Without a synthesizer it renders a PRELIMINARY report with no card. `render()` needs `state.synthesis` (`agents/synthesis.py`) and raises `ReportInputError` rather than invent it. |
 | FastAPI server + SSE | **built, tested** | `POST /api/analyze`, `GET /api/runs/{id}`, `/events` (SSE, full replay for late subscribers), `/stats`, `/config`. Runner is injectable (`server.RUNNER`). |
-| `web/` UI | not started | Step 2; types and API client drafted by Step 0 |
+| `web/` UI | in progress | Step 2; types and API client drafted by Step 0 |
 | Prompt-injection guard | **built, tested** | instruction-like sentences removed before the model sees them and reported in `data_quality.gaps`. The full "verdict must not move" e2e test needs the Synthesizer (Step 5). |
 | Redact hook | **built, tested** | applied in `Agent.wrap_untrusted`, i.e. before every model call; `ResearchState.redacted` recorded |
 | Cost/latency logging | partial | tokens/seconds per agent in `Coordinator.stats` and `orchestrator/logs/runs.jsonl` (gitignored). Rates in `agents/client.py::PRICES` are an ASSUMPTION copied from the claude-api skill (2026-06-24). |
@@ -37,6 +39,7 @@ P3-owned MCP test double (`tests/e2e/support/fake_mcp.py`).
   a later step; `Agent.tools` already declares each agent's allowed set.
 
 ## Known gaps
+- The mock `ResearchState` has no synthesizer output, so the Step 2 checkpoint test composes `synthesis`/`market`/`company_name` from the other fixtures. See the report-inputs request.
 - `fixtures/mock/analysis_financial.json` cites facts missing from `facts.json` (`gross_profit`, `receivables`, `sbc`
   FY2025); the agent ignores unknown fact ids and logs it. Coordinator follow-up: extend the facts fixture.
 - v1 P3 work (forensic/business/balance-sheet/valuation/red-team/synthesizer against the v1 contracts) is preserved on
@@ -49,4 +52,4 @@ make lint && make test-contracts
 uvicorn orchestrator.server:app --port 8000
 ```
 
-**Last updated:** 2026-09-19 (Step 1)
+**Last updated:** 2026-09-19 (Step 2 backend)

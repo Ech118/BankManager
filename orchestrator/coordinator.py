@@ -28,9 +28,16 @@ Three things this module is responsible for that are easy to get wrong:
   outputs. Handing it only the summaries produces agreement in a sceptical tone
   (error J).
 
-STATUS: Step 1 (roadmap). One agent (financial) runs sequentially against MCP and
-produces a ResearchState. Parallelism, the remaining agents, verification and the
-report are later steps and raise NotImplementedError with the step named.
+STATUS: Step 2 (roadmap). One agent (financial) runs sequentially against MCP and
+produces a ResearchState; `verify()` runs the injected auditor once and marks
+claims; `orchestrator/report/` renders the report. Parallelism, the remaining
+agents and the retry loop are later steps and say so.
+
+THE AUDITOR IS INJECTED. P3 may not import audit/ (ADR 0007), so whoever composes
+the process passes `auditor` (audit.api.run_audit), `factsheet` (a provider that
+returns the Factsheet dict audit needs) and optionally `verify_claim`. Nothing on
+the MCP surface yields a Factsheet today, so the composition root has to supply
+it (docs/requests/2026-09-19-p3-report-inputs.md).
 """
 
 from __future__ import annotations
@@ -42,15 +49,16 @@ from collections.abc import Callable
 from datetime import UTC, datetime
 from typing import Any
 
-from agents.base import Agent
+from agents.base import Agent, section_id_for
 from agents.financial_agent import FinancialAgent
 from orchestrator import events
 from orchestrator.mcp_client import McpToolError
 from schema.contracts import SCHEMA_VERSION
 from schema.contracts.common import DataQuality, ISODate, Ticker
-from schema.contracts.enums import AgentName, Mode
+from schema.contracts.enums import AgentName, Mode, Severity, VerificationStatus
 from schema.contracts.state import SECTION_OWNERS, ResearchSection, ResearchSections, ResearchState
 from schema.contracts.verdict import Verdict
+from schema.contracts.verification import VerificationResult
 
 log = logging.getLogger("bankmanager.coordinator")
 
@@ -121,9 +129,12 @@ def current_mode() -> Mode:
 
 
 def new_state(
-    ticker: str, as_of: str, mode: Mode, redacted: bool, data_quality: DataQuality
+    ticker: str, as_of: str, mode: Mode, redacted: bool, data_quality: DataQuality, **extras: Any
 ) -> ResearchState:
-    """An empty ResearchState: all fourteen sections present, owners from SECTION_OWNERS."""
+    """An empty ResearchState: all fourteen sections present, owners from SECTION_OWNERS.
+
+    `extras` land in the state's extra="allow" space (company_name, market, synthesis...): the
+    report is a pure function of the state, so anything it needs must live on it."""
     sections = ResearchSections(
         **{
             key: ResearchSection(section_key=key, title=SECTION_TITLES[key], owner=owner)
@@ -139,7 +150,12 @@ def new_state(
         sections=sections,
         data_quality=data_quality,
         redacted=redacted,
+        **extras,
     )
+
+
+class VerifierUnavailable(RuntimeError):
+    """verify() was asked for but no auditor or factsheet was injected."""
 
 
 class Coordinator:
@@ -151,9 +167,15 @@ class Coordinator:
         redact: Callable[[str], str] | None = None,
         run_id: str | None = None,
         mode: Mode | None = None,
+        auditor: Callable[..., dict] | None = None,
+        factsheet: Callable[[dict], dict] | None = None,
+        verify_claim: Callable[[str, str], bool] | None = None,
     ) -> None:
         self.mcp = mcp
         self.redact = redact
+        self.auditor = auditor
+        self.factsheet = factsheet
+        self.verify_claim = verify_claim
         self.run_id = run_id or "local"
         self.mode = mode or current_mode()
         self.stats: dict[str, Any] = {"agents": {}}
@@ -182,6 +204,9 @@ class Coordinator:
             ]
             if profile is None:
                 raise ValueError(f"{ticker}: no company profile available as of {as_of}")
+            market = self.mcp.call_tool("get_market_snapshot", {"ticker": ticker, "as_of": as_of})[
+                "snapshot"
+            ]
             facts = self.mcp.call_tool(
                 "get_financial_facts", {"ticker": ticker, "metrics": FACT_METRICS, "as_of": as_of}
             )["facts"]
@@ -216,12 +241,15 @@ class Coordinator:
             gaps.append(f"No {item} section found in the filings available as of {as_of}")
         if not facts:
             gaps.append("No financial facts available")
+        if market is None:
+            gaps.append("No market snapshot available: price and market cap are unavailable")
         self._emit("ingest", "done")
         return {
             "ticker": ticker,
             "as_of": as_of,
             "profile": profile,
             "facts": facts,
+            "market": market,
             "sections": sections,
             "filings": filings,
             "gaps": gaps,
@@ -277,13 +305,58 @@ class Coordinator:
         return state
 
     def verify(self, state: ResearchState, context: dict) -> ResearchState:
-        """Audit, route retries to section owners, stop at the cap.
+        """Run the injected auditor once and mark every claim verified or failed.
 
-        After the cap the run CONTINUES with the failing claims marked
-        unverified. Blocking the report would trade a visible flaw for an
-        invisible one (ADR 0005).
+        Step 2: a single pass. Failed claims stay `failed` and render with the
+        UNVERIFIED marker. TODO(roadmap Step 5, P3): route RetryDirectives to the owning
+        agent, max 2 attempts, then ship the failures marked `unverified` (ADR 0005).
         """
-        raise NotImplementedError("TODO(roadmap Step 5, P3)")
+        if self.auditor is None or self.factsheet is None:
+            raise VerifierUnavailable(
+                "verify() needs an injected `auditor` and `factsheet` provider; P3 may not import "
+                "audit/ or data/ itself (see docs/requests/2026-09-19-p3-report-inputs.md)"
+            )
+        self._emit("verify", "running")
+
+        def get_text(source_id: str) -> str:
+            section_id = section_id_for(source_id)
+            if section_id is None:
+                raise KeyError(source_id)
+            try:
+                text = self.mcp.call_tool(
+                    "get_filing_section", {"section_id": section_id, "as_of": state.as_of}
+                )["section"]["text"]
+            except McpToolError as e:
+                raise KeyError(source_id) from e
+            return self.redact(text) if self.redact else text
+
+        try:
+            raw = self.auditor(
+                state.model_dump(mode="json"), self.factsheet(context), get_text, self.verify_claim
+            )
+            result = VerificationResult.model_validate(raw)
+        except Exception as e:
+            self._emit("verify", "failed", detail=str(e))
+            raise
+        state.verification = result
+        failed = {i.claim_id for i in result.issues if i.claim_id and i.severity is Severity.ERROR}
+        for section in state.sections.as_list():
+            for claim in section.claims:
+                claim.verification_status = (
+                    VerificationStatus.FAILED
+                    if claim.claim_id in failed
+                    else VerificationStatus.VERIFIED
+                )
+            if section.claims:
+                section.verification_status = (
+                    VerificationStatus.FAILED
+                    if any(c.claim_id in failed for c in section.claims)
+                    else VerificationStatus.VERIFIED
+                )
+        self._emit(
+            "verify", "done", detail=f"{result.claims_verified}/{result.claims_checked} verified"
+        )
+        return state
 
     # -------------------------------------------------------------------- run
     def run_state(self, ticker: Ticker, as_of: ISODate | None = None) -> ResearchState:
@@ -293,8 +366,18 @@ class Coordinator:
         quality = DataQuality(
             overall="partial" if context["gaps"] else "ok", gaps=list(context["gaps"])
         )
-        state = new_state(ticker, context["as_of"], self.mode, self.redact is not None, quality)
+        state = new_state(
+            ticker,
+            context["as_of"],
+            self.mode,
+            self.redact is not None,
+            quality,
+            company_name=context["profile"]["company_name"],
+            market=context["market"],
+        )
         state = self.run_agents(state, context)
+        if self.auditor is not None and self.factsheet is not None:
+            state = self.verify(state, context)
         state = ResearchState.model_validate(
             state.model_dump(mode="json")
         )  # re-run every contract validator
@@ -313,6 +396,8 @@ class Coordinator:
     def run(self, ticker: Ticker, as_of: ISODate | None = None) -> Verdict:
         """The whole pipeline.
 
-        TODO(roadmap Step 2, P3): render the Verdict from the ResearchState.
+        TODO(roadmap Step 5, P3): needs the scenario agent, red team, synthesizer and calc's
+        evaluate_scenarios before a Verdict can exist. Until then `run_state()` plus
+        `report.render_markdown()` gives a preliminary report that shows no verdict.
         """
-        raise NotImplementedError("TODO(roadmap Step 2, P3): report generator")
+        raise NotImplementedError("TODO(roadmap Step 5, P3): scenario, red team, synthesizer")

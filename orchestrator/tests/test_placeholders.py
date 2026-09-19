@@ -18,21 +18,6 @@ def test_report_ships_after_the_retry_cap_with_claims_marked():
     """The run completes; the failing claims are labelled unverified."""
 
 
-@pytest.mark.skip(reason="TODO(roadmap Step 2, P3): report generator")
-def test_report_is_a_pure_function_of_the_state():
-    """Same ResearchState, byte-identical report. No LLM in the renderer."""
-
-
-@pytest.mark.skip(reason="TODO(roadmap Step 2, P3): report generator")
-def test_unavailable_values_render_as_unavailable_not_zero():
-    """A reader must be able to tell a missing number from a zero one."""
-
-
-@pytest.mark.skip(reason="TODO(roadmap Step 2, P3): report generator")
-def test_disclaimer_is_present_on_every_rendered_page():
-    """Error M."""
-
-
 @pytest.mark.skip(reason="TODO(roadmap Step 6, P3): redact hook")
 def test_redact_is_applied_centrally_to_all_filing_text():
     """No agent can obtain un-redacted text by fetching a section itself."""
