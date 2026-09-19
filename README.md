@@ -130,3 +130,40 @@ Next: [docs/roadmap.md](docs/roadmap.md) Step 1. Current state per partition:
 
 [CONTRIBUTING.md](CONTRIBUTING.md) — branch naming, PR rules, and the contract
 change process. Working with Claude in this repo: [CLAUDE.md](CLAUDE.md).
+
+
+P1: Data & MCP. This is now the heaviest partition.
+
+Serve the fixture tools over the in-memory transport so P3 is unblocked. Do this first.
+Build ticker lookup and scope. Map ticker to CIK through company_tickers.json, then have check_scope return supported, partial, or unsupported with a reason, covering: no SEC filings, 20-F filer, financial-sector SIC, and too little history.
+Build the EDGAR ingest with the User-Agent header, rate limiting, and a disk cache.
+Build the concept map with fallback chains for about 10 annual metrics over 3–5 years. Handle any fiscal year end, and return unavailable when a metric is missing.
+Filter by as_of, using the latest filing when a fact was restated.
+Add price from the market API, and take shares from the filing.
+Build peer discovery from the SIC code, picking the 4 companies closest by revenue, with minimal metrics fetched and cached.
+Extract Items 1 and 1A from the latest 10-K, and keyword-search them. If parsing fails, return nothing rather than garbage.
+Add the calculate_valuation wrapper.
+
+P2: Calc, audit & eval.
+
+Metrics with lineage, where any metric with a missing input comes out unavailable instead of crashing.
+Sector-aware metric sets. Banks, insurers, and REITs get their own applicable metrics, and calc marks everything else not applicable.
+Valuation: multiples, peer comparison, and the reverse DCF, skipping any method whose inputs are unavailable.
+Scenario engine with the capped prior, weight clamp, S&P comparison, and derive_scores.
+Deterministic audit plus validate_consistency.
+The ticker torture test (new, and yours because it's evaluation). Build a list of about 20 tickers that breaks things on purpose: mega-caps, a January fiscal year (NVDA), a June fiscal year (MSFT), a bank (JPM), an insurer, a REIT, an ADR (TSM), share classes (GOOGL, BRK.B), a recent IPO, and a small-cap. Write a script that runs the pipeline on all of them and prints a table of what failed and why. Run it after every sync point, and send failures to P1 or P3. This one script is what makes "any stock" true.
+Sanity-check the numbers for about 5 of those tickers against the companies' own reports.
+
+P3: Agents, orchestrator & web.
+
+Coordinator skeleton against the fixture fake, with the mock LLM mode working end to end.
+Call check_scope first and show unsupported or partial results clearly in the UI.
+Financial Agent, then Business, Valuation, and Scenario. Each must handle unavailable data by saying "not available," never inventing numbers.
+Red Team and Synthesizer.
+Wire the audit and the single retry.
+Report generator. Partial reports must still render cleanly.
+Web page: ticker input, streamed agent progress, the verdict card, click-a-number-to-see-its-source, and the audit badge.
+Demo safety net: cached recent runs load instantly, plus 3 prerecorded runs in case the network dies.
+
+PUT THIS IN CLAUDE CODE BEFORE STARTING:
+Read CLAUDE.md, docs/pN/CLAUDE.md and my STATUS.md. We're in hackathon mode: follow the step list I'm about to paste, in order. Stay inside my partition's folders. Tests first against ACME fixtures. Keep it simple; working beats complete.
