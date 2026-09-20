@@ -5,7 +5,8 @@ A PR that changes behaviour must update this file.
 
 **Step:** 4 complete. **All eleven tools are served and live; XBRL normalization
 is real and runs against twelve recorded filers.**
-**Next:** peer revenue and net income from the frames already fetched.
+**Next:** Q4 derivation, and Postgres if the corpus outgrows one company per
+run. Both still raise rather than guess.
 **Blockers:** `calc/` is on `p2-port` and not yet merged to `main`, so the
 wrapper is tested against that branch's `calc/` locally. Real 10-K section extraction is deferred and is
 what `search_filing` needs to work in live mode.
@@ -42,6 +43,7 @@ PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
 | Stock splits | **real** | discontinuity detector + split-adjusted derived facts when a ratio is tagged |
 | Derived-fact dating | **real** | `filed_at` = latest input's, never null; `data/normalize/derived.py` |
 | Peer selection | **real** | browse-edgar SIC (paged) + frames revenue ranking, log-distance cutoff, provider fallback |
+| Peer figures | **real** | revenue + net income per peer from the same frames; unblocks calc's `peer_median` |
 | `sp500_baseline` | **real** | SPY quote measured; forward P/E, earnings yield and risk-free rate are reviewed constants typed `assumption` |
 | Market client | **real** | `MarketClient` Protocol; Finnhub impl; 5-min quote cache; `NullMarketClient` for outages |
 | Shares outstanding | **real** | 5-candidate chain behind a public-float floor check (GOOGL, BRK-B) |
@@ -57,7 +59,7 @@ PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
 | Live e2e over stdio | **real** | `BM_LIVE_TESTS=1 pytest mcp_server/tests/test_live_e2e.py`; 22 checks, all ten tools |
 | `fixtures/real/` demo tickers | not started | Step 6; coordinate the choice via `docs/requests/` |
 
-**Last updated:** 2026-09-20 (`calculate_valuation` wired to calc/; TTM flow facts)
+**Last updated:** 2026-09-20 (`calculate_valuation`, TTM facts, peer figures)
 
 ---
 
@@ -212,6 +214,14 @@ produced a confident wrong number rather than an error.
     so labelling the comparative from its own `fy` gives two facts the same
     `Q3-2026` id and one silently overwrites the other. The comparative's label
     is derived by subtracting a year from the current one.
+
+18. **A bank tagging `RevenueFromContractWithCustomer` is reporting FEE
+    income, not revenue.** ASC 606 does not cover interest, which is the rest of
+    the business. Taking the first concept that matches gave Capital One $8.1B
+    against a real $53.4B - which ranks it as a small company and hands calc/ a
+    P/S five times too high. For SIC 6xxx the chain is reordered to try
+    `RevenuesNetOfInterestExpense` first; every other filer keeps the existing
+    order. Reordered, never shortened.
 
 ### Two earlier findings, still true
 

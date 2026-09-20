@@ -111,6 +111,19 @@ bank's whole industry is missing a revenue, every candidate is dropped for
 having none, and the SIC ranking silently returns nothing."""
 
 
+NET_INCOME_CONCEPTS: tuple[str, ...] = (
+    "NetIncomeLoss",
+    "ProfitLoss",
+    "NetIncomeLossAvailableToCommonStockholdersBasic",
+)
+"""Tried in order, like the revenue chain. `NetIncomeLoss` is attributable to
+the parent, which is what a P/E divides; `ProfitLoss` includes
+non-controlling interests and is the fallback for a filer that tags only that.
+
+Unlike revenue, a NEGATIVE value is kept: a loss-making peer is a real peer, and
+dropping it would quietly bias a peer median upward."""
+
+
 def unavailable(unit: Unit) -> ValueObject:
     """A multiple P1 is not allowed to compute."""
     return ValueObject(value=None, unit=unit, type=ValueType.FACT, status=ValueStatus.UNAVAILABLE)
@@ -133,7 +146,31 @@ def frame_period(as_of: ISODate | None) -> str:
     return f"CY{year - 1}"
 
 
-def industry_revenues(period: str) -> dict[str, float]:
+BANK_SIC_PREFIX = "6"
+"""SIC 6xxx: banks, brokers, insurers and REITs."""
+
+
+def revenue_concept_order(sic: str | None) -> tuple[str, ...]:
+    """The revenue chain, reordered for a financial filer.
+
+    A bank tagging `RevenueFromContractWithCustomerExcludingAssessedTax` is
+    reporting its FEE income, not its revenue - interest is the rest of the
+    business and ASC 606 does not cover it. Taking the first match gives Capital
+    One $8.1B against a real $39B, which then ranks it as a small company and
+    hands calc/ a P/S five times too high.
+
+    `RevenuesNetOfInterestExpense` is the figure a bank's own income statement
+    leads with, so for SIC 6xxx it is tried first. Every other filer keeps the
+    existing order, where the ASC 606 concept is the modern spelling and
+    `Revenues` the older one.
+    """
+    if sic and sic.startswith(BANK_SIC_PREFIX):
+        preferred = ("RevenuesNetOfInterestExpense", "Revenues")
+        return preferred + tuple(c for c in REVENUE_CONCEPTS if c not in preferred)
+    return REVENUE_CONCEPTS
+
+
+def industry_revenues(period: str, sic: str | None = None) -> dict[str, float]:
     """cik -> revenue, merged across the revenue concepts.
 
     First concept that carries a value for a CIK wins, which is the same
@@ -142,10 +179,24 @@ def industry_revenues(period: str) -> dict[str, float]:
     summing them double-counts.
     """
     merged: dict[str, float] = {}
-    for concept in REVENUE_CONCEPTS:
+    for concept in revenue_concept_order(sic):
         for cik, value in edgar_client.fetch_frame(concept, period).items():
             if cik not in merged and value > 0:
                 merged[cik] = value
+    return merged
+
+
+def industry_net_income(period: str) -> dict[str, float]:
+    """cik -> net income, merged across the net-income concepts.
+
+    Costs one more frame request per run, on top of the ones the ranking already
+    makes, and covers every peer at once. The alternative - a companyfacts fetch
+    per peer - is six requests for six peers and grows with the peer count.
+    """
+    merged: dict[str, float] = {}
+    for concept in NET_INCOME_CONCEPTS:
+        for cik, value in edgar_client.fetch_frame(concept, period).items():
+            merged.setdefault(cik, value)
     return merged
 
 
@@ -211,12 +262,33 @@ def rank_candidates(
     return ranked
 
 
+def _reported(value: float | None, period: str) -> ValueObject:
+    """One figure from an XBRL frame, or `unavailable`.
+
+    `None` and only `None` is missing. Zero is a real reported number and a
+    negative one is a real loss; treating either as absent would drop exactly
+    the peers a median most needs to include.
+    """
+    if value is None:
+        return unavailable(Unit.USD)
+    return ValueObject(
+        value=float(value),
+        unit=Unit.USD,
+        type=ValueType.FACT,
+        status=ValueStatus.OK,
+        source_id=f"src:edgar_frames:{period}",
+    )
+
+
 def _peer(
     ticker: str,
     *,
     sic: str | None,
     reason: str,
     market_cap: float | None,
+    period: str,
+    revenue: float | None = None,
+    net_income: float | None = None,
     company_name: str | None = None,
 ) -> Peer:
     cap = (
@@ -235,7 +307,14 @@ def _peer(
         company_name=company_name,
         sic=sic,
         market_cap=cap,
-        # Ratios are calc/'s, not P1's (ADR 0001).
+        # Ratios are calc/'s, not P1's (ADR 0001). The RAW figures calc/ needs to
+        # compute them ride along as extra fields, which Peer allows: without
+        # them calc/ skips peer_median entirely, reporting "no peer carries this
+        # multiple, and the raw fields to compute it are not on the peers
+        # either".
+        revenue=_reported(revenue, period),
+        net_income=_reported(net_income, period),
+        frame_period=period,
         pe=unavailable(Unit.MULTIPLE),
         ev_ebitda=unavailable(Unit.MULTIPLE),
         ev_revenue=unavailable(Unit.MULTIPLE),
@@ -274,7 +353,8 @@ def select(
         return PeerResult([], gaps)
 
     period = frame_period(as_of)
-    revenues = industry_revenues(period)
+    revenues = industry_revenues(period, sic)
+    net_incomes = industry_net_income(period)
     if not revenues:
         gaps.append(
             f"{ticker}: the XBRL frames API returned no revenue data for {period}, "
@@ -299,7 +379,7 @@ def select(
     for cutoff, widened in ((MAX_LOG_DISTANCE, False), (WIDENED_LOG_DISTANCE, True)):
         if len(chosen) >= MIN_PEERS:
             break
-        for peer_ticker, _cik, revenue, distance in ranked:
+        for peer_ticker, peer_cik, revenue, distance in ranked:
             if len(chosen) >= limit:
                 break
             if target_revenue and distance > cutoff:
@@ -319,7 +399,15 @@ def select(
                 "; size cutoff relaxed for lack of closer matches" if widened else ""
             )
             chosen.append(
-                _peer(peer_ticker, sic=sic, reason=reason, market_cap=_market_cap(peer_ticker))
+                _peer(
+                    peer_ticker,
+                    sic=sic,
+                    reason=reason,
+                    market_cap=_market_cap(peer_ticker),
+                    period=period,
+                    revenue=revenue,
+                    net_income=net_incomes.get(peer_cik),
+                )
             )
         if not widened and len(chosen) < MIN_PEERS:
             gaps.append(
@@ -330,7 +418,18 @@ def select(
             )
 
     if len(chosen) < MIN_PEERS:
-        chosen.extend(_provider_fallback(ticker, as_of, limit - len(chosen), seen))
+        chosen.extend(
+            _provider_fallback(
+                ticker,
+                as_of,
+                limit - len(chosen),
+                seen,
+                period=period,
+                revenues=revenues,
+                net_incomes=net_incomes,
+                cik_to_ticker=cik_to_ticker,
+            )
+        )
 
     if len(chosen) < MIN_PEERS:
         gaps.append(
@@ -342,7 +441,15 @@ def select(
 
 
 def _provider_fallback(
-    ticker: Ticker, as_of: ISODate | None, room: int, seen: set[str]
+    ticker: Ticker,
+    as_of: ISODate | None,
+    room: int,
+    seen: set[str],
+    *,
+    period: str,
+    revenues: dict[str, float],
+    net_incomes: dict[str, float],
+    cik_to_ticker: dict[str, str],
 ) -> list[Peer]:
     """Finnhub's own peer list, used only when SIC+frames came up short.
 
@@ -353,6 +460,7 @@ def _provider_fallback(
     """
     if room <= 0:
         return []
+    ticker_to_cik = {tick: cik for cik, tick in cik_to_ticker.items()}
     try:
         candidates = market_client.get_client().peers(ticker)
     except Exception:
@@ -368,6 +476,9 @@ def _provider_fallback(
         if not _in_scope(normalized, as_of):
             continue
         seen.add(normalized)
+        # A provider-chosen peer still gets its figures, when the frames know
+        # it: the reason it was chosen is weaker, the numbers are the same ones.
+        cik = ticker_to_cik.get(normalized)
         out.append(
             _peer(
                 normalized,
@@ -377,6 +488,9 @@ def _provider_fallback(
                     "share this SIC code to rank by size."
                 ),
                 market_cap=_market_cap(normalized),
+                period=period,
+                revenue=revenues.get(cik) if cik else None,
+                net_income=net_incomes.get(cik) if cik else None,
             )
         )
     return out

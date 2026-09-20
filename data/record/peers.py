@@ -49,12 +49,14 @@ def record(ticker: str, as_of: str) -> dict:
         if sic
         else []
     )
-    revenues = peer_rules.industry_revenues(period)
+    revenues = peer_rules.industry_revenues(period, sic)
+    net_incomes = peer_rules.industry_net_income(period)
     tickers = peer_rules.primary_tickers(edgar_client.fetch_ticker_map())
 
     # Trim to this industry, plus the target itself.
     relevant = set(candidates) | {data.cik.zfill(10)}
     revenues = {cik: value for cik, value in revenues.items() if cik in relevant}
+    net_incomes = {cik: value for cik, value in net_incomes.items() if cik in relevant}
     tickers = {cik: tick for cik, tick in tickers.items() if cik in relevant}
 
     client = market_client.get_client()
@@ -79,6 +81,7 @@ def record(ticker: str, as_of: str) -> dict:
         "frame_period": period,
         "candidates": candidates,
         "revenues": revenues,
+        "net_incomes": net_incomes,
         "tickers": tickers,
         "provider_peers": provider_peers,
         "market_caps": caps,

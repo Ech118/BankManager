@@ -64,7 +64,14 @@ def replay(monkeypatch):
             lambda sic, count=100, pages=1: list(fixture["candidates"]),
         )
         monkeypatch.setattr(
-            peer_rules, "industry_revenues", lambda period: dict(fixture["revenues"])
+            peer_rules,
+            "industry_revenues",
+            lambda period, sic=None: dict(fixture["revenues"]),
+        )
+        monkeypatch.setattr(
+            peer_rules,
+            "industry_net_income",
+            lambda period: dict(fixture.get("net_incomes") or {}),
         )
         monkeypatch.setattr(
             peer_rules, "primary_tickers", lambda _map: dict(fixture["tickers"])
@@ -270,3 +277,83 @@ def test_revenue_concepts_are_merged_not_summed(monkeypatch):
 
 def test_primary_tickers_prefers_the_shortest_spelling():
     assert peer_rules.primary_tickers({"SMCIP": "1", "SMCI": "1"}) == {"0000000001": "SMCI"}
+
+
+# --------------------------------------------------------------------------
+# the raw figures calc/ needs to compute a peer median
+# --------------------------------------------------------------------------
+def test_peers_carry_revenue_and_net_income(replay):
+    """Without these calc/ skips peer_median entirely, reporting "no peer
+    carries this multiple, and the raw fields to compute it are not on the
+    peers either"."""
+    for ticker in TICKERS:
+        _, result = replay(ticker)
+        filled = [p for p in result.peers if p.revenue.status.value == "ok"]
+        assert filled, f"{ticker}: no peer carries a revenue"
+        for peer in filled:
+            assert peer.revenue.value is not None
+            assert peer.revenue.unit.value == "usd"
+
+
+def test_peer_figures_come_from_the_frames_not_a_per_peer_fetch(replay):
+    """One frame request covers the whole industry. A companyfacts fetch per
+    peer is six requests for six peers and grows with the peer count."""
+    for ticker in TICKERS:
+        fixture, result = replay(ticker)
+        for peer in result.peers:
+            if peer.revenue.status.value == "ok":
+                assert peer.revenue.source_id == f"src:edgar_frames:{fixture['frame_period']}"
+
+
+def test_a_peer_missing_from_the_frames_is_unavailable_not_zero(replay):
+    """Zero revenue would rank a company as tiny and make a P/S infinite."""
+    for ticker in TICKERS:
+        _, result = replay(ticker)
+        for peer in result.peers:
+            for field in ("revenue", "net_income"):
+                value = getattr(peer, field)
+                if value.status.value == "unavailable":
+                    assert value.value is None, f"{ticker} {peer.ticker} {field}"
+
+
+def test_a_loss_making_peer_keeps_its_negative_net_income():
+    """Dropping losers would quietly bias a peer median upward."""
+    assert peer_rules._reported(-1.5e9, "CY2025").value == -1.5e9
+    assert peer_rules._reported(-1.5e9, "CY2025").status.value == "ok"
+
+
+def test_only_none_counts_as_missing():
+    assert peer_rules._reported(0.0, "CY2025").status.value == "ok"
+    assert peer_rules._reported(None, "CY2025").status.value == "unavailable"
+
+
+def test_a_bank_reads_revenue_net_of_interest_expense_first():
+    """A bank tagging RevenueFromContractWithCustomer is reporting FEE income.
+    Taking it first gives Capital One $8.1B against a real $53.4B, which ranks
+    it as a small company and hands calc/ a P/S five times too high."""
+    order = peer_rules.revenue_concept_order("6021")
+    assert order[0] == "RevenuesNetOfInterestExpense"
+
+    ordinary = peer_rules.revenue_concept_order("3674")
+    assert ordinary == peer_rules.REVENUE_CONCEPTS
+    assert set(order) == set(ordinary), "reordered, never shortened"
+
+
+def test_no_sic_keeps_the_ordinary_order():
+    assert peer_rules.revenue_concept_order(None) == peer_rules.REVENUE_CONCEPTS
+
+
+def test_net_income_prefers_the_figure_a_pe_divides(monkeypatch):
+    """NetIncomeLoss is attributable to the parent; ProfitLoss includes
+    non-controlling interests."""
+    frames = {
+        "NetIncomeLoss": {"0000000001": 100.0},
+        "ProfitLoss": {"0000000001": 130.0, "0000000002": 50.0},
+    }
+    monkeypatch.setattr(
+        peer_rules.edgar_client,
+        "fetch_frame",
+        lambda concept, period, **kw: frames.get(concept, {}),
+    )
+    merged = peer_rules.industry_net_income("CY2025")
+    assert merged == {"0000000001": 100.0, "0000000002": 50.0}
