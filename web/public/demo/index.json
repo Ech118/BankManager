@@ -1,8 +1,9 @@
 {
   "tickers": [
-    "ACME"
+    "ACME",
+    "AAPL"
   ],
-  "generated_at": "2026-09-20T13:36:28Z",
+  "generated_at": "2026-09-20T14:00:14Z",
   "runs": [
     {
       "ticker": "ACME",
@@ -15,6 +16,18 @@
         "long_term": 4
       },
       "company": "Acme Corporation (fictional mock)"
+    },
+    {
+      "ticker": "AAPL",
+      "ok": true,
+      "mode": "live",
+      "company": "Apple Inc.",
+      "verdict": "avoid",
+      "scores": {
+        "short_term": 3,
+        "medium_term": 3,
+        "long_term": 3
+      }
     }
   ]
 }
