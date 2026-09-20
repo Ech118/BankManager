@@ -64,6 +64,16 @@ provenance only - `value` is already normalized (CLAUDE.md)."""
 XBRL_SOURCE_PREFIX = "src:edgar_xbrl"
 
 
+UNRESOLVED_CONCEPT_MARKER = "no concept matched "
+"""How data/normalize/to_facts.py words a metric that no chain resolved.
+
+The factsheet says the same thing, once per PERIOD rather than once per metric
+per period, so the normalizer's lines are dropped as the factsheet's are added.
+Keeping both made JPM report 47 gaps for 12 distinct problems and AAPL 5 for 3 -
+a banner that inflates with the verbosity of whichever layer noticed first,
+which teaches a reader to ignore the count."""
+
+
 @dataclass
 class FactsheetResult:
     factsheet: Factsheet
@@ -217,7 +227,9 @@ def build(
     """Assemble one company's whole reported picture at one date."""
     from schema.contracts.common import DataQuality
 
-    collected = list(gaps or [])
+    # The per-period summary below restates these, so they are dropped rather
+    # than counted twice.
+    collected = [g for g in (gaps or []) if UNRESOLVED_CONCEPT_MARKER not in g]
     periods, sources, period_gaps = build_periods(
         facts, cik=cik, retrieved_at=retrieved_at
     )

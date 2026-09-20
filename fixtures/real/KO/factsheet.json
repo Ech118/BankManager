@@ -1,6 +1,6 @@
 {
  "as_of": "2026-09-19",
- "built_at": "2026-09-20T04:13:50Z",
+ "built_at": "2026-09-20T04:21:53Z",
  "company_name": "COCA COLA CO",
  "consensus": null,
  "data_quality": {
@@ -1149,7 +1149,7 @@
    "unit": "usd_per_share",
    "value": 88.25
   },
-  "retrieved_at": "2026-09-20T04:13:50Z",
+  "retrieved_at": "2026-09-20T04:21:53Z",
   "shares_outstanding": {
    "accession": "0001628280-26-028802",
    "derived_from": [
@@ -1423,37 +1423,37 @@
  "sources": {
   "src:config:sp500_baseline:2026.09": {
    "accession": null,
-   "fetched_at": "2026-09-20T04:13:50Z",
+   "fetched_at": "2026-09-20T04:21:53Z",
    "kind": "config",
    "url": null
   },
   "src:edgar_xbrl:0000021344-23-000011": {
    "accession": "0000021344-23-000011",
-   "fetched_at": "2026-09-20T04:13:50Z",
+   "fetched_at": "2026-09-20T04:21:53Z",
    "kind": "edgar_xbrl",
    "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134423000011/0000021344-23-000011-index.htm"
   },
   "src:edgar_xbrl:0000021344-24-000009": {
    "accession": "0000021344-24-000009",
-   "fetched_at": "2026-09-20T04:13:50Z",
+   "fetched_at": "2026-09-20T04:21:53Z",
    "kind": "edgar_xbrl",
    "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134424000009/0000021344-24-000009-index.htm"
   },
   "src:edgar_xbrl:0000021344-25-000011": {
    "accession": "0000021344-25-000011",
-   "fetched_at": "2026-09-20T04:13:50Z",
+   "fetched_at": "2026-09-20T04:21:53Z",
    "kind": "edgar_xbrl",
    "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134425000011/0000021344-25-000011-index.htm"
   },
   "src:edgar_xbrl:0001628280-26-010047": {
    "accession": "0001628280-26-010047",
-   "fetched_at": "2026-09-20T04:13:50Z",
+   "fetched_at": "2026-09-20T04:21:53Z",
    "kind": "edgar_xbrl",
    "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026010047/0001628280-26-010047-index.htm"
   },
   "src:market:KO:20260918T200000Z": {
    "accession": null,
-   "fetched_at": "2026-09-20T04:13:50Z",
+   "fetched_at": "2026-09-20T04:21:53Z",
    "kind": "market",
    "url": null
   },

@@ -238,3 +238,30 @@ def test_sections_and_news_are_empty_rather_than_invented(parsed, ticker):
     honest; a fabricated entry would not be."""
     assert parsed[ticker].filing_sections == []
     assert parsed[ticker].news == []
+
+
+# --------------------------------------------------------------------------
+# the gap list is a summary, not a log
+# --------------------------------------------------------------------------
+def test_a_missing_metric_is_reported_once_not_twice():
+    """The normalizer reports one gap per metric per period; the factsheet
+    reports one per period. Keeping both made JPM show 47 gaps for 12 distinct
+    problems - a count that inflates with whichever layer happened to be more
+    verbose teaches a reader to ignore it."""
+    from data.normalize import factsheet as factsheet_rules
+
+    incoming = [
+        "JPM FY2025: no concept matched capex",
+        "JPM FY2025: no concept matched gross_profit",
+        "JPM: SIC 6021 (banks): valuation output is partial.",
+    ]
+    kept = [
+        g for g in incoming if factsheet_rules.UNRESOLVED_CONCEPT_MARKER not in g
+    ]
+    assert kept == ["JPM: SIC 6021 (banks): valuation output is partial."]
+
+
+@pytest.mark.parametrize("ticker", TICKERS)
+def test_no_gap_is_listed_twice(recorded, ticker):
+    gaps = recorded[ticker]["data_quality"]["gaps"]
+    assert len(gaps) == len(set(gaps)), f"{ticker} repeats a gap verbatim"

@@ -1,6 +1,6 @@
 {
  "as_of": "2026-09-19",
- "built_at": "2026-09-20T04:13:50Z",
+ "built_at": "2026-09-20T04:21:55Z",
  "company_name": "MICROSOFT CORP",
  "consensus": null,
  "data_quality": {
@@ -1146,7 +1146,7 @@
    "unit": "usd_per_share",
    "value": 493.78
   },
-  "retrieved_at": "2026-09-20T04:13:50Z",
+  "retrieved_at": "2026-09-20T04:21:55Z",
   "shares_outstanding": {
    "accession": "0001193125-26-323660",
    "derived_from": [
@@ -1466,37 +1466,37 @@
  "sources": {
   "src:config:sp500_baseline:2026.09": {
    "accession": null,
-   "fetched_at": "2026-09-20T04:13:50Z",
+   "fetched_at": "2026-09-20T04:21:55Z",
    "kind": "config",
    "url": null
   },
   "src:edgar_xbrl:0000950170-23-035122": {
    "accession": "0000950170-23-035122",
-   "fetched_at": "2026-09-20T04:13:50Z",
+   "fetched_at": "2026-09-20T04:21:55Z",
    "kind": "edgar_xbrl",
    "url": "https://www.sec.gov/Archives/edgar/data/789019/000095017023035122/0000950170-23-035122-index.htm"
   },
   "src:edgar_xbrl:0000950170-24-087843": {
    "accession": "0000950170-24-087843",
-   "fetched_at": "2026-09-20T04:13:50Z",
+   "fetched_at": "2026-09-20T04:21:55Z",
    "kind": "edgar_xbrl",
    "url": "https://www.sec.gov/Archives/edgar/data/789019/000095017024087843/0000950170-24-087843-index.htm"
   },
   "src:edgar_xbrl:0000950170-25-100235": {
    "accession": "0000950170-25-100235",
-   "fetched_at": "2026-09-20T04:13:50Z",
+   "fetched_at": "2026-09-20T04:21:55Z",
    "kind": "edgar_xbrl",
    "url": "https://www.sec.gov/Archives/edgar/data/789019/000095017025100235/0000950170-25-100235-index.htm"
   },
   "src:edgar_xbrl:0001193125-26-323660": {
    "accession": "0001193125-26-323660",
-   "fetched_at": "2026-09-20T04:13:50Z",
+   "fetched_at": "2026-09-20T04:21:55Z",
    "kind": "edgar_xbrl",
    "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/0001193125-26-323660-index.htm"
   },
   "src:market:MSFT:20260918T200000Z": {
    "accession": null,
-   "fetched_at": "2026-09-20T04:13:50Z",
+   "fetched_at": "2026-09-20T04:21:55Z",
    "kind": "market",
    "url": null
   },

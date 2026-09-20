@@ -1,6 +1,6 @@
 {
  "as_of": "2026-09-19",
- "built_at": "2026-09-20T04:13:49Z",
+ "built_at": "2026-09-20T04:21:51Z",
  "company_name": "NVIDIA CORP",
  "consensus": null,
  "data_quality": {
@@ -1149,7 +1149,7 @@
    "unit": "usd_per_share",
    "value": 222.27
   },
-  "retrieved_at": "2026-09-20T04:13:49Z",
+  "retrieved_at": "2026-09-20T04:21:51Z",
   "shares_outstanding": {
    "accession": "0001045810-26-000075",
    "derived_from": [
@@ -1469,43 +1469,43 @@
  "sources": {
   "src:config:sp500_baseline:2026.09": {
    "accession": null,
-   "fetched_at": "2026-09-20T04:13:49Z",
+   "fetched_at": "2026-09-20T04:21:51Z",
    "kind": "config",
    "url": null
   },
   "src:edgar_xbrl:0001045810-22-000036": {
    "accession": "0001045810-22-000036",
-   "fetched_at": "2026-09-20T04:13:49Z",
+   "fetched_at": "2026-09-20T04:21:51Z",
    "kind": "edgar_xbrl",
    "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581022000036/0001045810-22-000036-index.htm"
   },
   "src:edgar_xbrl:0001045810-23-000017": {
    "accession": "0001045810-23-000017",
-   "fetched_at": "2026-09-20T04:13:49Z",
+   "fetched_at": "2026-09-20T04:21:51Z",
    "kind": "edgar_xbrl",
    "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581023000017/0001045810-23-000017-index.htm"
   },
   "src:edgar_xbrl:0001045810-24-000029": {
    "accession": "0001045810-24-000029",
-   "fetched_at": "2026-09-20T04:13:49Z",
+   "fetched_at": "2026-09-20T04:21:51Z",
    "kind": "edgar_xbrl",
    "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/0001045810-24-000029-index.htm"
   },
   "src:edgar_xbrl:0001045810-25-000023": {
    "accession": "0001045810-25-000023",
-   "fetched_at": "2026-09-20T04:13:49Z",
+   "fetched_at": "2026-09-20T04:21:51Z",
    "kind": "edgar_xbrl",
    "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581025000023/0001045810-25-000023-index.htm"
   },
   "src:edgar_xbrl:0001045810-26-000021": {
    "accession": "0001045810-26-000021",
-   "fetched_at": "2026-09-20T04:13:49Z",
+   "fetched_at": "2026-09-20T04:21:51Z",
    "kind": "edgar_xbrl",
    "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000021/0001045810-26-000021-index.htm"
   },
   "src:market:NVDA:20260918T200000Z": {
    "accession": null,
-   "fetched_at": "2026-09-20T04:13:49Z",
+   "fetched_at": "2026-09-20T04:21:51Z",
    "kind": "market",
    "url": null
   },

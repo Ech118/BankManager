@@ -1,12 +1,10 @@
 {
  "as_of": "2026-09-19",
- "built_at": "2026-09-20T04:13:47Z",
+ "built_at": "2026-09-20T04:21:47Z",
  "company_name": "Apple Inc.",
  "consensus": null,
  "data_quality": {
   "gaps": [
-   "AAPL FY2025: no concept matched interest_expense",
-   "AAPL FY2024: no concept matched interest_expense",
    "AAPL: only 2 in-scope companies file under SIC 3571 within 20x of its revenue, so the size cutoff was relaxed to 100x. Peer multiples across that spread compare different businesses.",
    "FY2025: no us-gaap concept resolved for interest_expense. Reported as unavailable; any metric built on them is unavailable too.",
    "FY2024: no us-gaap concept resolved for interest_expense. Reported as unavailable; any metric built on them is unavailable too."
@@ -1149,7 +1147,7 @@
    "unit": "usd_per_share",
    "value": 336.13
   },
-  "retrieved_at": "2026-09-20T04:13:47Z",
+  "retrieved_at": "2026-09-20T04:21:47Z",
   "shares_outstanding": {
    "accession": "0000320193-26-000020",
    "derived_from": [
@@ -1469,37 +1467,37 @@
  "sources": {
   "src:config:sp500_baseline:2026.09": {
    "accession": null,
-   "fetched_at": "2026-09-20T04:13:47Z",
+   "fetched_at": "2026-09-20T04:21:47Z",
    "kind": "config",
    "url": null
   },
   "src:edgar_xbrl:0000320193-22-000108": {
    "accession": "0000320193-22-000108",
-   "fetched_at": "2026-09-20T04:13:47Z",
+   "fetched_at": "2026-09-20T04:21:47Z",
    "kind": "edgar_xbrl",
    "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019322000108/0000320193-22-000108-index.htm"
   },
   "src:edgar_xbrl:0000320193-23-000106": {
    "accession": "0000320193-23-000106",
-   "fetched_at": "2026-09-20T04:13:47Z",
+   "fetched_at": "2026-09-20T04:21:47Z",
    "kind": "edgar_xbrl",
    "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/0000320193-23-000106-index.htm"
   },
   "src:edgar_xbrl:0000320193-24-000123": {
    "accession": "0000320193-24-000123",
-   "fetched_at": "2026-09-20T04:13:47Z",
+   "fetched_at": "2026-09-20T04:21:47Z",
    "kind": "edgar_xbrl",
    "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/0000320193-24-000123-index.htm"
   },
   "src:edgar_xbrl:0000320193-25-000079": {
    "accession": "0000320193-25-000079",
-   "fetched_at": "2026-09-20T04:13:47Z",
+   "fetched_at": "2026-09-20T04:21:47Z",
    "kind": "edgar_xbrl",
    "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm"
   },
   "src:market:AAPL:20260918T200000Z": {
    "accession": null,
-   "fetched_at": "2026-09-20T04:13:47Z",
+   "fetched_at": "2026-09-20T04:21:47Z",
    "kind": "market",
    "url": null
   },

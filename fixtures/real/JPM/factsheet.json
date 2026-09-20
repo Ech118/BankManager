@@ -1,50 +1,10 @@
 {
  "as_of": "2026-09-19",
- "built_at": "2026-09-20T04:13:48Z",
+ "built_at": "2026-09-20T04:21:49Z",
  "company_name": "JPMORGAN CHASE & CO",
  "consensus": null,
  "data_quality": {
   "gaps": [
-   "JPM FY2025: no concept matched cost_of_revenue",
-   "JPM FY2025: no concept matched gross_profit",
-   "JPM FY2025: no concept matched operating_income",
-   "JPM FY2025: no concept matched capex",
-   "JPM FY2025: no concept matched current_assets",
-   "JPM FY2025: no concept matched current_liabilities",
-   "JPM FY2025: no concept matched receivables",
-   "JPM FY2025: no concept matched inventory",
-   "JPM FY2024: no concept matched cost_of_revenue",
-   "JPM FY2024: no concept matched gross_profit",
-   "JPM FY2024: no concept matched operating_income",
-   "JPM FY2024: no concept matched capex",
-   "JPM FY2024: no concept matched current_assets",
-   "JPM FY2024: no concept matched current_liabilities",
-   "JPM FY2024: no concept matched receivables",
-   "JPM FY2024: no concept matched inventory",
-   "JPM FY2023: no concept matched cost_of_revenue",
-   "JPM FY2023: no concept matched gross_profit",
-   "JPM FY2023: no concept matched operating_income",
-   "JPM FY2023: no concept matched capex",
-   "JPM FY2023: no concept matched current_assets",
-   "JPM FY2023: no concept matched current_liabilities",
-   "JPM FY2023: no concept matched receivables",
-   "JPM FY2023: no concept matched inventory",
-   "JPM FY2022: no concept matched cost_of_revenue",
-   "JPM FY2022: no concept matched gross_profit",
-   "JPM FY2022: no concept matched operating_income",
-   "JPM FY2022: no concept matched capex",
-   "JPM FY2022: no concept matched current_assets",
-   "JPM FY2022: no concept matched current_liabilities",
-   "JPM FY2022: no concept matched receivables",
-   "JPM FY2022: no concept matched inventory",
-   "JPM FY2021: no concept matched cost_of_revenue",
-   "JPM FY2021: no concept matched gross_profit",
-   "JPM FY2021: no concept matched operating_income",
-   "JPM FY2021: no concept matched capex",
-   "JPM FY2021: no concept matched current_assets",
-   "JPM FY2021: no concept matched current_liabilities",
-   "JPM FY2021: no concept matched receivables",
-   "JPM FY2021: no concept matched inventory",
    "JPM: SIC 6021 (banks, brokers and insurers): free cash flow and enterprise value do not describe this balance sheet, so valuation output is partial. [National Commercial Banks]",
    "JPM: only 2 in-scope companies file under SIC 6021 within 20x of its revenue, so the size cutoff was relaxed to 100x. Peer multiples across that spread compare different businesses.",
    "FY2025: no us-gaap concept resolved for capex, cost_of_revenue, current_assets, current_liabilities, gross_profit, inventory, operating_income, receivables. Reported as unavailable; any metric built on them is unavailable too.",
@@ -1114,7 +1074,7 @@
    "unit": "usd_per_share",
    "value": 349.67
   },
-  "retrieved_at": "2026-09-20T04:13:48Z",
+  "retrieved_at": "2026-09-20T04:21:49Z",
   "shares_outstanding": {
    "accession": "0001628280-26-054343",
    "derived_from": [
@@ -1344,37 +1304,37 @@
  "sources": {
   "src:config:sp500_baseline:2026.09": {
    "accession": null,
-   "fetched_at": "2026-09-20T04:13:48Z",
+   "fetched_at": "2026-09-20T04:21:49Z",
    "kind": "config",
    "url": null
   },
   "src:edgar_xbrl:0000019617-23-000231": {
    "accession": "0000019617-23-000231",
-   "fetched_at": "2026-09-20T04:13:48Z",
+   "fetched_at": "2026-09-20T04:21:49Z",
    "kind": "edgar_xbrl",
    "url": "https://www.sec.gov/Archives/edgar/data/19617/000001961723000231/0000019617-23-000231-index.htm"
   },
   "src:edgar_xbrl:0000019617-24-000225": {
    "accession": "0000019617-24-000225",
-   "fetched_at": "2026-09-20T04:13:48Z",
+   "fetched_at": "2026-09-20T04:21:49Z",
    "kind": "edgar_xbrl",
    "url": "https://www.sec.gov/Archives/edgar/data/19617/000001961724000225/0000019617-24-000225-index.htm"
   },
   "src:edgar_xbrl:0000019617-25-000270": {
    "accession": "0000019617-25-000270",
-   "fetched_at": "2026-09-20T04:13:48Z",
+   "fetched_at": "2026-09-20T04:21:49Z",
    "kind": "edgar_xbrl",
    "url": "https://www.sec.gov/Archives/edgar/data/19617/000001961725000270/0000019617-25-000270-index.htm"
   },
   "src:edgar_xbrl:0001628280-26-008131": {
    "accession": "0001628280-26-008131",
-   "fetched_at": "2026-09-20T04:13:48Z",
+   "fetched_at": "2026-09-20T04:21:49Z",
    "kind": "edgar_xbrl",
    "url": "https://www.sec.gov/Archives/edgar/data/19617/000162828026008131/0001628280-26-008131-index.htm"
   },
   "src:market:JPM:20260918T200000Z": {
    "accession": null,
-   "fetched_at": "2026-09-20T04:13:48Z",
+   "fetched_at": "2026-09-20T04:21:49Z",
    "kind": "market",
    "url": null
   },
