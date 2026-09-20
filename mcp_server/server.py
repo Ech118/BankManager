@@ -26,7 +26,6 @@ ERRORS
     a failed result; a transport-level exception just aborts their turn.
     ValueError = out of scope, KeyError = unknown id (docs/mcp-tools.md).
 
-TODO(roadmap Step 4, P1): add calculate_valuation once calc/ lands on main.
 """
 
 from __future__ import annotations
@@ -40,6 +39,7 @@ from mcp.server.lowlevel import Server
 from schema.contracts.tools import TOOL_REQUESTS, TOOL_RESPONSES
 
 from .tools import (
+    calculate_valuation,
     get_company_profile,
     get_factsheet,
     get_filing_section,
@@ -65,6 +65,7 @@ _RUNNERS: dict[str, Any] = {
     "resolve_fact": resolve_fact.run,
     "get_factsheet": get_factsheet.run,
     "search_news": search_news.run,
+    "calculate_valuation": calculate_valuation.run,
 }
 
 IMPLEMENTED_TOOLS: tuple[str, ...] = tuple(_RUNNERS)
@@ -113,6 +114,20 @@ _DESCRIPTIONS: dict[str, str] = {
         "Item it lives in. Ranked by relevance, always scoped by ticker and date. "
         "Returns whole sections, never fragments, so a quote has a stable anchor. "
         "An empty list is a valid answer: no section mentioned your terms."
+    ),
+    "calculate_valuation": (
+        "Valuation math. YOU choose the methods; code does every sum and always "
+        "returns a sensitivity grid, never a single point. Methods: pe, forward_pe, "
+        "ev_ebitda, ev_revenue, p_fcf, p_s, p_b, peer_median, dcf, reverse_dcf, "
+        "historical - or the shorthands all, multiples, peers. "
+        "p_b is the PRIMARY multiple for a bank, insurer, broker or REIT, where "
+        "ev_ebitda and p_fcf do not apply. "
+        "Read metrics.valuation.methods_skipped: every skipped method carries a "
+        "reason, so do not ask again or supply a number yourself. "
+        "Read metrics.valuation.basis: multiples divide the latest FULL fiscal "
+        "year, so a P/E here is higher than a finance site's trailing-twelve-month "
+        "one when the year is partly elapsed. Takes NO as_of - the factsheet "
+        "carries the authoritative date."
     ),
     "search_news": (
         "Developments since the last filing, newest first, inside "
