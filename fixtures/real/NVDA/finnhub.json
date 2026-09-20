@@ -1,0 +1,127 @@
+{
+ "news": [
+  {
+   "category": "company",
+   "datetime": 1789861381,
+   "headline": "I Think IBM Stock Will Be Higher in 5 Years. I Still Wouldn't Buy It Today.",
+   "id": 142275790,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "NVDA",
+   "source": "Yahoo",
+   "summary": "Following a brutal 2026, the five-year case comes down to reaccelerating software growth and a 31-year dividend streak.",
+   "url": "https://finnhub.io/api/news?id=64136571b0bd7d214eae4f399f522de5bfd674916a348c3828e8ce1f2230aefd"
+  },
+  {
+   "category": "company",
+   "datetime": 1789860360,
+   "headline": "Unpacking the Stock Market's Coiled Spring Set Up",
+   "id": 142275791,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "NVDA",
+   "source": "Yahoo",
+   "summary": "Surging corporate earnings, a robust GDP, and widespread pessimism are the perfect cocktail for an explosive upside move in equities.",
+   "url": "https://finnhub.io/api/news?id=2eb6fc54dc727e045212a7c95be3d3466da0e1d08eb014cd4c0f58ce20e4aa70"
+  },
+  {
+   "category": "company",
+   "datetime": 1789860000,
+   "headline": "Berkshire's Energy Holdings Are Worth More Than Most Stand-Alone Utilities. Here's the Math.",
+   "id": 142275784,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "NVDA",
+   "source": "Yahoo",
+   "summary": "Comparing this relatively small part of Berkshire's business to its publicly traded counterparts illustrates just how enormous the conglomerate has become.",
+   "url": "https://finnhub.io/api/news?id=73ce9bf76d0713b1afb4b0d4c981f2a5e41971d0c9c27906120d7af1d1c92874"
+  },
+  {
+   "category": "company",
+   "datetime": 1789859372,
+   "headline": "Nvidia (NVDA) Forms Alliance To Build A Power Flexible AI Data Center",
+   "id": 142275783,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "NVDA",
+   "source": "Yahoo",
+   "summary": "NVIDIA (NasdaqGS:NVDA), Google, and Emerald AI have created the AI Energy Management Alliance to coordinate electricity use in AI data centers. The alliance has started building what it calls the first purpose-built power-flexible AI data center, designed to adjust consumption with grid needs. AEMA plans to publish shared frameworks for grid-responsive data centers with input from utilities, regulators, and large AI infrastructure users. The formation of AEMA and the power-flexible data...",
+   "url": "https://finnhub.io/api/news?id=3cc167e549bf08f7f13503d5b8418f61d23e85d41fa18892cea7039507542882"
+  },
+  {
+   "category": "company",
+   "datetime": 1789858657,
+   "headline": "DGRW Pays Dividends Every Month. Its Biggest Stocks Look Nothing Like a High-Yield ETF",
+   "id": 142275785,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "NVDA",
+   "source": "Yahoo",
+   "summary": "WisdomTree's DGRW distributes cash to shareholders every single month, yet its largest holdings read like a growth fund roster rather than an income portfolio. Whether that contradiction works for or against dividend investors depends entirely on what you actually need from a dividend ETF.",
+   "url": "https://finnhub.io/api/news?id=6b832664e640eb589ca6b277d6432b2239002b4d689a91893ad9ef70f68f0dc5"
+  },
+  {
+   "category": "company",
+   "datetime": 1789858200,
+   "headline": "RTX Beats Lockheed Martin on Risk -- Here's Why It's the Better Buy Long-Term",
+   "id": 142275786,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "NVDA",
+   "source": "Yahoo",
+   "summary": "The defense industry environment is changing, and it's putting pressure on traditional ways of doing business.",
+   "url": "https://finnhub.io/api/news?id=d3ee382a4337799702fcb76d9f25c631cb8d61e0917b0e3ab10dbe65cbe17a85"
+  },
+  {
+   "category": "company",
+   "datetime": 1789856700,
+   "headline": "Bloom Energy Is Riding the Data Center Boom to a $25 Billion Backlog. Plug Power Is Passing on It. Here's Why.",
+   "id": 142275787,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "NVDA",
+   "source": "Yahoo",
+   "summary": "One fuel cell stock is chasing AI power demand with billions in backing. Another is staying out of the race entirely.",
+   "url": "https://finnhub.io/api/news?id=945b9e58528a2a18739acd260ba7f3484d6af6fc3b4eae4270c7d5cc64e2be41"
+  },
+  {
+   "category": "company",
+   "datetime": 1789855740,
+   "headline": "Could Oracle's Debt Load Derail Its AI Cloud Ambitions?",
+   "id": 142275788,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "NVDA",
+   "source": "Yahoo",
+   "summary": "The risk of a sudden reversal in AI growth looms large over Oracle stock.",
+   "url": "https://finnhub.io/api/news?id=4645bea08991c8983fe61986b84ed52aec72fc829944a649cddc7d10b5642594"
+  }
+ ],
+ "news_window": [
+  "2026-08-20",
+  "2026-09-19"
+ ],
+ "peers": [
+  "AVGO",
+  "MU",
+  "AMD",
+  "INTC",
+  "TXN",
+  "MRVL",
+  "QCOM",
+  "ADI",
+  "MPWR",
+  "ALAB"
+ ],
+ "profile": {
+  "currency": "USD",
+  "exchange": "NASDAQ NMS - GLOBAL MARKET",
+  "industry": "Semiconductors",
+  "market_cap": 5356706910564.041,
+  "name": "NVIDIA Corp",
+  "shares_outstanding": 24200000000.0,
+  "source": "finnhub",
+  "ticker": "NVDA"
+ },
+ "quote": {
+  "currency": "USD",
+  "observed_at": 1789761600,
+  "previous_close": 219.34,
+  "price": 222.27,
+  "source": "finnhub",
+  "ticker": "NVDA"
+ },
+ "ticker": "NVDA"
+}

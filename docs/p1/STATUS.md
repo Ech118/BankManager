@@ -5,15 +5,15 @@ A PR that changes behaviour must update this file.
 
 **Step:** 3 in progress. **Seven of ten tools are served; XBRL normalization is
 real and runs against twelve recorded filers.**
-**Next:** `get_market_snapshot` (Finnhub + dei shares), then peers, then
-`build_factsheet`, then live filing sections, then the last three tools.
+**Next:** `get_peer_companies` (SIC + XBRL frames), then `build_factsheet`,
+then live filing sections, then the last three tools.
 **Blockers:** none.
 
 | Capability | State | Notes |
 |---|---|---|
 | **MCP server** | **mock, live over MCP** | 7 of 10 tools served over the in-memory transport |
 | `get_financial_facts` | **served** | as_of + restatement filtering, `periods`, `include_superseded` |
-| `get_market_snapshot` | **served** | null before the snapshot was observed |
+| `get_market_snapshot` | **served, live** | Finnhub price + filing share count; degrades to price unavailable |
 | `get_company_profile` | **served** | |
 | `get_peer_companies` | **served** | `limit` + `truncated` |
 | `resolve_fact` | **served** | flags `is_superseded` / `is_future` separately |
@@ -35,6 +35,9 @@ real and runs against twelve recorded filers.**
 | Total debt | **real** | derived fact; components emitted and linked by `Derivation` |
 | Restatement linking | **real** | `superseded_by` + `as_known_on()`; real splits exercise it |
 | Stock splits | **real** | discontinuity detector + split-adjusted derived facts when a ratio is tagged |
+| Market client | **real** | `MarketClient` Protocol; Finnhub impl; 5-min quote cache; `NullMarketClient` for outages |
+| Shares outstanding | **real** | 5-candidate chain behind a public-float floor check (GOOGL, BRK-B) |
+| Market snapshot | **real** | one timestamp for the bundle; EV bridge cites the facts |
 | Point-in-time reads | **real** | facts filed after `as_of` are never read |
 | YTD differencing / Q4 derivation | not started | annual only for now; both raise rather than guess |
 | ticker -> CIK overrides | **real** | `data/ingest/ticker_overrides.py`; XOM is the only one in the top 100 |
@@ -109,6 +112,16 @@ produced a confident wrong number rather than an error.
    one filer and a month-long DURATION by another (NVDA does both), and the same
    split is tagged twice, at announcement and at effect - 164 days apart for
    GOOGL - which would compound 20 into 400.
+
+9. **A cover-page share count cannot be trusted for a multi-class filer.**
+   GOOGL's `dei:EntityCommonStockSharesOutstanding` is ABSENT from companyfacts
+   (tagged per class, so dimensioned, so dropped). BRK-B's is PRESENT and reads
+   941,481 - Class A alone, which at a Class B price makes Berkshire a $480M
+   company against its own reported $903B float. Finnhub repeats the same
+   mistake (`shareOutstanding` 1.44M); only its `marketCapitalization` covers
+   every class. `data/normalize/shares.py` therefore tries five candidates and
+   keeps the first that survives a public-float floor check. AAPL, NVDA and
+   GOOGL market caps come out equal to the provider's to the dollar.
 
 ### Two earlier findings, still true
 

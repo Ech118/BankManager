@@ -1,0 +1,128 @@
+{
+ "news": [
+  {
+   "category": "company",
+   "datetime": 1789855620,
+   "headline": "Bank of America does the math on Apple's $1,200 iPhone offer",
+   "id": 142275802,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "AAPL",
+   "source": "Yahoo",
+   "summary": "The credit is bigger this year. The bill at the register still isn\u2019t zero.",
+   "url": "https://finnhub.io/api/news?id=77ae12ba886dec647639ba223f44cc987803b99e1b59b0e733992f395fee804e"
+  },
+  {
+   "category": "company",
+   "datetime": 1789845180,
+   "headline": "Cramer strongly recommends buying beaten-down 90s tech legend",
+   "id": 142273792,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "AAPL",
+   "source": "Yahoo",
+   "summary": "Jim Cramer touts a former mobile phone king as an AI buy, though its Q2 cash flow raises questions.",
+   "url": "https://finnhub.io/api/news?id=c0c92924ae13cb6f019c9e221fca221df8b2936806878be8b9ee43a0d423aa82"
+  },
+  {
+   "category": "company",
+   "datetime": 1789843800,
+   "headline": "Forget Buying All Seven: The \"Magnificent Seven\" Stock Most Likely to Double by 2028",
+   "id": 142273787,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "AAPL",
+   "source": "Yahoo",
+   "summary": "I believe investors are underrating the potential of this compounding machine.",
+   "url": "https://finnhub.io/api/news?id=e7c88893e45fbbc500a296482ce0c87e9709b092bc2dcd956c578f26ddcad785"
+  },
+  {
+   "category": "company",
+   "datetime": 1789833780,
+   "headline": "Apple gets bullish Wall Street call as iPhone demand jumps",
+   "id": 142272955,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "AAPL",
+   "source": "Yahoo",
+   "summary": "Apple\u2019s price target hike comes on the heels of surprising consumer survey findings.",
+   "url": "https://finnhub.io/api/news?id=58b9203811fc59e3162b59b966223d56f324222c1c67a4c83e5afe24e2110bc9"
+  },
+  {
+   "category": "company",
+   "datetime": 1789830671,
+   "headline": "Coinbase Files With CFTC To List US Single-Stock Perpetual Futures, Including AAPL And TSLA Contracts",
+   "id": 142272114,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "AAPL",
+   "source": "Yahoo",
+   "summary": "Coinbase\u2019s filing used an Apple contract as its model, which is cash-settled, has no fixed expiration, and would trade from Sunday to Friday.",
+   "url": "https://finnhub.io/api/news?id=fbf822b1a1edb9f93faaedea12bfb16fa622ace06cadfefe458bcad49a850766"
+  },
+  {
+   "category": "company",
+   "datetime": 1789830300,
+   "headline": "The Stock Market's Biggest Companies Are Losing Their Grip. Here's the ETF I'd Buy If History Repeats.",
+   "id": 142272106,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "AAPL",
+   "source": "Yahoo",
+   "summary": "As the market rotates away from large-cap stocks, new opportunities have emerged in their place.",
+   "url": "https://finnhub.io/api/news?id=4d81a180e6f8e18c98e7f7f44ee77306e9a702930d559d9446b189a7f8237f78"
+  },
+  {
+   "category": "company",
+   "datetime": 1789822200,
+   "headline": "John Ternus's First iPhone Launch Prompted a Bank of America Price Target Cut. Is Apple Stock a Buy?",
+   "id": 142270865,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "AAPL",
+   "source": "Yahoo",
+   "summary": "Apple stock just got a price target cut due to the memory processor crunch.",
+   "url": "https://finnhub.io/api/news?id=814e533b97d603798092a58557d5257cd58ff9b553db16b0b83fc6c164476a1f"
+  },
+  {
+   "category": "company",
+   "datetime": 1789816920,
+   "headline": "History Says You Should Know These 3 Things Before Buying Apple Stock (AAPL)",
+   "id": 142270180,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "AAPL",
+   "source": "Yahoo",
+   "summary": "The pride of Cupertino continues its winning ways, and investors are eager to jump on the bandwagon.",
+   "url": "https://finnhub.io/api/news?id=3b414a219e85ef32df40dd5598b187c14281f58d7d811d16ed4d4254de35fef0"
+  }
+ ],
+ "news_window": [
+  "2026-08-20",
+  "2026-09-19"
+ ],
+ "peers": [
+  "DELL",
+  "SNDK",
+  "WDC",
+  "HPE",
+  "NTAP",
+  "P",
+  "HPQ",
+  "SMCI",
+  "IONQ",
+  "GPGI",
+  "INFQ"
+ ],
+ "profile": {
+  "currency": "USD",
+  "exchange": "NASDAQ NMS - GLOBAL MARKET",
+  "industry": "Technology",
+  "market_cap": 4905541618359.874,
+  "name": "Apple Inc",
+  "shares_outstanding": 14687360000.0,
+  "source": "finnhub",
+  "ticker": "AAPL"
+ },
+ "quote": {
+  "currency": "USD",
+  "observed_at": 1789761600,
+  "previous_close": 337.0,
+  "price": 336.13,
+  "source": "finnhub",
+  "ticker": "AAPL"
+ },
+ "ticker": "AAPL"
+}

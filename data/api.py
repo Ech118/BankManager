@@ -218,10 +218,20 @@ def get_financial_facts(
 
 
 def get_market_snapshot(ticker: str, as_of: str | None = None) -> dict:
-    """Price, shares and the EV bridge at one instant (MCP tool: get_market_snapshot)."""
+    """Price, shares and the EV bridge at one instant (MCP tool: get_market_snapshot).
+
+    LIVE: price from the market provider, shares from the filing (with a
+    public-float sanity check, because a cover-page count can be one share class
+    of several), cash and debt from the normalized facts. A provider outage
+    yields a snapshot with price unavailable - never an exception.
+    """
     scope = check_scope(ticker, as_of)
     if not scope["in_scope"]:
         raise ValueError(scope["reason"])
+    if _mode() == "live":
+        from data import live
+
+        return live.market_snapshot(ticker, as_of)
     _require_mock("get_market_snapshot")
     return _load("market_snapshot.json")
 
