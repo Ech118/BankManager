@@ -75,7 +75,7 @@ from schema.contracts.verification import (
     VerificationResult,
 )
 
-SCHEMA_VERSION = "2.0.0"
+SCHEMA_VERSION = "2.1.0"
 """Semantic version of the whole contract set. Bumped on breaking changes only."""
 
 __all__ = [

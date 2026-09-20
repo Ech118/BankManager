@@ -1,6 +1,6 @@
 # MCP tools
 
-The ten tools `mcp_server/` exposes. This is the **only** surface P3 may touch.
+The eleven tools `mcp_server/` exposes. This is the **only** surface P3 may touch.
 
 Contracts: `schema/contracts/tools.py`. Generated schema: `schema/tools.json`.
 
@@ -55,9 +55,9 @@ it found in a filing.
 
 ---
 
-## The ten tools
+## The eleven tools
 
-### Data tools (nine) — wrap `data/api.py`
+### Data tools (ten) — wrap `data/api.py`
 
 #### `search_filings`
 Which filings exist. Lets an agent fetch two sections instead of a whole 10-K.
@@ -72,9 +72,23 @@ rather than an empty result, because silently returning nothing would look like
 the filing did not exist.
 
 #### `search_filing`
-Postgres full-text search, scoped by ticker, form, item and date. Returns whole
-sections, not fragments ([ADR 0006](adr/0006-no-naive-chunk-and-embed-rag.md)).
+Keyword search over the extracted sections, scoped by ticker, form, item and
+date. Returns whole sections, not fragments
+([ADR 0006](adr/0006-no-naive-chunk-and-embed-rag.md)).
 **In:** `ticker`, `query`, `as_of`, `forms?`, `items?`, `limit=10` · **Out:** `FilingSection[]`
+
+**The index is in memory, not Postgres.** ADR 0006 specified Postgres full-text
+search; the implementation ranks the already-extracted sections in process
+instead. What the ADR actually rules out — chunking filings into embeddings and
+retrieving fragments — is unchanged: the unit of retrieval is still a whole
+structural section, still scoped by ticker, form, item and date, and the ranking
+is still deterministic and inspectable. Only the index lives somewhere else.
+
+The reason is that a run reads one company's filings, which is a few hundred
+sections. A process-local index over that is faster than a round trip, needs no
+service to be up, and keeps the offline test suite honest. Postgres earns its
+place when the corpus outgrows one company per run, and the tool signature does
+not change when it does.
 
 #### `get_financial_facts`
 The main way an agent gets numbers. Returns facts with `fact_id`s, which the
@@ -115,6 +129,32 @@ because the verifier must distinguish three cases: the id does not exist
 (`unresolved_fact`), it was restated (`superseded_fact`), or it post-dates the
 run (`future_fact`). Collapsing them into "not found" would make the verifier's
 report useless.
+
+#### `get_factsheet`
+The whole reported picture of one company at one date, in one object.
+**In:** `ticker`, `as_of` · **Out:** `Factsheet | null`
+**Errors:** `ValueError` for an out-of-scope ticker.
+
+`null` means the ticker is in scope but has no reportable history. An
+out-of-scope ticker raises instead, so the two cases stay distinguishable.
+
+This tool exists for one reason: `audit.run_audit(state, factsheet, ...)` needs
+a `Factsheet`, and the orchestrator may not import `data/` (ADR 0007). Before
+it, the only way to satisfy the auditor was to inject a factsheet from outside
+the pipeline — which put a P1 artifact on a path no contract described, and
+meant the object the auditor checked was not necessarily the one the tools
+answered from. The orchestrator now fetches it over MCP like everything else and
+passes it to `run_audit`.
+
+It is a **data** tool: it takes `as_of`, and the returned `Factsheet.as_of`
+equals it. Everything inside is filtered to that date by
+`Factsheet`'s own point-in-time validator, so a violation is a loud error rather
+than a quiet one.
+
+It is also by far the most expensive tool in the set — it assembles what the
+other tools return piecemeal. An agent that needs three numbers should call
+`get_financial_facts`. `get_factsheet` is for the auditor and the composition
+root.
 
 ### Compute tool (one) — wraps `calc/api.py`
 

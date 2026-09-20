@@ -1,6 +1,6 @@
 """MCP tool request/response models - the only surface P3 may touch (ADR 0007).
 
-Specified by docs/mcp-tools.md. The server lives in mcp_server/ (P1). Nine tools
+Specified by docs/mcp-tools.md. The server lives in mcp_server/ (P1). Ten tools
 wrap data/; calculate_valuation is a thin wrapper over calc/ and is the ONE
 sanctioned cross-partition import in the repo.
 
@@ -24,6 +24,7 @@ from schema.contracts.common import (
 )
 from schema.contracts.enums import FilingType, ItemCode
 from schema.contracts.facts import FinancialFact
+from schema.contracts.factsheet import Factsheet
 from schema.contracts.filings import Filing, FilingSection
 from schema.contracts.market import CompanyProfile, MarketSnapshot, NewsItem, Peer
 from schema.contracts.metrics import Metrics, ReverseDcf
@@ -237,6 +238,29 @@ class ResolveFactResponse(ToolResponse):
     )
 
 
+# --------------------------------------------------------------------------
+# 11. get_factsheet
+# --------------------------------------------------------------------------
+class GetFactsheetRequest(DataToolRequest):
+    """The whole reported picture of one company at one date, in one object.
+
+    Exists because `audit.run_audit(state, factsheet, ...)` needs a `Factsheet`
+    and the orchestrator may not import `data/` (ADR 0007). Without this tool
+    the only way to satisfy the auditor was to inject a factsheet from outside
+    the pipeline, which put a P1 artifact on a path no contract described.
+    """
+
+    ticker: Ticker
+
+
+class GetFactsheetResponse(ToolResponse):
+    factsheet: Factsheet | None = Field(
+        default=None,
+        description="None only when the ticker is in scope but has no reportable "
+        "history; an out-of-scope ticker raises instead.",
+    )
+
+
 TOOL_REQUESTS: dict[str, type[ToolRequest]] = {
     "search_filings": SearchFilingsRequest,
     "get_filing_section": GetFilingSectionRequest,
@@ -248,8 +272,9 @@ TOOL_REQUESTS: dict[str, type[ToolRequest]] = {
     "search_news": SearchNewsRequest,
     "calculate_valuation": CalculateValuationRequest,
     "resolve_fact": ResolveFactRequest,
+    "get_factsheet": GetFactsheetRequest,
 }
-"""Tool name -> request model. mcp_server/ registers exactly these ten."""
+"""Tool name -> request model. mcp_server/ registers exactly these eleven."""
 
 TOOL_RESPONSES: dict[str, type[ToolResponse]] = {
     "search_filings": SearchFilingsResponse,
@@ -262,6 +287,7 @@ TOOL_RESPONSES: dict[str, type[ToolResponse]] = {
     "search_news": SearchNewsResponse,
     "calculate_valuation": CalculateValuationResponse,
     "resolve_fact": ResolveFactResponse,
+    "get_factsheet": GetFactsheetResponse,
 }
 """Tool name -> response model."""
 
