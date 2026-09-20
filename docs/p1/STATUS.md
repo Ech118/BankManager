@@ -3,28 +3,28 @@
 Update whenever a capability moves from mock to real, or when blocked.
 A PR that changes behaviour must update this file.
 
-**Step:** 4 in progress. **Ten of eleven tools are served; XBRL normalization
+**Step:** 4 complete. **Ten of eleven tools are served and live; XBRL normalization
 is real and runs against twelve recorded filers.**
-**Next:** MODE=live over stdio, plus a live end-to-end test.
-`calculate_valuation` waits for `calc/` to land on main and errors clearly
-until then. Real 10-K section extraction is deferred and is
+**Next:** `calculate_valuation`, once P2's `calc/` lands on main. Then YTD
+differencing and Q4 derivation, and Postgres if the corpus outgrows one company
+per run. Real 10-K section extraction is deferred and is
 what `search_filing` needs to work in live mode.
 **Blockers:** `get_factsheet` is in the contracts but not yet in `main` -
 PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
 
 | Capability | State | Notes |
 |---|---|---|
-| **MCP server** | **mock, live over MCP** | 10 of 11 tools served over the in-memory transport |
-| `get_financial_facts` | **served** | as_of + restatement filtering, `periods`, `include_superseded` |
+| **MCP server** | **mock + LIVE** | 10 of 11 tools; in-memory transport in mock, stdio subprocess in live |
+| `get_financial_facts` | **served, live** | as_of + restatement filtering, `periods`, `include_superseded` |
 | `get_market_snapshot` | **served, live** | Finnhub price + filing share count; degrades to price unavailable |
-| `get_company_profile` | **served** | |
+| `get_company_profile` | **served, live** | from SEC submissions, not the vendor: `sic` decides scope |
 | `get_peer_companies` | **served, live** | SIC + XBRL frames ranking; `limit` + `truncated` |
-| `resolve_fact` | **served** | flags `is_superseded` / `is_future` separately |
+| `resolve_fact` | **served, live** | flags `is_superseded` / `is_future` separately |
 | `search_filings` | **served, live** | newest first, `forms` filter, `limit` + `truncated` |
 | `get_filing_section` | **served, live** | verbatim; errors on unknown id AND on one filed after `as_of` |
 | `search_filing` | **served, live** | BM25 over the extracted Item 1 / 1A sections, in process |
 | `search_news` | **served, live** | Finnhub /company-news; `as_of` bounds the window from above too |
-| `calculate_valuation` | not served | Step 4; waits on P2's `calc.api` |
+| `calculate_valuation` | not served | waits on P2's `calc.api` landing on main; errors readably if called |
 | **EDGAR client** | **real** | submissions, filings, documents; responses replayed in tests |
 | **ticker → CIK** | **real** | `BRK.B` / `BRK-B` / `brk-b` all normalise |
 | **rate limiting** | **real** | token bucket at 8 req/s; escalating 429/503 backoff |
@@ -51,10 +51,12 @@ PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
 | ticker -> CIK overrides | **real** | `data/ingest/ticker_overrides.py`; XOM is the only one in the top 100 |
 | `fixtures/real/` recorded filers | **real** | 12 companies, trimmed companyfacts + submissions |
 | Section parsing | **real** | 10-K Item 1 + 1A from the primary document; TOC, letter-spacing and cross-references handled |
-| Postgres store | not started | migration file lists the tables |
+| Postgres store | not started | live repositories compute on demand instead; migration file lists the tables |
+| Live repositories | **real** | `data/repositories/live.py` implements the three Protocols |
+| Live e2e over stdio | **real** | `BM_LIVE_TESTS=1 pytest mcp_server/tests/test_live_e2e.py`; 22 checks, all ten tools |
 | `fixtures/real/` demo tickers | not started | Step 6; coordinate the choice via `docs/requests/` |
 
-**Last updated:** 2026-09-20 (live `search_news`, live 10-K Item 1/1A extraction)
+**Last updated:** 2026-09-20 (Step 4 complete: MODE=live over stdio, live e2e)
 
 ---
 

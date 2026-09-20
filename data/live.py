@@ -279,6 +279,36 @@ def _latest_annual_revenue(data: CompanyData) -> float | None:
     return float(max(revenues, key=lambda f: f.period_end).value or 0.0) or None
 
 
+def company_profile(ticker: Ticker, as_of: ISODate | None = None) -> dict:
+    """Identity and SIC classification, from the filer's own SEC submissions.
+
+    SEC is authoritative here rather than the market provider: `sic` decides
+    scope and drives peer selection, and a vendor's industry label is neither
+    the SEC's code nor stable.
+    """
+    data = load_facts(ticker, as_of)
+    submissions = data.submissions
+    retrieved_at = to_facts.utc_now()
+    fiscal_year_end = submissions.get("fiscalYearEnd") or ""
+    return {
+        "ticker": ticker,
+        "company_name": data.company_name,
+        "cik": data.cik,
+        "sic": str(submissions.get("sic") or "") or None,
+        "sic_description": submissions.get("sicDescription") or None,
+        "exchange": (submissions.get("exchanges") or [None])[0],
+        # SEC writes MMDD; the contract wants MM-DD.
+        "fiscal_year_end": (
+            f"{fiscal_year_end[:2]}-{fiscal_year_end[2:]}"
+            if len(fiscal_year_end) == 4
+            else None
+        ),
+        "as_of": as_of or retrieved_at[:10],
+        "retrieved_at": retrieved_at,
+        "source_id": f"src:edgar_submissions:{data.cik}",
+    }
+
+
 def peer_companies(ticker: Ticker, as_of: ISODate | None = None, limit: int = 6) -> list[dict]:
     """Comparables by SIC and size (data/normalize/peers.py)."""
     data = load_facts(ticker, as_of)

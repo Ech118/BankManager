@@ -299,10 +299,19 @@ def get_market_snapshot(ticker: str, as_of: str | None = None) -> dict:
 
 
 def get_company_profile(ticker: str, as_of: str | None = None) -> dict:
-    """Identity and SIC classification (MCP tool: get_company_profile)."""
+    """Identity and SIC classification (MCP tool: get_company_profile).
+
+    LIVE: from the filer's own SEC submissions, not from the market provider -
+    `sic` decides scope and drives peer selection, and a vendor's industry label
+    is neither the SEC's code nor stable.
+    """
     scope = check_scope(ticker, as_of)
     if not scope["in_scope"]:
         raise ValueError(scope["reason"])
+    if _mode() == "live":
+        from data import live
+
+        return live.company_profile(ticker, as_of)
     _require_mock("get_company_profile")
     return _load("company_profile.json")
 

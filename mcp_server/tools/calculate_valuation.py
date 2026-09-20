@@ -25,7 +25,11 @@ as_of: NOT taken. This is a COMPUTE tool; the factsheet it works from already
 carries the authoritative as_of, and a second date could silently disagree
 (amendment 2).
 
-TODO(roadmap Step 4, P1 + P2): wire to calc.api.calculate_valuation.
+NOT SERVED YET. `calc/` has not landed on main, so this tool is deliberately
+absent from `mcp_server.server.IMPLEMENTED_TOOLS` rather than advertised and
+broken: an agent that plans around a tool which raises is worse off than one
+that can see the tool does not exist. Calling it directly raises an error that
+says what is missing and what to do instead.
 """
 
 from __future__ import annotations
@@ -38,6 +42,15 @@ from schema.contracts.tools import CalculateValuationRequest, CalculateValuation
 def run(request: CalculateValuationRequest, backends: Any) -> CalculateValuationResponse:
     """Pass `request` to calc.api.calculate_valuation and return its answer.
 
-    The entire body should stay this short.
+    The entire body should stay this short. When calc/ lands, this becomes:
+
+        from calc import api as calc_api
+        return CalculateValuationResponse(**calc_api.calculate_valuation(...))
     """
-    raise NotImplementedError("TODO(roadmap Step 4, P1 + P2)")
+    raise NotImplementedError(
+        "calculate_valuation is not available: calc/ (P2) has not landed on main "
+        "yet, so there is nothing to wrap. This tool is not advertised in "
+        "tools/list for that reason - check mcp_server.server.IMPLEMENTED_TOOLS "
+        "before planning around a tool. Valuation multiples must be computed by "
+        "calc/, never by an agent (ADR 0001)."
+    )
