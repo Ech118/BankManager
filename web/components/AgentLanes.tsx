@@ -20,7 +20,16 @@ export function AgentLanes({ events }: { events: AgentEvent[] }) {
     });
   }
   if (lanes.size === 0) return null;
+  const all = [...lanes.values()];
+  const done = all.filter((l) => l.status === "done").length;
   return (
+    <>
+      <p className="progress-label">
+        {done} of {all.length} stages done
+      </p>
+      <div className="progress" role="progressbar" aria-valuemin={0} aria-valuemax={all.length} aria-valuenow={done}>
+        <span style={{ width: `${(done / all.length) * 100}%` }} />
+      </div>
     <ol className="lanes" aria-label="Agent progress">
       {[...lanes.values()].map((l) => (
         <li key={l.agent} className={`lane lane-${l.status}`} data-agent={l.agent} data-status={l.status}>
@@ -31,5 +40,6 @@ export function AgentLanes({ events }: { events: AgentEvent[] }) {
         </li>
       ))}
     </ol>
+    </>
   );
 }

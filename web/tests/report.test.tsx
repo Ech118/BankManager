@@ -132,9 +132,19 @@ describe("banners", () => {
     expect(screen.getByText("No news available")).toBeInTheDocument();
   });
 
-  it("labels mock data as fictional", () => {
-    render(<Report verdict={acmeVerdict()} />);
-    expect(screen.getByText(/fictional company/)).toBeInTheDocument();
+  it("shows no mock or fictional wording", () => {
+    const { container } = render(<Report verdict={acmeVerdict()} />);
+    expect(container.textContent).not.toMatch(/mock|fictional/i);
+  });
+
+  it("breaks the case against into points with a stance per response", () => {
+    const v = acmeVerdict();
+    v.red_team.summary = "First risk is real. Second risk; third risk.";
+    v.red_team.responses_by_synthesizer = "R1: Accepted. It drives the avoid. R2: Rebutted. Coverage is ample.";
+    const { container } = render(<Report verdict={v} />);
+    expect(container.querySelectorAll(".rt-points:not(.responses) li").length).toBe(3);
+    expect(container.querySelector(".stance-accepted")).toBeTruthy();
+    expect(container.querySelector(".stance-rebutted")).toBeTruthy();
   });
 });
 

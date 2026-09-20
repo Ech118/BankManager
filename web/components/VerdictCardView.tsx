@@ -1,5 +1,5 @@
 import { HORIZON_LABELS, type VerdictCard } from "@/lib/types";
-import { humanize } from "@/lib/format";
+import { humanize, stripMock } from "@/lib/format";
 import { NumberBadge } from "./NumberBadge";
 
 const TONE: Record<string, string> = {
@@ -11,6 +11,8 @@ const TONE: Record<string, string> = {
   sell: "bad",
 };
 
+const CIRC = 2 * Math.PI * 36;
+
 /** The answer, first. Every number on it comes from calc or the market snapshot, never from the model. */
 export function VerdictCardView({ card }: { card: VerdictCard }) {
   const horizons = ["short_term", "medium_term", "long_term"] as const;
@@ -20,7 +22,7 @@ export function VerdictCardView({ card }: { card: VerdictCard }) {
       <div className="card-top">
         <div>
           <h2 id="verdict-heading" className="company">
-            {card.company} <span className="ticker">{card.ticker}</span>
+            {stripMock(card.company)} <span className="ticker">{card.ticker}</span>
           </h2>
           <p className="quote-line">
             Price <NumberBadge value={card.price} /> · Market cap <NumberBadge value={card.market_cap} />
@@ -50,6 +52,9 @@ export function VerdictCardView({ card }: { card: VerdictCard }) {
             {horizons.map((h) => (
               <td key={h}>
                 <span className="score">{card.scores[h]}</span>
+                <span className="score-bar" aria-hidden="true">
+                  <span style={{ width: `${Math.max(0, Math.min(10, card.scores[h])) * 10}%` }} />
+                </span>
               </td>
             ))}
           </tr>
@@ -64,26 +69,43 @@ export function VerdictCardView({ card }: { card: VerdictCard }) {
         </tbody>
       </table>
 
-      <dl className="facts">
-        <div>
-          <dt>Probability of beating the S&amp;P 500 (3-5y)</dt>
-          <dd>{Math.round(card.p_beat_sp500_5y * 100)}%</dd>
+      <div className="hero-stats">
+        <div className="gauge">
+          <svg viewBox="0 0 84 84" aria-hidden="true">
+            <circle className="gauge-track" cx="42" cy="42" r="36" fill="none" strokeWidth="8" />
+            <circle
+              className="gauge-fill"
+              cx="42"
+              cy="42"
+              r="36"
+              fill="none"
+              strokeWidth="8"
+              strokeDasharray={CIRC}
+              strokeDashoffset={CIRC * (1 - Math.max(0, Math.min(1, card.p_beat_sp500_5y)))}
+            />
+          </svg>
+          <div>
+            <div className="gauge-value">{Math.round(card.p_beat_sp500_5y * 100)}%</div>
+            <div className="gauge-label">Probability of beating the S&amp;P 500 (3-5y)</div>
+          </div>
         </div>
-        <div>
-          <dt>Expected 3-5y return</dt>
-          <dd>
-            <NumberBadge value={card.expected_5y_return} />
-          </dd>
-        </div>
-        <div>
-          <dt>Primary catalyst</dt>
-          <dd>{card.primary_catalyst}</dd>
-        </div>
-        <div>
-          <dt>Biggest risk</dt>
-          <dd>{card.biggest_risk}</dd>
-        </div>
-      </dl>
+        <dl className="facts">
+          <div>
+            <dt>Expected 3-5y return</dt>
+            <dd>
+              <NumberBadge value={card.expected_5y_return} />
+            </dd>
+          </div>
+          <div className="catalyst">
+            <dt>Primary catalyst</dt>
+            <dd>{card.primary_catalyst}</dd>
+          </div>
+          <div className="risk">
+            <dt>Biggest risk</dt>
+            <dd>{card.biggest_risk}</dd>
+          </div>
+        </dl>
+      </div>
 
       <p className="tags">
         <span className="tag">Valuation: {humanize(card.valuation)}</span>

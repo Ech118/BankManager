@@ -1,4 +1,5 @@
 import type { ReportSection } from "@/lib/types";
+import { stripMock } from "@/lib/format";
 import { Markdown } from "@/lib/markdown";
 
 const STATUS_LABEL: Record<ReportSection["verification_status"], string> = {
@@ -35,7 +36,7 @@ export function SectionList({ sections }: { sections: ReportSection[] }) {
               )}
               <span className="owner">{s.agent}</span>
             </summary>
-            <Markdown source={s.body_markdown} />
+            <Markdown source={stripMock(s.body_markdown)} />
           </details>
         );
       })}

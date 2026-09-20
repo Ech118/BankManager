@@ -11,11 +11,6 @@ export function Report({ verdict }: { verdict: Verdict }) {
   const audit = verdict.audit;
   return (
     <article className="report" data-mode={verdict.mode}>
-      {verdict.mode === "mock" && (
-        <div className="banner banner-mock" role="note">
-          Mock data: a fictional company, not real market data.
-        </div>
-      )}
       <DataQualityBanner quality={verdict.data_quality} />
       <VerdictCardView card={verdict.card} />
       <RedTeamView redTeam={verdict.red_team} />

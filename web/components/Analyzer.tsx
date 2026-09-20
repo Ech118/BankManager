@@ -19,6 +19,13 @@ import { Report } from "./Report";
 
 type Phase = "idle" | "running" | "done" | "failed";
 
+const STEPS = [
+  { t: "Agents read", d: "Filings and market data, parsed by structure." },
+  { t: "Code computes", d: "Every metric and valuation is deterministic math." },
+  { t: "Red team objects", d: "A dedicated agent argues the other side." },
+  { t: "Claims checked", d: "Each claim is verified against its source." },
+];
+
 /** A browser network failure says only "Failed to fetch"; say what is actually wrong and how to fix it. */
 function describe(err: unknown): string {
   if (err instanceof TypeError) {
@@ -132,11 +139,18 @@ export function Analyzer() {
           maxLength={7}
         />
         <button type="submit" disabled={phase === "running"}>
-          {phase === "running" ? "Analyzing…" : "Analyze"}
+          {phase === "running" ? (
+            <>
+              <span className="spinner" aria-hidden="true" />
+              Analyzing…
+            </>
+          ) : (
+            "Analyze"
+          )}
         </button>
       </form>
       {saved.length > 0 && (
-        <p className="lede">
+        <p className="saved-runs">
           {offline ? "Saved runs (no backend needed): " : "Saved runs: "}
           {saved.map((symbol) => (
             <button
@@ -161,6 +175,17 @@ export function Analyzer() {
       <AgentLanes events={events} />
       {result?.kind === "verdict" && <Report verdict={result.verdict} />}
       {result?.kind === "preliminary" && <PreliminaryReport markdown={result.markdown} />}
+      {phase === "idle" && !result && (
+        <ol className="steps" aria-label="How it works">
+          {STEPS.map((s, i) => (
+            <li key={s.t}>
+              <span className="step-n">{i + 1}</span>
+              <strong>{s.t}</strong>
+              <span className="d">{s.d}</span>
+            </li>
+          ))}
+        </ol>
+      )}
     </div>
   );
 }
