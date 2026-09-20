@@ -1,8 +1,9 @@
 """P2 (Calc, Audit & Eval) owns this file. Public interface of the math layer.
 
-Step 0 STUB: returns the ACME fixtures from fixtures/mock/. The owner replaces
-the internals with real deterministic math but MUST NOT change any signature
-(CONTRACT-CHANGE PR, CONTRIBUTING.md).
+Every function here is a thin delegate to a module that holds the maths, so that
+this file stays readable as the contract it is. Signatures are FROZEN
+(tests/contracts/test_signatures.py): changing one is a CONTRACT-CHANGE PR
+(CONTRIBUTING.md).
 
 calc/ IS PURE (docs/adr/0001, docs/adr/0007):
   - no network, no database, no filesystem beyond the mock fixtures,
@@ -21,6 +22,12 @@ import json
 import os
 from pathlib import Path
 from typing import Any
+
+from calc.metrics.compute import compute_metrics as metrics_compute
+from calc.scenarios.consistency import validate_consistency as scenarios_validate
+from calc.scenarios.evaluate import evaluate_scenarios as scenarios_evaluate
+from calc.scenarios.rubric import derive_scores as scenarios_derive_scores
+from calc.valuation.compute import calculate_valuation as valuation_compute
 
 _MOCK = Path(__file__).resolve().parents[1] / "fixtures" / "mock"
 
@@ -44,9 +51,13 @@ def compute_metrics(factsheet: dict) -> dict:
     """Factsheet -> Metrics. Pure function.
 
     Takes no `as_of`: `factsheet["as_of"]` is authoritative for the whole run.
+
+    Beside the contract's fields the result carries `derived_facts` and
+    `input_facts`: one FinancialFact per computed number, with its formula, its
+    input fact_ids and a filed_at equal to the latest of those inputs. That is
+    what audit/'s recompute check reads.
     """
-    _require_mock("compute_metrics")
-    return _load("metrics.json")
+    return metrics_compute(factsheet)
 
 
 def reverse_dcf(factsheet: dict, metrics: dict, assumptions: dict | None = None) -> dict:
@@ -55,8 +66,9 @@ def reverse_dcf(factsheet: dict, metrics: dict, assumptions: dict | None = None)
     ALWAYS returns a sensitivity grid: a single point answer hides how much the
     result depends on the discount rate (error D).
     """
-    _require_mock("reverse_dcf")
-    return _load("metrics.json")["reverse_dcf"]
+    if assumptions:
+        return metrics_compute(factsheet, assumptions)["reverse_dcf"]
+    return (metrics or {}).get("reverse_dcf") or metrics_compute(factsheet)["reverse_dcf"]
 
 
 def calculate_valuation(request: dict) -> dict:
@@ -65,16 +77,12 @@ def calculate_valuation(request: dict) -> dict:
     mcp_server/tools/calculate_valuation.py is a thin wrapper over this function
     and holds no formulas of its own. That wrapper is the ONE sanctioned
     cross-partition import in the repo (docs/adr/0007).
+
+    calc/ is pure, so it cannot turn a ticker into a factsheet: the caller passes
+    one as `request["factsheet"]`. A request naming ACME without one falls back to
+    the mock fixture, which is how the contract suite calls it.
     """
-    _require_mock("calculate_valuation")
-    metrics = _load("metrics.json")
-    return {
-        "metrics": metrics,
-        "reverse_dcf": metrics["reverse_dcf"],
-        "notes": ["Mock valuation: ACME fixtures, no computation performed."],
-        "as_of": metrics["as_of"],
-        "truncated": False,
-    }
+    return valuation_compute(request)
 
 
 def evaluate_scenarios(
@@ -95,15 +103,17 @@ def evaluate_scenarios(
          recording requested vs applied (error C).
 
     `prior_shifts` is a list of PriorShift dicts. None means use only
-    `scenarios["prior_shift"]`.
+    `scenarios["prior_shift"]`; a non-empty list is authoritative, because P3's
+    list already contains the Scenario Agent's own shift and counting the embedded
+    one as well would apply it twice.
+
+    `eps_at_horizon` is DERIVED here from revenue, the scenario's growth and
+    margin, and the current share count - it is arithmetic, and no agent does
+    arithmetic (ADR 0001; the answer to P3's 2026-09-20 request).
 
     Takes no `as_of`: the factsheet carries it.
     """
-    total = sum(s["probability"] for s in scenarios["scenarios"].values())
-    if abs(total - 1.0) > 1e-6:
-        raise ValueError(f"Scenario probabilities must sum to 1.0, got {total}")
-    _require_mock("evaluate_scenarios")
-    return _load("scenario_result.json")
+    return scenarios_evaluate(scenarios, factsheet, metrics, prior_shifts)
 
 
 def derive_scores(scenario_result: dict) -> dict:
@@ -112,8 +122,7 @@ def derive_scores(scenario_result: dict) -> dict:
     A fixed rubric mapping excess return to a score. Documented in
     docs/p2/rubric.md. Never inflated, and never produced by an LLM.
     """
-    _require_mock("derive_scores")
-    return _load("scenario_result.json")["scores"]
+    return scenarios_derive_scores(scenario_result)
 
 
 def validate_consistency(scenario_result: dict, verdict_card: dict) -> dict:
@@ -123,5 +132,4 @@ def validate_consistency(scenario_result: dict, verdict_card: dict) -> dict:
     "strong_buy" whose expected return trails the index is an error, not a
     matter of taste.
     """
-    _require_mock("validate_consistency")
-    return {"ok": True, "issues": []}
+    return scenarios_validate(scenario_result, verdict_card)
