@@ -5,9 +5,9 @@ A PR that changes behaviour must update this file.
 
 **Step:** 4 in progress. **Ten of eleven tools are served; XBRL normalization
 is real and runs against twelve recorded filers.**
-**Next:** real 10-K Item 1/1A extraction (what `search_filing` needs in live
-mode), then MODE=live over stdio. `calculate_valuation` waits for `calc/` to
-land on main and errors clearly until then. Real 10-K section extraction is deferred and is
+**Next:** MODE=live over stdio, plus a live end-to-end test.
+`calculate_valuation` waits for `calc/` to land on main and errors clearly
+until then. Real 10-K section extraction is deferred and is
 what `search_filing` needs to work in live mode.
 **Blockers:** `get_factsheet` is in the contracts but not yet in `main` -
 PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
@@ -20,9 +20,9 @@ PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
 | `get_company_profile` | **served** | |
 | `get_peer_companies` | **served, live** | SIC + XBRL frames ranking; `limit` + `truncated` |
 | `resolve_fact` | **served** | flags `is_superseded` / `is_future` separately |
-| `search_filings` | **served** | newest first, `forms` filter, `limit` + `truncated` |
-| `get_filing_section` | **served** | verbatim; errors on unknown id AND on one filed after `as_of` |
-| `search_filing` | **served** | BM25 over whole sections, in process; **live needs the section parser** |
+| `search_filings` | **served, live** | newest first, `forms` filter, `limit` + `truncated` |
+| `get_filing_section` | **served, live** | verbatim; errors on unknown id AND on one filed after `as_of` |
+| `search_filing` | **served, live** | BM25 over the extracted Item 1 / 1A sections, in process |
 | `search_news` | **served, live** | Finnhub /company-news; `as_of` bounds the window from above too |
 | `calculate_valuation` | not served | Step 4; waits on P2's `calc.api` |
 | **EDGAR client** | **real** | submissions, filings, documents; responses replayed in tests |
@@ -50,11 +50,11 @@ PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
 | YTD differencing / Q4 derivation | not started | annual only for now; both raise rather than guess |
 | ticker -> CIK overrides | **real** | `data/ingest/ticker_overrides.py`; XOM is the only one in the top 100 |
 | `fixtures/real/` recorded filers | **real** | 12 companies, trimmed companyfacts + submissions |
-| Section parsing | mock | serves `fixtures/mock/sections/*.txt`; **real 10-K Item extraction is the gap that keeps `search_filing` mock-only in live mode** |
+| Section parsing | **real** | 10-K Item 1 + 1A from the primary document; TOC, letter-spacing and cross-references handled |
 | Postgres store | not started | migration file lists the tables |
 | `fixtures/real/` demo tickers | not started | Step 6; coordinate the choice via `docs/requests/` |
 
-**Last updated:** 2026-09-20 (live `build_factsheet`, live `search_news`)
+**Last updated:** 2026-09-20 (live `search_news`, live 10-K Item 1/1A extraction)
 
 ---
 
@@ -172,6 +172,28 @@ produced a confident wrong number rather than an error.
     `ok` for KO, `partial` for AAPL/MSFT/NVDA and `degraded` for JPM with 47
     gaps - a bank has no operating income, no capex, no gross profit and no
     inventory, and every one of them is `unavailable` rather than zero.
+
+14. **Four ways a 10-K parser confidently returns the wrong text.** Each was
+    found against a recorded filing, and each produces plausible content rather
+    than an error. (a) The contents block names every Item, so the first match
+    is a line like "Item 1. Business 3"; the fix is to require a real body after
+    the heading. (b) "Take the occurrence with the most text after it" always
+    picks the LAST one, because its span runs to end-of-file - JPMorgan
+    cross-references "Item 1A: Risk Factors" 590KB from the end, which beat the
+    real section at offset 279,411. (c) A cross-reference inside a sentence
+    looks exactly like a heading: NVIDIA says "see Item 1A. Risk Factors' for a
+    discussion" 6,000 characters early, so a heading now has to start its own
+    line. (d) Microsoft LETTER-SPACES its headings - the text reads "ITEM 1. B
+    USINESS" and "ITEM 1A. RIS K FACTORS" - which no regex over the visible text
+    can match, so matching runs against a whitespace-free copy with an offset
+    map back.
+
+15. **Item 1A cannot be ended by the next recognised heading.** A risk factors
+    section cross-references Item 1 and Item 8 inside its own body - Coca-Cola
+    does it twice in the first 5,000 characters - so ending there truncates the
+    section to a tenth of itself while looking entirely successful. It ends at
+    Item 1B, 1C, 2 or 3, none of which is a phrase a risk factor uses in
+    passing.
 
 ### Two earlier findings, still true
 

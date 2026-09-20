@@ -28,6 +28,7 @@ from data.normalize import peers as peer_rules
 from data.normalize import scope as scope_rules
 from data.normalize import snapshot as snapshot_rules
 from data.normalize import to_facts
+from data.sections import extract as section_extract
 from schema.contracts.common import ISODate, Ticker
 from schema.contracts.enums import Mode
 
@@ -58,9 +59,16 @@ class CompanyData:
         )
 
 
+_LOADED: list[Ticker] = []
+"""Every ticker load_facts has served, newest last, so a section_id can be
+resolved back to the company that produced it."""
+
+
 @lru_cache(maxsize=32)
 def load_facts(ticker: Ticker, as_of: ISODate | None = None) -> CompanyData:
     """Resolve, fetch and normalize one ticker. Memoised per process."""
+    if ticker not in _LOADED:
+        _LOADED.append(ticker)
     cik = edgar_client.lookup_cik(ticker)
     submissions = edgar_client.fetch_submissions(cik)
     try:
@@ -78,14 +86,105 @@ def load_facts(ticker: Ticker, as_of: ISODate | None = None) -> CompanyData:
     return CompanyData(ticker, cik, submissions, facts_payload, normalized, normalized.gaps)
 
 
+def loaded_tickers() -> list[Ticker]:
+    """Tickers this process has already normalized.
+
+    A section_id carries an accession and an item but no ticker, so resolving
+    one means asking the companies already in play. That is the right set: the
+    MCP layer only ever hands back a section_id it produced, for a ticker the
+    same run asked about.
+    """
+    return list(reversed(_LOADED))
+
+
 def clear_cache() -> None:
     """Drop the memoised facts. Tests call this between cases."""
     load_facts.cache_clear()
+    load_sections.cache_clear()
+    _LOADED.clear()
 
 
 def check_scope(ticker: Ticker, as_of: ISODate | None = None) -> dict:
     """Three-level scope decision (data/normalize/scope.py)."""
     return scope_rules.check_scope(ticker, as_of).model_dump(mode="json")
+
+
+@lru_cache(maxsize=16)
+def load_sections(ticker: Ticker, as_of: ISODate | None = None):
+    """Item 1 and Item 1A of the latest 10-K, extracted once per process.
+
+    Memoised for the same reason facts are: a factsheet build, a section fetch
+    and a search all want the same document, and parsing a 1.4MB text three
+    times to get the same answer is waste, not safety.
+    """
+    data = load_facts(ticker, as_of)
+    latest = next((f for f in data.facts if f.fiscal_period), None)
+    return section_extract.extract(
+        ticker,
+        data.cik,
+        as_of=as_of,
+        fiscal_period=latest.fiscal_period if latest else "FY0000",
+        retrieved_at=to_facts.utc_now(),
+    )
+
+
+def search_filings(
+    ticker: Ticker, as_of: ISODate | None = None, forms=None, limit: int = 20
+) -> list[dict]:
+    """Filings filed on or before `as_of`, newest first."""
+    data = load_facts(ticker, as_of)
+    rows = edgar_client.list_filings(data.cik, as_of, forms=list(forms) if forms else None)
+    retrieved_at = to_facts.utc_now()
+    out = []
+    for row in rows[:limit]:
+        out.append(
+            {
+                "accession": row["accession"],
+                "company_id": ticker,
+                "cik": data.cik,
+                "form": row["form"],
+                "fiscal_period": row["period_end"][:4] if row["period_end"] else "",
+                "period_end": row["period_end"] or row["filed_at"],
+                "filed_at": row["filed_at"],
+                "retrieved_at": retrieved_at,
+                "source_url": section_extract.filing_url(
+                    data.cik, row["accession"], row["primary_document"] or ""
+                ),
+            }
+        )
+    return out
+
+
+def get_filing_section(section_id: str, as_of: ISODate | None = None) -> dict:
+    """One extracted section by id. The ticker is recovered from the id's owner."""
+    raise KeyError(
+        f"{section_id}: live section lookup needs the ticker; call "
+        "search_filing or get_factsheet, which carry it."
+    )
+
+
+def search_filing(
+    ticker: Ticker,
+    query: str,
+    as_of: ISODate | None = None,
+    forms=None,
+    items=None,
+    limit: int = 10,
+) -> list[dict]:
+    """Ranked keyword search over the extracted sections."""
+    from data.sections import search as section_search
+
+    result = load_sections(ticker, as_of)
+    hits = section_search.search(
+        result.sections,
+        [s.text for s in result.sections],
+        query,
+        as_of=as_of,
+        forms=[str(f) for f in forms] if forms else None,
+        items=[str(i) for i in items] if items else None,
+        limit=limit,
+    )
+    return [hit.section.model_dump(mode="json") for hit in hits]
 
 
 def search_news(
@@ -136,6 +235,9 @@ def build_factsheet(ticker: Ticker, as_of: ISODate | None = None) -> dict:
     news = news_client.search(ticker, effective_as_of)
     gaps.extend(news.gaps)
 
+    sections = load_sections(ticker, as_of)
+    gaps.extend(sections.gaps)
+
     peer_result = peer_rules.select(
         ticker,
         as_of=as_of,
@@ -159,6 +261,7 @@ def build_factsheet(ticker: Ticker, as_of: ISODate | None = None) -> dict:
         retrieved_at=retrieved_at,
         gaps=gaps,
         news=news,
+        sections=sections,
         mode=Mode.BACKTEST if as_of and as_of < retrieved_at[:10] else Mode.LIVE,
     )
     return result.factsheet.model_dump(mode="json")

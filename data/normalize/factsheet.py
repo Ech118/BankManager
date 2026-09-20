@@ -222,6 +222,7 @@ def build(
     retrieved_at: ISOTimestamp,
     gaps: list[str] | None = None,
     news=None,
+    sections=None,
     mode: Mode = Mode.LIVE,
     schema_version: str = "2.1.0",
 ) -> FactsheetResult:
@@ -244,6 +245,16 @@ def build(
 
     sources.update(getattr(baseline, "sources", {}) or {})
     sources.update(getattr(news, "sources", {}) or {})
+    for section in getattr(sections, "sections", []) or []:
+        sources.setdefault(
+            section.source_id,
+            SourceRef(
+                kind="edgar_text",
+                url=getattr(getattr(sections, "filing", None), "source_url", None),
+                accession=section.accession,
+                fetched_at=retrieved_at,
+            ),
+        )
     market_source = getattr(market, "source_id", None)
     if market_source and market_source not in sources:
         sources[market_source] = SourceRef(
@@ -266,10 +277,7 @@ def build(
         peers=list(peers or []),
         sp500_baseline=baseline.baseline,
         consensus=None,
-        # filing_sections stays empty until the section parser lands; the
-        # contract defaults it, and an empty list is honest where a fabricated
-        # entry would not be.
-        filing_sections=[],
+        filing_sections=list(getattr(sections, "sections", []) or []),
         news=list(getattr(news, "news", []) or []),
         sources=sources,
     )
