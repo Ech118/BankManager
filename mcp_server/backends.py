@@ -24,8 +24,9 @@ from schema.contracts.interfaces import FactRepository, FilingRepository, Market
 class Backends:
     """The repositories a tool may be given.
 
-    `filings` is None until roadmap Step 7 implements section parsing; the tools
-    that need it are not registered before then.
+    `filings` is populated in mock mode from the fixture sections. It stays
+    None only where a backend genuinely has no filing store; the tools that
+    need it are not registered in that case.
     """
 
     facts: FactRepository
@@ -46,11 +47,13 @@ def build_backends(fixtures_dir: str | Path | None = None) -> Backends:
         )
 
     from data.repositories.fixture_facts import FixtureFactRepository
+    from data.repositories.fixture_filings import FixtureFilingRepository
     from data.repositories.fixture_market import FixtureMarketRepository
 
     return Backends(
         facts=FixtureFactRepository(fixtures_dir),
         market=FixtureMarketRepository(fixtures_dir),
+        filings=FixtureFilingRepository(fixtures_dir),
     )
 
 

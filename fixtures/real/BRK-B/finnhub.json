@@ -1,0 +1,129 @@
+{
+ "news": [
+  {
+   "category": "company",
+   "datetime": 1789816920,
+   "headline": "History Says You Should Know These 3 Things Before Buying Apple Stock (AAPL)",
+   "id": 142270180,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "BRK.B",
+   "source": "Yahoo",
+   "summary": "The pride of Cupertino continues its winning ways, and investors are eager to jump on the bandwagon.",
+   "url": "https://finnhub.io/api/news?id=3b414a219e85ef32df40dd5598b187c14281f58d7d811d16ed4d4254de35fef0"
+  },
+  {
+   "category": "company",
+   "datetime": 1789813830,
+   "headline": "Warren Buffett found the most boring way to bet on AI",
+   "id": 142270196,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "BRK.B",
+   "source": "Yahoo",
+   "summary": "Warren Buffett became the world\u2019s most famous investor by betting on the boring stuff.",
+   "url": "https://finnhub.io/api/news?id=569d989d9e4140e2c947766dd99a3bebcdd39cae7071ae1d8cb1140344e5c3ba"
+  },
+  {
+   "category": "company",
+   "datetime": 1789813801,
+   "headline": "Warren Buffett Says This Is the 1 Mistake Many Investors Make. Here\u2019s How to Avoid This Common and Costly Error.",
+   "id": 142270351,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "BRK.B",
+   "source": "Yahoo",
+   "summary": "Buffett, after six decades of success, is the perfect person to offer investing advice.",
+   "url": "https://finnhub.io/api/news?id=84149ea07de52b402d83bd400fd7d2a196cc35124608ee63c3a444112154b443"
+  },
+  {
+   "category": "company",
+   "datetime": 1789807436,
+   "headline": "Buffett takes next step in plan to keep Berkshire from straying",
+   "id": 142272677,
+   "image": "https://image.cnbcfm.com/api/v1/image/108301052-1777729799321-Screenshot_2026-05-02_at_947.jpg?v=1777729909&w=1920&h=1080",
+   "related": "BRK.B",
+   "source": "CNBC",
+   "summary": "Warren Buffett steps down as Berkshire Hathaway's chairman, passing the job to his son, Howard.",
+   "url": "https://finnhub.io/api/news?id=a957bf3602a50bc44d89c6360c9fa866a25f75e3f19301ca1114d0856f4be752"
+  },
+  {
+   "category": "company",
+   "datetime": 1789798285,
+   "headline": "Why Berkshire Hathaway Succession Could Reshape SGH Stock And Other Conglomerate Picks",
+   "id": 142270309,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "BRK.B",
+   "source": "Yahoo",
+   "summary": "Warren Buffett stepping back at Berkshire Hathaway has turned the spotlight onto conglomerates and holding companies in a fresh way. Power is shifting, playbooks may be tested, and perceptions of risk are being rewritten in real time. That shake up can create mispricing, both on the upside and the downside. This article walks through 3 stocks exposed to this news so you can spot where the market story might be changing. The three stocks below are just a starting sample from this shake up in...",
+   "url": "https://finnhub.io/api/news?id=d1419d5053c73e16c12533276aecb5123683a01f487afc0ec0431cd71fcc8621"
+  },
+  {
+   "category": "company",
+   "datetime": 1789790821,
+   "headline": "Even as trading and markets moved faster, Warren Buffett made patience profitable and cool",
+   "id": 142268131,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "BRK.B",
+   "source": "Yahoo",
+   "summary": "Even in the age of algorithms, short attention spans and TikTok teases, Warren Buffett continued to profit with his patient bargain-hunting approach while offering folksy advice on investing and life.  As chairman and CEO of Berkshire Hathaway, Buffett became famous for his unwavering and methodical investing style: Buy good businesses when their prices are low, stay on the sidelines when prices are too high and be patient with well-chosen picks.  The formula of buying good things at low prices sounds simple, and it\u2019s the foundation of a style of investing called \u201cvalue\u201d hunting.",
+   "url": "https://finnhub.io/api/news?id=e62c8f73e8d3072c9a9c7f08ab9f25c20fe4e0e1ce84969d2a2266be62da58e3"
+  },
+  {
+   "category": "company",
+   "datetime": 1789785300,
+   "headline": "What History Says About Insurance Stocks When Bond Yields Rise",
+   "id": 142267326,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "BRK.B",
+   "source": "Yahoo",
+   "summary": "Rising bond yields can both help and hurt insurance stocks, so the latest Fed rate hike is an important development.",
+   "url": "https://finnhub.io/api/news?id=a5895b56e915b3b5d6ad06b0ee44f528b9da68614832ef74bfc89f5d84d1cd9b"
+  },
+  {
+   "category": "company",
+   "datetime": 1789762537,
+   "headline": "Stocks Rally for Mixed Close to Volatile Week: Stock Market Today",
+   "id": 142263766,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "BRK.B",
+   "source": "Yahoo",
+   "summary": "Buyers stepped in late, but it was only enough to lift two of three main equity indexes into positive territory on Friday.",
+   "url": "https://finnhub.io/api/news?id=d619a65d8d1f2e998b1dd472b2fb9c038d4e8079b97dd745b6c78be800303066"
+  }
+ ],
+ "news_window": [
+  "2026-08-20",
+  "2026-09-19"
+ ],
+ "peers": [
+  "BRK.A",
+  "CODI",
+  "CNNE",
+  "RAFI",
+  "QEDN",
+  "TMXN",
+  "AZIL",
+  "ACGX",
+  "JMON",
+  "CBCA",
+  "HZHI",
+  "PVNO"
+ ],
+ "profile": {
+  "currency": "USD",
+  "exchange": "NEW YORK STOCK EXCHANGE, INC.",
+  "industry": "Financial Services",
+  "market_cap": 979834954729.3242,
+  "name": "Berkshire Hathaway Inc",
+  "shares_outstanding": 1440000.0,
+  "source": "finnhub",
+  "ticker": "BRK.B"
+ },
+ "quote": {
+  "currency": "USD",
+  "observed_at": 1789761600,
+  "previous_close": 509.2,
+  "price": 509.77,
+  "source": "finnhub",
+  "ticker": "BRK.B"
+ },
+ "ticker": "BRK.B"
+}

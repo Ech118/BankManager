@@ -1,0 +1,127 @@
+{
+ "news": [
+  {
+   "category": "company",
+   "datetime": 1789859372,
+   "headline": "Nvidia (NVDA) Forms Alliance To Build A Power Flexible AI Data Center",
+   "id": 142275783,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "GOOGL",
+   "source": "Yahoo",
+   "summary": "NVIDIA (NasdaqGS:NVDA), Google, and Emerald AI have created the AI Energy Management Alliance to coordinate electricity use in AI data centers. The alliance has started building what it calls the first purpose-built power-flexible AI data center, designed to adjust consumption with grid needs. AEMA plans to publish shared frameworks for grid-responsive data centers with input from utilities, regulators, and large AI infrastructure users. The formation of AEMA and the power-flexible data...",
+   "url": "https://finnhub.io/api/news?id=3cc167e549bf08f7f13503d5b8418f61d23e85d41fa18892cea7039507542882"
+  },
+  {
+   "category": "company",
+   "datetime": 1789846894,
+   "headline": "Three Frontier Labs Are Building a FINRA-Style Safety Body. History Suggests It Won\u2019t Be a Brake.",
+   "id": 142273796,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "GOOGL",
+   "source": "Yahoo",
+   "summary": "September 15, 2026, marked a shift in AI governance when OpenAI Chief Global Affairs Officer Chris Lehane confirmed during a Washington briefing that OpenAI, Anthropic, and Google DeepMind have been coordinating on safety protocols for several weeks. This confirmation moves the industry from abstract discussion toward active coalition-building, though the proposed structure remains unformalized. While [\u2026]",
+   "url": "https://finnhub.io/api/news?id=ea95f63eec84e16714261141c7c0721a9e692db907a914aa251934cb73368c5a"
+  },
+  {
+   "category": "company",
+   "datetime": 1789843800,
+   "headline": "Forget Buying All Seven: The \"Magnificent Seven\" Stock Most Likely to Double by 2028",
+   "id": 142273787,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "GOOGL",
+   "source": "Yahoo",
+   "summary": "I believe investors are underrating the potential of this compounding machine.",
+   "url": "https://finnhub.io/api/news?id=e7c88893e45fbbc500a296482ce0c87e9709b092bc2dcd956c578f26ddcad785"
+  },
+  {
+   "category": "company",
+   "datetime": 1789830300,
+   "headline": "The Stock Market's Biggest Companies Are Losing Their Grip. Here's the ETF I'd Buy If History Repeats.",
+   "id": 142272106,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "GOOGL",
+   "source": "Yahoo",
+   "summary": "As the market rotates away from large-cap stocks, new opportunities have emerged in their place.",
+   "url": "https://finnhub.io/api/news?id=4d81a180e6f8e18c98e7f7f44ee77306e9a702930d559d9446b189a7f8237f78"
+  },
+  {
+   "category": "company",
+   "datetime": 1789829400,
+   "headline": "Warren Buffett Watched Alphabet's Stock Price Climb 9,000% Before He Decided to Invest. Here's Why He and Greg Abel Are Making It One of Berkshire Hathaway's Biggest Investments Now.",
+   "id": 142272108,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "GOOGL",
+   "source": "Yahoo",
+   "summary": "Here's why Berkshire could be buying more Alphabet shares this quarter.",
+   "url": "https://finnhub.io/api/news?id=5e7aa6446d39adb2feed6da9ca3cded8c0aaf3fb7f4412e3705f4476ed58c278"
+  },
+  {
+   "category": "company",
+   "datetime": 1789819847,
+   "headline": "GM brings back Apple CarPlay as buyers demand it",
+   "id": 142270323,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "GOOGL",
+   "source": "Yahoo",
+   "summary": "GM is bringing Apple CarPlay and Android Auto back to its vehicles, reversing one of the more unpopular decisions in the automaker's recent history.",
+   "url": "https://finnhub.io/api/news?id=0d63aa930713a025b946ec2280318c2aad45547e8c84f547dc5a612e045c4451"
+  },
+  {
+   "category": "company",
+   "datetime": 1789813830,
+   "headline": "Warren Buffett found the most boring way to bet on AI",
+   "id": 142270196,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "GOOGL",
+   "source": "Yahoo",
+   "summary": "Warren Buffett became the world\u2019s most famous investor by betting on the boring stuff.",
+   "url": "https://finnhub.io/api/news?id=569d989d9e4140e2c947766dd99a3bebcdd39cae7071ae1d8cb1140344e5c3ba"
+  },
+  {
+   "category": "company",
+   "datetime": 1789809900,
+   "headline": "Cathie Wood Is Selling 2 Magnificent Seven Stocks, but Piling Into Another",
+   "id": 142269653,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "GOOGL",
+   "source": "Yahoo",
+   "summary": "Wood made a major Magnificent Seven purchase in the ARK Innovation ETF.",
+   "url": "https://finnhub.io/api/news?id=0acda1fb3dd9590223fe7bd7887f472510e60469c115352e5814e642eb3bc4ca"
+  }
+ ],
+ "news_window": [
+  "2026-08-20",
+  "2026-09-19"
+ ],
+ "peers": [
+  "META",
+  "RDDT",
+  "PINS",
+  "MTCH",
+  "SNAP",
+  "RUM",
+  "CARG",
+  "PPLI",
+  "GRND",
+  "DJT"
+ ],
+ "profile": {
+  "currency": "USD",
+  "exchange": "NASDAQ NMS - GLOBAL MARKET",
+  "industry": "Media",
+  "market_cap": 4274874200000.0,
+  "name": "Alphabet Inc",
+  "shares_outstanding": 12230000000.0,
+  "source": "finnhub",
+  "ticker": "GOOGL"
+ },
+ "quote": {
+  "currency": "USD",
+  "observed_at": 1789761600,
+  "previous_close": 347.33,
+  "price": 349.54,
+  "source": "finnhub",
+  "ticker": "GOOGL"
+ },
+ "ticker": "GOOGL"
+}

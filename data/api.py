@@ -55,10 +55,19 @@ def check_scope(ticker: str, as_of: str | None = None) -> dict:
 
     Rejects financials, REITs and pre-revenue companies (docs/sec-pitfalls.md,
     error H). Must be called before build_factsheet.
+
+    LIVE: three outcomes, not two. `level` rides in the extra fields as
+    supported | partial | unsupported, and a bank, an insurer, a REIT or a
+    foreign private issuer is `partial` - in scope, with the reason attached as
+    a data_quality gap - rather than refused outright. Only `unsupported` sets
+    in_scope False. See data/normalize/scope.py.
     """
     if not _TICKER_RE.match(ticker or ""):
         return {"in_scope": False, "reason": f"Invalid ticker format: {ticker!r}"}
-    _require_mock("check_scope")
+    if _mode() == "live":
+        from data.normalize import scope as scope_rules
+
+        return scope_rules.check_scope(ticker, as_of).model_dump(mode="json")
     if ticker in _MOCK_OUT_OF_SCOPE:
         return {"in_scope": False, "reason": _MOCK_OUT_OF_SCOPE[ticker]}
     if ticker != "ACME":
@@ -209,10 +218,20 @@ def get_financial_facts(
 
 
 def get_market_snapshot(ticker: str, as_of: str | None = None) -> dict:
-    """Price, shares and the EV bridge at one instant (MCP tool: get_market_snapshot)."""
+    """Price, shares and the EV bridge at one instant (MCP tool: get_market_snapshot).
+
+    LIVE: price from the market provider, shares from the filing (with a
+    public-float sanity check, because a cover-page count can be one share class
+    of several), cash and debt from the normalized facts. A provider outage
+    yields a snapshot with price unavailable - never an exception.
+    """
     scope = check_scope(ticker, as_of)
     if not scope["in_scope"]:
         raise ValueError(scope["reason"])
+    if _mode() == "live":
+        from data import live
+
+        return live.market_snapshot(ticker, as_of)
     _require_mock("get_market_snapshot")
     return _load("market_snapshot.json")
 

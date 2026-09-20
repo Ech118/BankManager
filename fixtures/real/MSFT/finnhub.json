@@ -1,0 +1,128 @@
+{
+ "news": [
+  {
+   "category": "company",
+   "datetime": 1789860638,
+   "headline": "AI risk debate: Existential threat or dangerous tool?",
+   "id": 142275803,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "MSFT",
+   "source": "Yahoo",
+   "summary": "Investing.com -- Concerns about artificial intelligence are shifting from hypothetical extinction scenarios toward evidence that increasingly capable models can already be used for weapons development and cyber operations, according to Yardeni Research.",
+   "url": "https://finnhub.io/api/news?id=1df6b2682d2c7a0c4ccc2ee48309f59c455ee67ccc2b1e0e65779f21dd1ea392"
+  },
+  {
+   "category": "company",
+   "datetime": 1789858657,
+   "headline": "DGRW Pays Dividends Every Month. Its Biggest Stocks Look Nothing Like a High-Yield ETF",
+   "id": 142275785,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "MSFT",
+   "source": "Yahoo",
+   "summary": "WisdomTree's DGRW distributes cash to shareholders every single month, yet its largest holdings read like a growth fund roster rather than an income portfolio. Whether that contradiction works for or against dividend investors depends entirely on what you actually need from a dividend ETF.",
+   "url": "https://finnhub.io/api/news?id=6b832664e640eb589ca6b277d6432b2239002b4d689a91893ad9ef70f68f0dc5"
+  },
+  {
+   "category": "company",
+   "datetime": 1789843800,
+   "headline": "Forget Buying All Seven: The \"Magnificent Seven\" Stock Most Likely to Double by 2028",
+   "id": 142273787,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "MSFT",
+   "source": "Yahoo",
+   "summary": "I believe investors are underrating the potential of this compounding machine.",
+   "url": "https://finnhub.io/api/news?id=e7c88893e45fbbc500a296482ce0c87e9709b092bc2dcd956c578f26ddcad785"
+  },
+  {
+   "category": "company",
+   "datetime": 1789842600,
+   "headline": "AI Made Execution Easier. It Also Changed the Founder\u2019s Most Important Job.",
+   "id": 142275805,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "MSFT",
+   "source": "Yahoo",
+   "summary": "As execution becomes easier to automate, accountability, trust and discernment become even more valuable leadership skills.",
+   "url": "https://finnhub.io/api/news?id=c2ca74138f86833a2c2c2b95c1adca37e29e8a0db5abb3ee8223fc838ead094a"
+  },
+  {
+   "category": "company",
+   "datetime": 1789830300,
+   "headline": "The Stock Market's Biggest Companies Are Losing Their Grip. Here's the ETF I'd Buy If History Repeats.",
+   "id": 142272106,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "MSFT",
+   "source": "Yahoo",
+   "summary": "As the market rotates away from large-cap stocks, new opportunities have emerged in their place.",
+   "url": "https://finnhub.io/api/news?id=4d81a180e6f8e18c98e7f7f44ee77306e9a702930d559d9446b189a7f8237f78"
+  },
+  {
+   "category": "company",
+   "datetime": 1789828054,
+   "headline": "1 Year Into the Microsoft Deal, IREN Is Delivering and a Rally May Follow Soon",
+   "id": 142274972,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "MSFT",
+   "source": "Yahoo",
+   "summary": "One year on from the $9.7 billion Microsoft deal, the company is finally delivering.",
+   "url": "https://finnhub.io/api/news?id=c1baba00348242f866a38d57a26c206a6041303f1db6836a8f8523e7295e0ab2"
+  },
+  {
+   "category": "company",
+   "datetime": 1789827033,
+   "headline": "How Investors Are Reacting To Ultragenyx Pharmaceutical (RARE) First-In-Disease Gene Therapy Approval For FAYUVI",
+   "id": 142272109,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "MSFT",
+   "source": "Yahoo",
+   "summary": "In September 2026, Ultragenyx Pharmaceutical received full U.S. FDA approval for FAYUVI (UX111), the first-ever treatment for pediatric patients with Sanfilippo syndrome Type A, along with a Priority Review Voucher. This approval not only addresses a previously untreated ultra-rare, fatal neurodegenerative disease but also expands Ultragenyx\u2019s commercial gene therapy portfolio and manufacturing footprint in the U.S. We\u2019ll now explore how FAYUVI\u2019s first-in-disease approval and the associated...",
+   "url": "https://finnhub.io/api/news?id=213e7ae3ec0eaf62c58e1a54b659021798684ad081ff6330bd28f07592bb8e19"
+  },
+  {
+   "category": "company",
+   "datetime": 1789826571,
+   "headline": "IBM Has Raised Its Dividend for 31 Years. Inflation Is Still Winning",
+   "id": 142272117,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "MSFT",
+   "source": "Yahoo",
+   "summary": "IBM has raised its dividend for three decades straight, but the latest increase fits on a penny. Before counting on that income to keep pace with rising costs, retirees should understand what the streak actually delivers.",
+   "url": "https://finnhub.io/api/news?id=3c1f06dd43dfb92bc4580221c728e7d579d60bf1b6d31eeed7317cb274e178d5"
+  }
+ ],
+ "news_window": [
+  "2026-08-20",
+  "2026-09-19"
+ ],
+ "peers": [
+  "ORCL",
+  "PANW",
+  "CRWD",
+  "NOW",
+  "FTNT",
+  "ZS",
+  "RBRK",
+  "GEN",
+  "FROG",
+  "GTLB",
+  "S"
+ ],
+ "profile": {
+  "currency": "USD",
+  "exchange": "NASDAQ NMS - GLOBAL MARKET",
+  "industry": "Technology",
+  "market_cap": 3666585812626.6816,
+  "name": "Microsoft Corp",
+  "shares_outstanding": 7425550000.0,
+  "source": "finnhub",
+  "ticker": "MSFT"
+ },
+ "quote": {
+  "currency": "USD",
+  "observed_at": 1789761600,
+  "previous_close": 497.75,
+  "price": 493.78,
+  "source": "finnhub",
+  "ticker": "MSFT"
+ },
+ "ticker": "MSFT"
+}

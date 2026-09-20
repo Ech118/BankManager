@@ -4,7 +4,6 @@ Forces mock mode so these tests never touch the network or a database, and puts
 the repo root on sys.path so `schema.contracts`, `data` and `mcp_server` import.
 """
 
-import os
 import sys
 from pathlib import Path
 

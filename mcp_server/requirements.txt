@@ -1,4 +1,10 @@
 # mcp_server/ dependencies (P1).
 -r ../data/requirements.txt
 
-mcp>=1.2   # the MCP Python SDK: stdio transport for live, in-memory for tests
+# The MCP Python SDK: stdio transport for live, in-memory for tests.
+# Pinned to the 2.x major deliberately. `mcp>=1.2` was unbounded, so one clone
+# resolved to 1.x and another to 2.x, and the two majors disagree on the names
+# that matter here (`Client` / `mcp.server.lowlevel`, and snake_case result
+# fields). P3 verified 2.2 resolves cleanly alongside fastapi>=0.141
+# (docs/requests/2026-09-19-mcp-sdk-major-version.md).
+mcp>=2,<3

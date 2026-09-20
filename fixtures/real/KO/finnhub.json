@@ -1,0 +1,128 @@
+{
+ "news": [
+  {
+   "category": "company",
+   "datetime": 1789808759,
+   "headline": "What do you need to make in GA to be the 1%? It's less than you think",
+   "id": 142269682,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "KO",
+   "source": "Yahoo",
+   "summary": "Who gets to qualify as the 1% in Georgia? It's people who meet an annual income threshold, according to SmartAsset, and it's less than you think.",
+   "url": "https://finnhub.io/api/news?id=35a558efa22fc28f3a2babba059f750c51140b14a0892b5cef69fe5ae8b0301d"
+  },
+  {
+   "category": "company",
+   "datetime": 1789755120,
+   "headline": "Meet Howard Buffett\u2014Farmer, Philanthropist, and Berkshire\u2019s New Chairman",
+   "id": 142259152,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "KO",
+   "source": "Yahoo",
+   "summary": "The middle child of Warren Buffett is a farmer, a philanthropist, and someone who will watch over the company\u2019s values and culture.",
+   "url": "https://finnhub.io/api/news?id=d9b5406b2a584f62b0d285a5ea9361a1ac6236d7984d479d9354ef2911d78a09"
+  },
+  {
+   "category": "company",
+   "datetime": 1789751246,
+   "headline": "PepsiCo Falls 3% While Consumer Staples Hold Firm; Keurig Dr. Pepper Eases, Coca-Cola Barely Budges",
+   "id": 142259585,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "KO",
+   "source": "Yahoo",
+   "summary": "PepsiCo is sliding hard on Friday while Coca-Cola sits nearly flat and the broader consumer staples sector barely flinches, and that split raises a pointed question about what exactly the market is punishing.",
+   "url": "https://finnhub.io/api/news?id=6b3dd9c1b17ea3fa261aaded6b19065ce05c6bbdbcd0030ba685c77750a4e658"
+  },
+  {
+   "category": "company",
+   "datetime": 1789750887,
+   "headline": "Coca-Cola Bets $10 Billion on U.S. Infrastructure to Drive Growth",
+   "id": 142259591,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "KO",
+   "source": "Yahoo",
+   "summary": "The Coca-Cola Company (NYSE:KO) plans to invest $10 billion in U.S. infrastructure from 2026 through 2030, reinforcing its manufacturing, distribution, and bottling network in one of its most important markets. The commitment is system-wide and therefore includes investments by Coca-Cola\u2019s bottling partners, rather than representing $10 billion of Coca-Cola\u2019s own capital expenditure. Bigger U.S. Network [\u2026]",
+   "url": "https://finnhub.io/api/news?id=0f68ca927f93bf841b811f15a731dd00b9ee79eab04de9503b00addfffd2d423"
+  },
+  {
+   "category": "company",
+   "datetime": 1789747895,
+   "headline": "The New Buffett Chairing Berkshire\u2019s Board Knows the Firm Well",
+   "id": 142259159,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "KO",
+   "source": "Yahoo",
+   "summary": "Howard Buffett, the eldest son of legendary investor Warren, is already well-versed in corporate governance as he takes over for his father as chairman of Berkshire Hathaway Inc.",
+   "url": "https://finnhub.io/api/news?id=91b37b2518e2a7a4b3fc4b1fd92b5249660505e3f0b8757d1c335d9f25b8985e"
+  },
+  {
+   "category": "company",
+   "datetime": 1789745202,
+   "headline": "Berkshire Hathaway's Warren Buffet Steps Down as Chairman",
+   "id": 142259587,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "KO",
+   "source": "Yahoo",
+   "summary": "Berkshire Hathaway (BRK.A, BR.B) said Friday that Warren Buffett stepped down as chairman of the con",
+   "url": "https://finnhub.io/api/news?id=622da876355050cb431cc8fc80ea5fa00046c38ad127f3fb4bf0aef0b0b4c4b8"
+  },
+  {
+   "category": "company",
+   "datetime": 1789745029,
+   "headline": "Berkshire Hathaway stock drops as Warren Buffett exits chairman role",
+   "id": 142259588,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "KO",
+   "source": "Yahoo",
+   "summary": "Warren Buffett steps down from Berkshire Hathaway. His son takes the chairman seat",
+   "url": "https://finnhub.io/api/news?id=42569542835c36f324a30d2d923a4f9a4da8055fcf12d5ddfe387dc6028bf449"
+  },
+  {
+   "category": "company",
+   "datetime": 1789742709,
+   "headline": "Warren Buffett's 3 Overlooked Investing Techniques That Could Improve Your Returns",
+   "id": 142259592,
+   "image": "https://s.yimg.com/rz/stage/p/yahoo_finance_en-US_h_p_finance_2.png",
+   "related": "KO",
+   "source": "Yahoo",
+   "summary": "Here are three of Buffett\u2019s main investment tenets. Best of all, they work at any income level.",
+   "url": "https://finnhub.io/api/news?id=d8ea5050cb6fdb9b28543310c204936a1644491fc83ff534ef208ddeaacb0f5a"
+  }
+ ],
+ "news_window": [
+  "2026-08-20",
+  "2026-09-19"
+ ],
+ "peers": [
+  "PEP",
+  "MNST",
+  "KDP",
+  "COKE",
+  "PRMW.TO",
+  "PRMB",
+  "CELH",
+  "COCO",
+  "FIZZ",
+  "MINE",
+  "ZVIA"
+ ],
+ "profile": {
+  "currency": "USD",
+  "exchange": "NEW YORK STOCK EXCHANGE, INC.",
+  "industry": "Beverages",
+  "market_cap": 379699923554.67865,
+  "name": "Coca-Cola Co",
+  "shares_outstanding": 4302550000.0,
+  "source": "finnhub",
+  "ticker": "KO"
+ },
+ "quote": {
+  "currency": "USD",
+  "observed_at": 1789761600,
+  "previous_close": 88.06,
+  "price": 88.25,
+  "source": "finnhub",
+  "ticker": "KO"
+ },
+ "ticker": "KO"
+}

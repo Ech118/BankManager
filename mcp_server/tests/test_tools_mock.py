@@ -14,11 +14,8 @@ import pytest
 from mcp import Client
 
 from mcp_server.server import IMPLEMENTED_TOOLS, build_server
+from mcp_server.tests.support import LATEST, TICKER, call, list_tool_names, ok
 from schema.contracts.tools import TOOL_REQUESTS, TOOL_RESPONSES
-
-TICKER = "ACME"
-LATEST = "2026-09-19"
-"""The fixture's own as_of: everything is visible."""
 
 BEFORE_RESTATEMENT = "2025-06-01"
 """After the FY2024 10-K (filed 2025-02-21), before the FY2025 10-K
@@ -26,33 +23,6 @@ BEFORE_RESTATEMENT = "2025-06-01"
 
 FY2024_AS_FILED = 690_000_000
 FY2024_RESTATED = 700_000_000
-
-
-def call(tool: str, arguments: dict):
-    """Call one tool over the in-memory transport and return the CallToolResult."""
-
-    async def go():
-        async with Client(build_server()) as client:
-            return await client.call_tool(tool, arguments)
-
-    return anyio.run(go)
-
-
-def ok(tool: str, arguments: dict) -> dict:
-    """Call a tool, assert it succeeded, and return its structured content."""
-    result = call(tool, arguments)
-    detail = result.content[0].text if result.content else ""
-    assert not result.is_error, f"{tool} failed: {detail}"
-    assert result.structured_content is not None, f"{tool} returned no structured content"
-    return result.structured_content
-
-
-def list_tool_names() -> list[str]:
-    async def go():
-        async with Client(build_server()) as client:
-            return [t.name for t in (await client.list_tools()).tools]
-
-    return anyio.run(go)
 
 
 # --------------------------------------------------------------------------
@@ -349,6 +319,7 @@ def test_get_peer_companies_honours_limit():
 def test_out_of_scope_ticker_is_refused_on_every_tool():
     """BANKX exercises the rejection path; it must never return data."""
     for tool, args in (
+        ("search_filings", {}),
         ("get_financial_facts", {"metrics": ["revenue"]}),
         ("get_market_snapshot", {}),
         ("get_company_profile", {}),
