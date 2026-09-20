@@ -3,25 +3,59 @@
 Update whenever a capability moves from mock to real, or when blocked.
 A PR that changes behaviour must update this file.
 
-**Step:** 0 complete. **Next:** [roadmap](../roadmap.md) Step 2.
-**Blockers:** none.
+**Step:** roadmap Step 2 (metrics) complete. **Next:** valuation, then scenarios
+and scores, then `audit/`.
+**Branch:** `p2-port`, based on P1's `p1-step2` (P1's PRs are not merged yet), so
+`scripts/check_ownership.sh p2` must be run as `BASE=HEAD scripts/check_ownership.sh p2`
+with the P2 paths staged. Against `origin/main` it reports P1's files.
+**Blockers:** none. Three things wanted from P1, none blocking: see
+`docs/requests/2026-09-19-p1-to-p2-split-warning-and-missing-metrics-response.md`.
 
 | Capability | State | Notes |
 |---|---|---|
-| `compute_metrics` | mock | returns the ACME fixture; `as_of` dropped per amendment 2 |
-| `reverse_dcf` | mock | fixture already carries a 9-cell sensitivity grid |
-| `calculate_valuation` | mock | the MCP-exposed entry point |
+| `compute_metrics` | **real** | every pinned ACME number reproduced exactly; runs on all five real recordings |
+| derived facts + lineage | **real** | one `FinancialFact` per computed number in `metrics["derived_facts"]`, `filed_at` = latest input |
+| `metrics["input_facts"]` | **real** | market/consensus facts calc/ had to mint an id for, so the verifier can resolve them |
+| split-basis rule | **real** | per-share growth across a share-count break is `unavailable` with the reason; totals unaffected |
+| partial scope (banks) | **real** | FCF, gross margin and EV multiples `not_applicable`; P/B, BVPS and ROE computed |
+| quality flags | **real** | DSO, inventory days, buyback-flattered EPS, FCF conversion, SBC |
+| `reverse_dcf` | **real** | ported bisection solver plus the 9-cell sensitivity grid |
+| `calculate_valuation` | mock | the MCP-exposed entry point; Step 3 |
+| peer multiples | **degraded** | real recordings carry peer market caps only, so the peer median is `unavailable` with a reason |
 | `evaluate_scenarios` | partial | **really** rejects weights not summing to 1; rest is fixture |
 | weight clamping | not started | algorithm specified in `docs/pipeline.md`; demonstrated by `fixtures/mock/scenario_weights_clamped.json` |
 | prior cap | mock | fixture respects it; `test_prior_shift_respects_cap` passes |
 | `derive_scores` | mock | rubric table drafted in `calc/config.py` |
 | `validate_consistency` | mock | returns ok; thresholds drafted in `scenarios/consistency.py` |
 | `run_audit` | mock | returns the ACME audit fixture |
-| deterministic checks | not started | Step 2; seven of them |
-| LLM claim check | not started | Step 5; prompt drafted in `prompts/verifier.md` |
-| retry routing | not started | Step 2; table in `docs/verification.md` |
-| `backtest/` | not started | Step 6 |
-| `predictions/` | not started | Step 6 |
+| deterministic checks | not started | seven of them |
+| LLM claim check | not started | prompt drafted in `prompts/verifier.md` |
+| retry routing | not started | table in `docs/verification.md` |
+| `backtest/` | not started | |
+| `predictions/` | not started | |
 | `docs/p2/rubric.md` | not written | must exist before `derive_scores` goes real |
 
-**Last updated:** 2026-09-19 (Step 0 scaffold)
+## Known gaps in Step 1
+
+- **`restated_prior_period`** is the one ACME quality flag calc/ cannot
+  reproduce: a restatement is visible only on the superseded `FinancialFact`, and
+  the `Factsheet` carries neither the superseded facts nor a gap naming one.
+  Requested from P1.
+- **Peer multiples** are unavailable on every real recording (peers carry a
+  market cap and nothing else), so `valuation.vs_peers` is unavailable with the
+  reason attached rather than wrong.
+- **`config.DSO_INCREASE_FLAG` was lowered from 0.10 to 0.05** when the flag was
+  implemented, so the ACME `dso_rising` flag in `fixtures/mock/metrics.json`
+  fires. Severity now comes from one threshold per flag plus a shared
+  `FLAG_SEVERITY_STEPS` ladder.
+
+## Additive keys calc/ puts on `Metrics` (outside the contract's required fields)
+
+`Metrics` tolerates extras, and P3 tolerates unknown keys, so these need no
+contract change: `derived_facts`, `input_facts`, `cagr`, `returns.roe`,
+`per_share.book_value_per_share`, `valuation.p_b`,
+`valuation.primary_multiple`, `growth.<period>.net_income_yoy`, `scope_level`,
+`notes`. Every unavailable ValueObject also carries `unavailable_reason`, and a
+metric that does not describe the filer at all carries `not_applicable: true`.
+
+**Last updated:** 2026-09-20 (Step 1: metrics, lineage, derived facts)

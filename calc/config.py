@@ -95,8 +95,14 @@ small because our ability to tell them apart is small.
 # --------------------------------------------------------------------------
 # Quality flag thresholds
 # --------------------------------------------------------------------------
-DSO_INCREASE_FLAG = 0.10
-"""Days-sales-outstanding rise (fraction, year over year) that raises a flag."""
+DSO_INCREASE_FLAG = 0.05
+"""Days-sales-outstanding rise (fraction, year over year) that raises a flag.
+
+Lowered from 0.10 when the flag was implemented (Step 1): receivables growing 5%
+faster than revenue is the point at which the trend is visible at all, and the
+severity steps below are what separate "worth a line in the report" from
+"worth the reader's attention". Reasoning recorded in docs/p2/rubric.md.
+"""
 
 SBC_REVENUE_FLAG = 0.05
 """Stock compensation above this share of revenue raises a flag."""
@@ -104,3 +110,83 @@ SBC_REVENUE_FLAG = 0.05
 FCF_CONVERSION_FLAG = 0.70
 """FCF / net income below this raises a flag: reported profit is not turning
 into cash."""
+
+INVENTORY_DAYS_FLAG = 0.05
+"""Days-inventory rise (fraction, year over year) that raises a flag."""
+
+BUYBACK_FLAG = 0.02
+"""Share-count shrinkage (fraction) above which EPS growth is partly a buyback."""
+
+FLAG_SEVERITY_STEPS: tuple[float, float, float] = (1.0, 3.0, 6.0)
+"""Multiples of a flag threshold that map to low / medium / high severity.
+
+One number per flag plus one shared ladder, so a reader can see the whole
+severity scheme at a glance instead of nine separate constants.
+"""
+
+# --------------------------------------------------------------------------
+# Per-share comparability
+# --------------------------------------------------------------------------
+SHARE_BASIS_BREAK_RATIO = 1.5
+"""Year-over-year diluted share-count ratio that means the share basis changed.
+
+A 10-K restates only the two comparative years it shows, so an older year can sit
+in the series on a pre-split basis while being correct as filed (NVDA FY2022,
+9.9x). Above this ratio calc/ refuses per-share comparisons across the boundary
+unless P1 published a `_split_adjusted` fact (P1 -> P2, 2026-09-19).
+"""
+
+# --------------------------------------------------------------------------
+# Reverse DCF solver
+# --------------------------------------------------------------------------
+DCF_SOLVE_LOW = -0.5
+DCF_SOLVE_HIGH = 1.0
+DCF_SOLVE_ITERATIONS = 200
+"""Bisection bracket and iteration count. 200 halvings of a 1.5-wide bracket is
+far past double precision, so the answer is deterministic to the last digit."""
+
+# --------------------------------------------------------------------------
+# Peers
+# --------------------------------------------------------------------------
+PEER_MIN_SAMPLE = 2
+"""Fewest peer values that may form a median. One peer is not a comparison."""
+
+# --------------------------------------------------------------------------
+# Scoring, continued
+# --------------------------------------------------------------------------
+SCORE_NEUTRAL = 5
+"""The score for "we do not know". Never 1 and never 10: an unavailable expected
+return is not evidence either way."""
+
+SCORE_FLOOR = 1
+SCORE_CEILING = 10
+
+SCORE_HORIZON_UNCERTAINTY: dict[str, float] = {
+    "short_term": 1.0,
+    "medium_term": 1.25,
+    "long_term": 1.5,
+}
+"""How much to discount the same excess return as the horizon lengthens.
+
+The scenario model produces ONE annualized return, so without this every horizon
+would score identically. Dividing the excess by these factors pulls the long
+horizon toward neutral, which is honest: our ability to tell a 3-5 year winner
+from a loser is worse than our ability to tell a 12-month one, and the score
+should say so rather than repeating the same confident number three times.
+"""
+
+SEVERE_DOWNSIDE_RETURN = -0.25
+"""Bear-case annualized return at or below which the score loses a point."""
+
+SEVERE_DOWNSIDE_PENALTY = 1
+"""Points subtracted when the bear case is severe, floored at SCORE_FLOOR.
+
+Stops a stock with a plausible -25%/yr path from reading as a high score purely
+because the bull case is doing the lifting in the weighted average.
+"""
+
+# --------------------------------------------------------------------------
+# Provenance
+# --------------------------------------------------------------------------
+CONFIG_SOURCE = "calc_assumptions"
+"""Name used in src:config:<name> for every constant in this module."""

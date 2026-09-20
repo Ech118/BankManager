@@ -1,8 +1,9 @@
 """P2 (Calc, Audit & Eval) owns this file. Public interface of the math layer.
 
-Step 0 STUB: returns the ACME fixtures from fixtures/mock/. The owner replaces
-the internals with real deterministic math but MUST NOT change any signature
-(CONTRACT-CHANGE PR, CONTRIBUTING.md).
+Every function here is a thin delegate to a module that holds the maths, so that
+this file stays readable as the contract it is. Signatures are FROZEN
+(tests/contracts/test_signatures.py): changing one is a CONTRACT-CHANGE PR
+(CONTRIBUTING.md).
 
 calc/ IS PURE (docs/adr/0001, docs/adr/0007):
   - no network, no database, no filesystem beyond the mock fixtures,
@@ -21,6 +22,8 @@ import json
 import os
 from pathlib import Path
 from typing import Any
+
+from calc.metrics.compute import compute_metrics as metrics_compute
 
 _MOCK = Path(__file__).resolve().parents[1] / "fixtures" / "mock"
 
@@ -44,9 +47,13 @@ def compute_metrics(factsheet: dict) -> dict:
     """Factsheet -> Metrics. Pure function.
 
     Takes no `as_of`: `factsheet["as_of"]` is authoritative for the whole run.
+
+    Beside the contract's fields the result carries `derived_facts` and
+    `input_facts`: one FinancialFact per computed number, with its formula, its
+    input fact_ids and a filed_at equal to the latest of those inputs. That is
+    what audit/'s recompute check reads.
     """
-    _require_mock("compute_metrics")
-    return _load("metrics.json")
+    return metrics_compute(factsheet)
 
 
 def reverse_dcf(factsheet: dict, metrics: dict, assumptions: dict | None = None) -> dict:
@@ -55,8 +62,9 @@ def reverse_dcf(factsheet: dict, metrics: dict, assumptions: dict | None = None)
     ALWAYS returns a sensitivity grid: a single point answer hides how much the
     result depends on the discount rate (error D).
     """
-    _require_mock("reverse_dcf")
-    return _load("metrics.json")["reverse_dcf"]
+    if assumptions:
+        return metrics_compute(factsheet, assumptions)["reverse_dcf"]
+    return (metrics or {}).get("reverse_dcf") or metrics_compute(factsheet)["reverse_dcf"]
 
 
 def calculate_valuation(request: dict) -> dict:

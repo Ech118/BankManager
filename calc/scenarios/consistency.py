@@ -32,9 +32,7 @@ A verdict below its floor is an error, not a matter of emphasis.
 """
 
 
-def validate_consistency(
-    scenario_result: ScenarioResult, verdict_card: VerdictCard
-) -> Consistency:
+def validate_consistency(scenario_result: ScenarioResult, verdict_card: VerdictCard) -> Consistency:
     """Check the four outputs tell the same story.
 
     Checks:
