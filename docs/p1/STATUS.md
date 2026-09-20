@@ -3,16 +3,17 @@
 Update whenever a capability moves from mock to real, or when blocked.
 A PR that changes behaviour must update this file.
 
-**Step:** 4 in progress. **Seven of eleven tools are served; XBRL normalization
+**Step:** 4 in progress. **Eight of eleven tools are served; XBRL normalization
 is real and runs against twelve recorded filers.**
-**Next:** `get_factsheet` served, then `sp500_baseline`, then `search_filing`,
-then `get_peer_companies` (SIC + XBRL frames), then `build_factsheet` live.
+**Next:** `get_factsheet` served, then `get_peer_companies` (SIC + XBRL frames),
+then `build_factsheet` live. Real 10-K section extraction is deferred and is
+what `search_filing` needs to work in live mode.
 **Blockers:** `get_factsheet` is in the contracts but not yet in `main` -
 PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
 
 | Capability | State | Notes |
 |---|---|---|
-| **MCP server** | **mock, live over MCP** | 7 of 11 tools served over the in-memory transport |
+| **MCP server** | **mock, live over MCP** | 8 of 11 tools served over the in-memory transport |
 | `get_financial_facts` | **served** | as_of + restatement filtering, `periods`, `include_superseded` |
 | `get_market_snapshot` | **served, live** | Finnhub price + filing share count; degrades to price unavailable |
 | `get_company_profile` | **served** | |
@@ -20,7 +21,7 @@ PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
 | `resolve_fact` | **served** | flags `is_superseded` / `is_future` separately |
 | `search_filings` | **served** | newest first, `forms` filter, `limit` + `truncated` |
 | `get_filing_section` | **served** | verbatim; errors on unknown id AND on one filed after `as_of` |
-| `search_filing` | not served | in-process keyword index over extracted sections, not Postgres |
+| `search_filing` | **served** | BM25 over whole sections, in process; **live needs the section parser** |
 | `search_news` | not served | Step 4 |
 | `calculate_valuation` | not served | Step 4; waits on P2's `calc.api` |
 | **EDGAR client** | **real** | submissions, filings, documents; responses replayed in tests |
@@ -46,11 +47,11 @@ PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
 | YTD differencing / Q4 derivation | not started | annual only for now; both raise rather than guess |
 | ticker -> CIK overrides | **real** | `data/ingest/ticker_overrides.py`; XOM is the only one in the top 100 |
 | `fixtures/real/` recorded filers | **real** | 12 companies, trimmed companyfacts + submissions |
-| Section parsing | mock | serves `fixtures/mock/sections/*.txt`; real 10-K parsing is Step 7 |
+| Section parsing | mock | serves `fixtures/mock/sections/*.txt`; **real 10-K Item extraction is the gap that keeps `search_filing` mock-only in live mode** |
 | Postgres store | not started | migration file lists the tables |
 | `fixtures/real/` demo tickers | not started | Step 6; coordinate the choice via `docs/requests/` |
 
-**Last updated:** 2026-09-20 (derived-fact dating, `get_factsheet` contract, S&P 500 baseline)
+**Last updated:** 2026-09-20 (derived-fact dating, baseline, ranked `search_filing`)
 
 ---
 

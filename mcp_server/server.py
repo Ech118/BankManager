@@ -26,8 +26,7 @@ ERRORS
     a failed result; a transport-level exception just aborts their turn.
     ValueError = out of scope, KeyError = unknown id (docs/mcp-tools.md).
 
-TODO(roadmap Step 3, P1): add search_filing (Postgres full-text search).
-TODO(roadmap Step 4, P1): add search_news and calculate_valuation.
+TODO(roadmap Step 4, P1): add search_news, calculate_valuation and get_factsheet.
 """
 
 from __future__ import annotations
@@ -47,6 +46,7 @@ from .tools import (
     get_market_snapshot,
     get_peer_companies,
     resolve_fact,
+    search_filing,
     search_filings,
 )
 
@@ -55,6 +55,7 @@ SERVER_NAME = "bankmanager-financial-research"
 _RUNNERS: dict[str, Any] = {
     "search_filings": search_filings.run,
     "get_filing_section": get_filing_section.run,
+    "search_filing": search_filing.run,
     "get_financial_facts": get_financial_facts.run,
     "get_market_snapshot": get_market_snapshot.run,
     "get_company_profile": get_company_profile.run,
@@ -102,6 +103,12 @@ _DESCRIPTIONS: dict[str, str] = {
     "get_peer_companies": (
         "Comparable companies by SIC code and market-cap band, each with a "
         "selection_reason. Fewer peers than limit is a valid answer."
+    ),
+    "search_filing": (
+        "Find the section that DISCUSSES something, when you do not know which "
+        "Item it lives in. Ranked by relevance, always scoped by ticker and date. "
+        "Returns whole sections, never fragments, so a quote has a stable anchor. "
+        "An empty list is a valid answer: no section mentioned your terms."
     ),
     "resolve_fact": (
         "Turn a fact_id back into the fact. Returns the fact even when it was "

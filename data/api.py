@@ -158,31 +158,33 @@ def search_filing(
     items: list[str] | None = None,
     limit: int = 10,
 ) -> list[dict]:
-    """Full-text search scoped by ticker/form/item/date (MCP tool: search_filing).
+    """Ranked keyword search scoped by ticker/form/item/date (MCP tool: search_filing).
 
-    Postgres full-text search in live mode. No embeddings, no chunking (ADR 0006).
-    MOCK: naive case-insensitive substring match over the fixture sections.
+    Whole sections, never fragments; no embeddings, no chunking (ADR 0006). The
+    index is in process rather than in Postgres - a run reads one company's
+    filings, and ranking a few hundred sections locally beats a round trip. See
+    data/sections/search.py for why, and for what ADR 0006 still forbids.
+
+    Ranking is shared with live mode, so a relevance bug shows up offline.
     """
+    from data.sections import search as section_search
+    from schema.contracts.filings import FilingSection
+
     scope = check_scope(ticker, as_of)
     if not scope["in_scope"]:
         raise ValueError(scope["reason"])
     _require_mock("search_filing")
-    needle = (query or "").lower()
-    out = []
-    for section in _load("factsheet.json")["filing_sections"]:
-        if as_of and section["filed_at"] > as_of:
-            continue
-        if forms and section["form"] not in forms:
-            continue
-        if items and section["item"] not in items:
-            continue
-        text = get_section_text(section["source_id"])
-        if needle and needle not in text.lower():
-            continue
-        hit = dict(section)
-        hit["text"] = text
-        out.append(hit)
-    return out[:limit]
+
+    sections, texts = [], []
+    for raw in _load("factsheet.json")["filing_sections"]:
+        text = get_section_text(raw["source_id"])
+        sections.append(FilingSection.model_validate({**raw, "text": text}))
+        texts.append(text)
+
+    hits = section_search.search(
+        sections, texts, query, as_of=as_of, forms=forms, items=items, limit=limit
+    )
+    return [hit.section.model_dump(mode="json") for hit in hits]
 
 
 def get_financial_facts(
