@@ -86,6 +86,12 @@ class Agent:
     prompt_file: str
     tools: tuple[str, ...] = ()
     """MCP tools this agent may call. Narrower is cheaper and safer."""
+    writable: tuple[str, ...] | None = None
+    """Sections the MODEL may write claims into, when narrower than the ones it owns (e.g. the scenario
+    agent owns `sp500_comparison`, but that section is generated from calc's result, not by the model)."""
+    strict_numerals: bool = False
+    """True for agents that must write no numerals of their own (the synthesizer): a numeral in a claim
+    that the finding's own quotes do not contain drops the finding. `uses_calc` implies it."""
     uses_calc: bool = False
     """True for agents whose numbers come from `calculate_valuation`: findings may then carry
     `calc_refs` (paths into the calc response) alongside `fact_ids`."""
@@ -154,14 +160,22 @@ class Agent:
         """ResearchState sections this agent owns (the routing key, state.py)."""
         return tuple(k for k, owner in SECTION_OWNERS.items() if owner is self.name)
 
+    @property
+    def write_sections(self) -> tuple[str, ...]:
+        return self.writable or self.sections
+
     def system_prompt(self) -> str:
         shared = (PROMPT_DIR / "shared_rules.md").read_text(encoding="utf-8").strip()
         role = (PROMPT_DIR / self.prompt_file).read_text(encoding="utf-8").strip()
+        return f"{shared}\n\n---\n\n{role}\n\n---\n\n{self.output_format()}\n"
+
+    def output_format(self) -> str:
+        """The "Output format for this run" block of the system prompt. Nested agents override it."""
         fmt = (
             "# Output format for this run\n\n"
             "Return ONE JSON object and nothing else:\n"
             '{"summary": "<2-3 sentences>", "findings": [{"claim": "<one sentence>", '
-            f'"trend": one of {_TRENDS}, "section": one of {list(self.sections)}, '
+            f'"trend": one of {_TRENDS}, "section": one of {list(self.write_sections)}, '
             '"evidence": [{"quote": "<verbatim>", "source_id": "<from a <document> tag>"}], '
             '"fact_ids": ["<from the FACTS table>"], '
             + ('"calc_refs": ["<paths from CALCULATION RESULTS>"], ' if self.uses_calc else "")
@@ -176,7 +190,7 @@ class Agent:
                 else ""
             )
         )
-        return f"{shared}\n\n---\n\n{role}\n\n---\n\n{fmt}\n"
+        return fmt
 
     def wrap_untrusted(
         self, text: str, source_id: str, *, item: str = "", form: str = "", period: str = ""
@@ -195,6 +209,10 @@ class Agent:
 
     def wire_schema(self) -> dict:
         """JSON schema sent as the structured-output constraint (simple subset)."""
+        return self.analysis_schema()
+
+    def analysis_schema(self) -> dict:
+        """The {summary, findings} object every agent's analysis part conforms to."""
         evidence = {
             "type": "object",
             "additionalProperties": False,
@@ -207,7 +225,7 @@ class Agent:
             "properties": {
                 "claim": {"type": "string"},
                 "trend": {"type": "string", "enum": _TRENDS},
-                "section": {"type": "string", "enum": list(self.sections)},
+                "section": {"type": "string", "enum": list(self.write_sections)},
                 "evidence": {"type": "array", "items": evidence},
                 "fact_ids": {"type": "array", "items": {"type": "string"}},
                 "confidence": {"type": "string", "enum": _CONFIDENCE},
@@ -254,6 +272,12 @@ class Agent:
             + ("\n\n".join(docs) or "(no filing sections available: say the data is unavailable)")
             + self.extra_blocks(context)
         )
+
+    def _fenced(self, label: str, text: str) -> str:
+        """Peer data and upstream findings are untrusted like any tool output: sanitise and fence."""
+        clean, flags = neutralize(text, label)
+        self.guard_flags += flags
+        return wrap_document(label, label, "", "", clean)
 
     def extra_blocks(self, context: dict) -> str:
         """Agent-specific prompt sections appended after the documents. Empty by default."""
@@ -377,7 +401,7 @@ class Agent:
             if not evidence:
                 self._drop(where, "no verifiable evidence: finding dropped")
                 continue
-            if self.uses_calc:
+            if self.uses_calc or self.strict_numerals:
                 typed = self._typed_numerals(f["claim"], evidence)
                 if typed:
                     self._drop(
@@ -387,7 +411,11 @@ class Agent:
                     )
                     continue
             fact_ids, numbers = self._resolve_facts(f, context["ticker"], where)
-            section = f.get("section") if f.get("section") in self.sections else self.sections[0]
+            section = (
+                f.get("section")
+                if f.get("section") in self.write_sections
+                else self.write_sections[0]
+            )
             findings.append(
                 {
                     "claim": f["claim"],

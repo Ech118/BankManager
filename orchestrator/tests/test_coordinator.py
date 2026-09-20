@@ -30,7 +30,7 @@ def test_empty_state_has_all_fourteen_sections_with_canonical_owners():
 
 
 def test_mock_run_builds_a_valid_state_with_claims_only_in_the_running_agents_sections(mcp):
-    st = Coordinator(mcp, run_id="t1").run_state("ACME")
+    st = Coordinator(mcp, run_id="t1").run_state("ACME", as_of="2026-09-19")
     ResearchState.model_validate(st.model_dump(mode="json"))  # every contract validator passes
     owned = {
         k
@@ -134,8 +134,10 @@ def test_agent_failure_emits_a_failed_event_and_propagates(mcp, monkeypatch):
     assert any(e.status == "failed" for e in events.history(run_id))
 
 
-def test_run_is_explicitly_not_built_until_the_synthesizer_exists(mcp):
-    with pytest.raises(NotImplementedError, match="Step 5"):
+def test_run_needs_an_injected_calc_port(mcp):
+    from orchestrator.coordinator import VerifierUnavailable
+
+    with pytest.raises(VerifierUnavailable, match="calc"):
         Coordinator(mcp).run("ACME")
 
 

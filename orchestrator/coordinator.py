@@ -50,16 +50,22 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
 from typing import Any
 
+from agents import client
 from agents.base import Agent, section_id_for
 from agents.business_agent import BusinessAgent
 from agents.financial_agent import FinancialAgent
+from agents.red_team_agent import RedTeamAgent
+from agents.scenario_agent import ScenarioAgent
+from agents.synthesizer_agent import SynthesizerAgent
 from agents.valuation_agent import ValuationAgent
-from orchestrator import events
+from orchestrator import events, scenario_claims
 from orchestrator.mcp_client import McpToolError
+from orchestrator.report import generator
 from orchestrator.retry import Rerun, failing_claim_ids, retry_loop
 from schema.contracts import SCHEMA_VERSION
 from schema.contracts.common import DataQuality, ISODate, Ticker
 from schema.contracts.enums import AgentName, Mode, VerificationStatus
+from schema.contracts.scenario_result import ScenarioResult
 from schema.contracts.state import SECTION_OWNERS, ResearchSection, ResearchSections, ResearchState
 from schema.contracts.verdict import Verdict
 from schema.contracts.verification import VerificationResult
@@ -89,6 +95,19 @@ IMPLEMENTED: dict[AgentName, type[Agent]] = {
     AgentName.VALUATION: ValuationAgent,
 }
 """Agents that exist so far. Grows with the roadmap; `plan()` reads it."""
+
+DECISION: dict[AgentName, type[Agent]] = {
+    AgentName.SCENARIO: ScenarioAgent,
+    AgentName.RED_TEAM: RedTeamAgent,
+    AgentName.SYNTHESIZER: SynthesizerAgent,
+}
+"""The agents that need calc/ between them (scenario -> red team -> evaluate_scenarios -> synthesizer).
+They run only when a `calc` port is injected, so the analysis stages work without it."""
+
+
+def agent_class(name: AgentName) -> type[Agent] | None:
+    return IMPLEMENTED.get(name) or DECISION.get(name)
+
 
 CANONICAL_ORDER = [
     AgentName.FINANCIAL,
@@ -169,6 +188,10 @@ def new_state(
     )
 
 
+class ConsistencyError(RuntimeError):
+    """The verdict contradicted calc's numbers twice, so no verdict is shipped."""
+
+
 class VerifierUnavailable(RuntimeError):
     """verify() was asked for but no auditor or factsheet was injected."""
 
@@ -185,7 +208,13 @@ class Coordinator:
         auditor: Callable[..., dict] | None = None,
         factsheet: Callable[[dict], dict] | None = None,
         verify_claim: Callable[[str, str], bool] | None = None,
+        calc: Any = None,
     ) -> None:
+        """`calc` is an INJECTED port (P3 may not import calc/): an object with
+        `compute_metrics(factsheet)`, `evaluate_scenarios(scenarios, factsheet, metrics, prior_shifts)`
+        and `validate_consistency(scenario_result, verdict_card)`, i.e. calc.api. It needs `factsheet`."""
+        self.calc = calc
+        self._decision_context: dict[str, Any] = {}
         self.mcp = mcp
         self.redact = redact
         self.auditor = auditor
@@ -285,14 +314,18 @@ class Coordinator:
         }
 
     # ----------------------------------------------------------------- agents
-    def _execute(self, name: AgentName, context: dict) -> tuple[Agent, Any, float]:
+    def _execute(
+        self, name: AgentName, context: dict, feedback: list[str] | None = None
+    ) -> tuple[Agent, Any, float]:
         """Run ONE agent. Called from a worker thread, so it touches no shared state except the
         (locked) event feed; the caller merges results afterwards, in canonical order."""
-        agent = IMPLEMENTED[name](self.mcp, redact=self.redact)
+        cls = agent_class(name)
+        assert cls is not None, name
+        agent = cls(self.mcp, redact=self.redact)
         self._emit(name, "running")
         t0 = time.monotonic()
         try:
-            analysis = agent.run(context)
+            analysis = agent.run(context, feedback=feedback)
         except Exception as e:
             self._emit(name, "failed", detail=str(e))
             raise
@@ -328,16 +361,25 @@ class Coordinator:
             )
         self.stats["agents"][name.value] = {
             **agent.usage,
+            "cost_usd": round(
+                client.estimate_cost(
+                    agent.usage["model"], agent.usage["tokens_in"], agent.usage["tokens_out"]
+                ),
+                6,
+            ),
             "dropped": agent.dropped,
             "claims": len(claims),
             "wall_seconds": round(seconds, 3),
         }
 
     @staticmethod
-    def _upstream_text(state: ResearchState) -> str:
-        """What the financial and business agents concluded, as plain text for later agents."""
+    def _upstream_text(
+        state: ResearchState,
+        names: tuple[AgentName, ...] = (AgentName.FINANCIAL, AgentName.BUSINESS),
+    ) -> str:
+        """What the given agents concluded, as plain text for later agents."""
         lines: list[str] = []
-        for name in (AgentName.FINANCIAL, AgentName.BUSINESS):
+        for name in names:
             analysis = state.agent_outputs.get(name)
             if analysis is None:
                 continue
@@ -387,6 +429,113 @@ class Coordinator:
                 self._merge(state, name, outcome)
         return state
 
+    # ------------------------------------------------------------------- decision
+    ANALYSTS = (AgentName.FINANCIAL, AgentName.BUSINESS, AgentName.VALUATION)
+
+    @staticmethod
+    def _evidence_pool(state: ResearchState) -> list[dict[str, str]]:
+        """Every quote the verified claims carry, deduplicated: the only text the Synthesizer may cite."""
+        seen: set[tuple[str, str]] = set()
+        pool: list[dict[str, str]] = []
+        for claim in state.all_claims:
+            for ev in claim.evidence:
+                key = (ev.source_id, " ".join(ev.quote.split()))
+                if key not in seen:
+                    seen.add(key)
+                    pool.append({"source_id": ev.source_id, "quote": ev.quote})
+        return pool
+
+    def run_decision(self, state: ResearchState, context: dict) -> ResearchState:
+        """scenario -> red team -> calc.evaluate_scenarios -> synthesizer (docs/pipeline.md).
+
+        The Red Team runs BEFORE calc so both agents' prior-shift requests are in hand when calc
+        bounds them. calc, not any model, produces every probability, score and return. The
+        Synthesizer's verdict word is checked by calc.validate_consistency and sent back once if
+        it contradicts the numbers; a second contradiction fails the run.
+        """
+        if self.calc is None or self.factsheet is None:
+            raise VerifierUnavailable(
+                "the decision stages need an injected `calc` port and a `factsheet` provider"
+            )
+        factsheet = self.factsheet(context)
+        metrics = self.calc.compute_metrics(factsheet)
+
+        def stage_context(names: tuple[AgentName, ...]) -> dict:
+            return {**context, "upstream_text": self._upstream_text(state, names)}
+
+        scenario = self._execute(AgentName.SCENARIO, stage_context(self.ANALYSTS))
+        self._merge(state, AgentName.SCENARIO, scenario)
+        proposal = scenario[1].scenarios_proposal  # type: ignore[attr-defined]
+
+        red = self._execute(AgentName.RED_TEAM, stage_context((*self.ANALYSTS, AgentName.SCENARIO)))
+        self._merge(state, AgentName.RED_TEAM, red)
+        red_extras = {
+            "drawdown_path": red[1].drawdown_path,
+            "requested_prior_shift": red[1].requested_prior_shift,
+        }
+
+        shifts = [proposal["prior_shift"]]
+        if red_extras["requested_prior_shift"] is not None:
+            shifts.append(
+                {
+                    "value": red_extras["requested_prior_shift"],
+                    "reason": red[1].prior_shift_reason,
+                    "source": AgentName.RED_TEAM.value,
+                }
+            )
+        self._emit("calc", "running", detail="evaluate_scenarios")
+        try:
+            raw = self.calc.evaluate_scenarios(proposal, factsheet, metrics, shifts)
+            state.scenario_result = ScenarioResult.model_validate(raw)
+        except Exception as e:
+            self._emit("calc", "failed", detail=str(e))
+            raise
+        self._emit("calc", "done")
+        for key, claims in scenario_claims.build(state.scenario_result, context["facts"]).items():
+            getattr(state.sections, key).claims.extend(claims)
+
+        red_summary = state.agent_outputs[AgentName.RED_TEAM].summary
+        feedback: list[str] = []
+        for _ in (1, 2):  # the verdict word gets one correction
+            synth_ctx = {
+                **stage_context((*self.ANALYSTS, AgentName.SCENARIO, AgentName.RED_TEAM)),
+                "scenario_result": state.scenario_result.model_dump(mode="json"),
+                "evidence": self._evidence_pool(state),
+                "red_team": red_extras,
+                "red_team_points": [c.text for c in state.sections.risks.claims],
+            }
+            synth = self._execute(AgentName.SYNTHESIZER, synth_ctx, feedback or None)
+            fields = synth[1].synthesis_fields  # type: ignore[attr-defined]
+            state.synthesis = {  # type: ignore[attr-defined]
+                **{k: v for k, v in fields.items() if k != "red_team_responses"},
+                "red_team": {
+                    "summary": red_summary,
+                    "responses_by_synthesizer": fields["red_team_responses"],
+                    "drawdown_path": red_extras["drawdown_path"],
+                    "requested_prior_shift": red_extras["requested_prior_shift"],
+                },
+            }
+            card = generator.render_card(state)
+            consistency = self.calc.validate_consistency(
+                state.scenario_result.model_dump(mode="json"), card.model_dump(mode="json")
+            )
+            if consistency["ok"]:
+                self._merge(state, AgentName.SYNTHESIZER, synth)
+                self._decision_context = {
+                    "scenario_result": synth_ctx["scenario_result"],
+                    "evidence": synth_ctx["evidence"],
+                    "red_team": red_extras,
+                    "red_team_points": synth_ctx["red_team_points"],
+                }
+                return state
+            feedback = [f"Consistency check failed: {i}" for i in consistency["issues"]]
+            self._emit(
+                AgentName.SYNTHESIZER, "retrying", detail="; ".join(consistency["issues"][:2])
+            )
+        raise ConsistencyError(
+            "the verdict contradicted calc's numbers twice: " + "; ".join(consistency["issues"])
+        )
+
     def _audit(self, state: ResearchState, context: dict) -> VerificationResult:
         """One pass of the injected auditor. Stores the result and marks every claim verified/failed."""
 
@@ -427,14 +576,12 @@ class Coordinator:
         """The callable retry.py uses to re-run ONE agent with the gate's feedback."""
 
         def rerun(name: AgentName, feedback: list[str], id_prefix: str) -> list[Any]:
-            cls = IMPLEMENTED.get(name)
-            if (
-                cls is None
-            ):  # e.g. red_team before it exists: nothing to re-run, the claims stay marked
+            cls = agent_class(name)
+            if cls is None:  # nothing to re-run: the claims simply stay marked
                 log.warning("cannot retry %s: agent not implemented yet", name.value)
                 return []
             agent = cls(self.mcp, redact=self.redact)
-            analysis = agent.run(context, feedback=feedback)
+            analysis = agent.run({**context, **self._decision_context}, feedback=feedback)
             slot = self.stats["agents"].setdefault(name.value, {})
             slot["retries"] = slot.get("retries", 0) + 1
             for key in ("tokens_in", "tokens_out"):
@@ -503,6 +650,8 @@ class Coordinator:
             market=context["market"],
         )
         state = self.run_agents(state, context)
+        if self.calc is not None:
+            state = self.run_decision(state, context)
         if self.auditor is not None and self.factsheet is not None:
             state = self.verify(state, context)
         state = ResearchState.model_validate(
@@ -515,16 +664,23 @@ class Coordinator:
                 "seconds": round(time.monotonic() - t0, 3),
                 "tokens_in": sum(a["tokens_in"] for a in self.stats["agents"].values()),
                 "tokens_out": sum(a["tokens_out"] for a in self.stats["agents"].values()),
+                "cost_usd_estimate": round(
+                    sum(a.get("cost_usd", 0.0) for a in self.stats["agents"].values()), 6
+                ),
             }
         )
         events.log_run(self.stats)
         return state
 
     def run(self, ticker: Ticker, as_of: ISODate | None = None) -> Verdict:
-        """The whole pipeline.
+        """The whole pipeline: analysts, scenarios, red team, calc, synthesizer, audit, report.
 
-        TODO(roadmap Step 5, P3): needs the scenario agent, red team, synthesizer and calc's
-        evaluate_scenarios before a Verdict can exist. Until then `run_state()` plus
-        `report.render_markdown()` gives a preliminary report that shows no verdict.
+        Needs the injected `calc`, `auditor` and `factsheet` (P3 imports none of them). Raises
+        ReportInputError if a verdict cannot be built, instead of inventing one.
         """
-        raise NotImplementedError("TODO(roadmap Step 5, P3): scenario, red team, synthesizer")
+        if self.calc is None:
+            raise VerifierUnavailable(
+                "run() needs an injected `calc` port (see Coordinator.__init__)"
+            )
+        state = self.run_state(ticker, as_of)
+        return generator.render(state)

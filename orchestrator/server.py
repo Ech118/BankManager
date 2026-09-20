@@ -49,20 +49,27 @@ class Composition:
         factsheet=None,
         redact=None,
         verify_claim=None,
+        calc=None,
     ):
         self.mcp_factory, self.auditor, self.factsheet = mcp_factory, auditor, factsheet
-        self.redact, self.verify_claim = redact, verify_claim
+        self.redact, self.verify_claim, self.calc = redact, verify_claim, calc
 
 
 COMPOSITION: Composition | None = None
 
 
 def configure(
-    mcp_factory: Callable[[], Any], *, auditor=None, factsheet=None, redact=None, verify_claim=None
+    mcp_factory: Callable[[], Any],
+    *,
+    auditor=None,
+    factsheet=None,
+    redact=None,
+    verify_claim=None,
+    calc=None,
 ) -> None:
     """Wire the Coordinator to a data layer. Called once by the composition root (a script or test)."""
     global COMPOSITION
-    COMPOSITION = Composition(mcp_factory, auditor, factsheet, redact, verify_claim)
+    COMPOSITION = Composition(mcp_factory, auditor, factsheet, redact, verify_claim, calc)
 
 
 RUNNER: Callable[[str, str | None, str], dict] | None = None
@@ -98,7 +105,11 @@ def _coordinator_runner(ticker: str, as_of: str | None, run_id: str) -> dict:
             auditor=comp.auditor,
             factsheet=comp.factsheet,
             verify_claim=comp.verify_claim,
+            calc=comp.calc,
         )
+        if comp.calc is not None:  # the whole pipeline: a finished Verdict
+            verdict = coord.run(ticker, as_of)
+            return {"verdict": verdict.model_dump(mode="json"), "stats": coord.stats}
         state = coord.run_state(ticker, as_of)
     finally:
         mcp.close()
@@ -133,7 +144,11 @@ def start_run(ticker: str, as_of: str | None = None) -> str:
             events.emit(events.AgentEvent(run_id, "run", "failed", detail=str(e)))
         else:
             with _LOCK:
-                if "card" in verdict:
+                if "verdict" in verdict:  # runner returned {"verdict", "stats"}
+                    _RESULTS[run_id].update(
+                        status="done", verdict=verdict["verdict"], stats=verdict.get("stats")
+                    )
+                elif "card" in verdict:
                     _RESULTS[run_id].update(status="done", verdict=verdict)
                 else:
                     _RESULTS[run_id].update(status="done", preliminary=verdict)
@@ -237,7 +252,8 @@ def create_app() -> Any:
     def stats(run_id: str) -> dict:
         if not events.known(run_id):
             raise HTTPException(404, "Unknown run.")
-        recorded = get_run(run_id).get("preliminary", {}).get("stats")
+        rec = get_run(run_id)
+        recorded = rec.get("stats") or rec.get("preliminary", {}).get("stats")
         if recorded:
             return recorded
         evs = events.history(run_id)

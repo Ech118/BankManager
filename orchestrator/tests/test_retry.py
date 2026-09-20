@@ -229,5 +229,5 @@ def test_a_directive_for_an_unbuilt_agent_leaves_the_claims_marked_not_lost(mcp,
     Model(monkeypatch)
     coord, st = run(mcp, make_auditor(lambda text: False))
     rerun = coord._rerun({})
-    assert rerun(AgentName.RED_TEAM, ["x"], "r1-") == []  # nothing to run: no crash, no claims
+    assert rerun(AgentName.VERIFIER, ["x"], "r1-") == []  # nothing to run: no crash, no claims
     assert retry.MAX_ATTEMPTS == 2

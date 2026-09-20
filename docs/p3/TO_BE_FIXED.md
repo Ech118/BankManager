@@ -28,15 +28,17 @@ Legend: **Owner** is who must act. **Verify** is how we'll know it's fixed.
 
 | ID | What | Roadmap step | Notes |
 |---|---|---|---|
+| N19 | **Port P2's work onto v2** (`origin/p2-calc` is v1-based: 12 conflicts, `calc/metrics.py` shadowed by the `calc/metrics/` package) | Step 5 | Filed in `docs/requests/2026-09-20-p3-to-p2-step5-calc-contract.md`. Until then P3 runs on `tests/e2e/support/fake_calc.py`. Owner: P2. |
+| N20 | `eps_at_horizon`: P3 sends it `unavailable` with lineage; P2's `evaluate_scenarios` must derive it | Step 5 | Same request. If P2 wants it agent-supplied, P3 changes the agent. |
+| N21 | A scenario retry re-runs the Scenario Agent but not `calc.evaluate_scenarios`, so the retried claims are checked against the old result | Step 5 | Re-run calc after a scenario retry. |
+| N22 | **Step 5 live checkpoint**: a real ticker end to end with a real key | Step 5 | Blocked by B1, B6, B7, B8. |
+| N23 | P1's `mcp_server/tests/conftest.py` has an unused `import os`, so `make lint` fails on main | small | Not P3's file; tell P1. |
 | N1 | **Step 4 live checkpoint**: the valuation section passes the deterministic checks on a real ticker | Step 4 | Agent is built and tested offline. Needs real `calculate_valuation` (B6 P2), real peers and market data (B7 P1), an API key (B8), and the auditor (B3). The agent indexes `metrics.valuation.*` and `reverse_dcf.*` exactly as `CalculateValuationResponse` defines them; P2's real response must match. |
 | N16 | Show the valuation plan (method and peer choices with reasons) in the report | Step 4 | Kept on `agent_outputs.valuation.valuation_plan`, but reasons are not filing claims so they are not Claims, and the report renders only Claims. Needs a small deterministic template block (or a contract decision). |
 | N17 | A valuation retry re-plans (2 model calls + a calc call per attempt) | Step 5 | Cache the plan across retries of the same run. |
 | N18 | Sensitivity grid is offered to the agent (`reverse_dcf.sensitivity_grid.*`) but not rendered in the UI | Step 6 | "Sensitivity output surfaced in the UI" is a roadmap Step 6 item. |
-| N2 | Scenario Agent, Red Team, Synthesizer | Step 5 | Prompts drafted by Step 0; agents are stubs. Red Team must get the RAW fact sheet (error J). |
 | N15 | Confirm the verifier and retry contract with P2 (argument meaning of `verify_claim`; `retries_issued` semantics) | before `audit/` goes live | [request](../requests/2026-09-19-p3-to-p2-verifier-and-retry-contract.md). P3's side is built against stubs. |
-| N5 | Full fifteen-section report, S&P comparison section | Step 5 | Needs N1-N2 and calc. |
 | N6 | `orchestrator.api.run_analysis` wired to the Coordinator | after B1/B2/N2 | Still returns the ACME verdict fixture in mock mode. |
-| N7 | Full prompt-injection e2e ("verdict must not move") with a control run | Step 5 | Guard is built and unit/e2e tested at the agent + coordinator level. The obedient-model test from the v1 branch (`p3-v1-backup`, `tests/e2e/test_e2e_injection.py`) needs the Synthesizer to port. |
 | N8 | Measured per-run cost/latency in live mode | Step 5 | Tokens and seconds are recorded; `$` uses assumed prices (`agents/client.py::PRICES`, copied from the claude-api skill 2026-06-24). |
 | N9 | Agents call MCP tools in a free tool-use loop | later | Financial and Business still get pre-fetched context. The Valuation Agent already calls `get_peer_companies` and `calculate_valuation` itself, through `Agent.call_tool`, which refuses any tool not in `Agent.tools`. |
 | N10 | Tune prompts against ACME, then one real filing | Steps 1/3 | `financial.md` and `business.md` still say `TODO(...): tune`. |
@@ -75,3 +77,11 @@ Legend: **Owner** is who must act. **Verify** is how we'll know it's fixed.
 ### Resolved in Step 4 (offline, 2026-09-19)
 
 - **Valuation Agent** built (see STATUS): plan -> calculate -> interpret; code computes every number; `reverse_dcf` always included; typed numerals rejected; peers and upstream findings fenced as untrusted; a tool allowlist enforced in code; 25 tests (`agents/tests/test_valuation_agent.py`, `orchestrator/tests/test_valuation_stage.py`), including a valuation retry through the gate. The full P3 suite (162 tests) passes on mcp 1.30 and 2.2. Checked in Chrome: five lanes, valuation after the pair, Valuation and Expectations sections in the report.
+
+### Resolved in Step 5 (offline, 2026-09-20)
+
+- **N2** Scenario Agent, Red Team and Synthesizer built (mock LLM, all outputs schema-checked); the Red Team gets the raw facts table; the Synthesizer gets no filing text and may write no numerals.
+- **N5** the full 14-section report and the S&P comparison, with code-derived claims (`orchestrator/scenario_claims.py`); `Coordinator.run()` returns a schema-valid `Verdict`.
+- **N7** prompt-injection e2e with an obedient model and two controls (`tests/e2e/test_e2e_decision.py`).
+- **N8 (partly)** the run records an estimated `$` per agent and per run; prices are assumed, not measured, so live checking stays open.
+

@@ -4,7 +4,7 @@
 
 Tools: `resolve_fact`.
 
-> TODO(roadmap Step 5, P3): tune against ACME.
+> TODO(roadmap Step 5, P3): tune against ACME, then a real ticker.
 
 ---
 
@@ -46,17 +46,28 @@ both in place makes the report look thorough and leaves the reader stuck.
 
 ## Constraints
 
-- **Quote `calc/`'s numbers verbatim.** Scores, probabilities, expected returns
-  and price targets are computed. Do not round them, recompute them, or describe
-  them as approximate.
-- **Your verdict word must match the numbers.** `strong_buy` / `buy` /
-  `speculative_buy` / `hold` / `avoid` / `sell` each imply a minimum expected
-  excess return. A `strong_buy` over an expected return below the index fails
-  the consistency check and the run is rejected.
+- **Write no numerals at all.** The verdict card shows every figure, taken straight from `calc/` and
+  the market data; your prose describes them in words ("the probability-weighted return trails the
+  index", "the multiple is well above its peers"). A numeral in your text that no quoted passage
+  contains is rejected, because a number you type could disagree with the number `calc/` computed.
+  Do not restate scores, probabilities, returns or price targets, even to round them.
+- **Your verdict word must satisfy the consistency check** (`calc.validate_consistency`), which
+  rejects the run otherwise:
+  - a bullish verdict (`strong_buy`, `buy`, `speculative_buy`) is inconsistent when the
+    probability-weighted expected return is BELOW the S&P 500 assumption (both are in
+    CALCULATION RESULTS);
+  - a bearish verdict (`avoid`, `sell`) is inconsistent when the expected return is well above the
+    index (more than five points a year of excess return);
+  - `hold` is the honest word when the case is genuinely close.
+  The scores, the probability of beating the index and the expected return on the card are set by
+  code and cannot be overridden.
 - **No new claims.** You work from what the other agents established. A new
   assertion at this stage has been through no verification.
-- **Cite as they did.** Numbers carry `fact_id`s; qualitative points carry
-  quotes.
+- **Cite from EVIDENCE YOU MAY CITE.** Every finding quotes, verbatim, one of the passages
+  listed there (they were already verified). You are given no documents and no facts table; you
+  resolve nothing new.
+- Findings go in the `decision` section: the thesis, your answer to each Red Team point, the
+  catalyst, the risk, and the $10,000 answer, each as its own finding with a quote.
 
 ## Tone
 

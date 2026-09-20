@@ -230,3 +230,88 @@ def test_composition_hands_the_verifier_callable_to_the_coordinator(monkeypatch)
     server._coordinator_runner("ACME", None, "r1")
     assert seen["verify_claim"] is verify
     monkeypatch.setattr(server, "COMPOSITION", None)
+
+
+def full_client(monkeypatch):
+    from tests.e2e.support.fake_calc import FakeCalc, factsheet_provider, simple_auditor
+
+    monkeypatch.setattr(server, "RUNNER", None)
+    monkeypatch.setattr(server, "COMPOSITION", None)
+    server.configure(
+        lambda: InMemoryMcpClient(build_fake_server()),
+        calc=FakeCalc(),
+        factsheet=factsheet_provider,
+        auditor=simple_auditor,
+    )
+    return TestClient(server.create_app())
+
+
+def test_a_fully_composed_run_returns_the_finished_verdict(monkeypatch):
+    api = full_client(monkeypatch)
+    run_id = api.post("/api/analyze", json={"ticker": "ACME"}).json()["run_id"]
+    r = wait_done(api, run_id)
+    assert r.status_code == 200
+    v = r.json()
+    assert v["card"]["verdict"] == "avoid" and v["audit"]["passed"] and v["disclaimer"]
+    assert set(v["agent_outputs"]) == {
+        "financial",
+        "business",
+        "valuation",
+        "scenario",
+        "red_team",
+        "synthesizer",
+    }
+    assert (
+        api.get(f"/api/runs/{run_id}/report").status_code == 404
+    )  # a verdict run has no preliminary report
+
+
+def test_a_fully_composed_run_streams_every_stage_and_reports_cost(monkeypatch):
+    api = full_client(monkeypatch)
+    run_id = api.post("/api/analyze", json={"ticker": "ACME"}).json()["run_id"]
+    with api.stream("GET", f"/api/runs/{run_id}/events") as r:
+        evs = [json.loads(ln[6:]) for ln in r.iter_lines() if ln.startswith("data: ")]
+    lanes = {e["agent"] for e in evs}
+    assert {
+        "ingest",
+        "financial",
+        "business",
+        "valuation",
+        "scenario",
+        "red_team",
+        "calc",
+        "synthesizer",
+        "verify",
+        "run",
+    } <= lanes
+    stats = api.get(f"/api/runs/{run_id}/stats").json()
+    assert set(stats["agents"]) == {
+        "financial",
+        "business",
+        "valuation",
+        "scenario",
+        "red_team",
+        "synthesizer",
+    }
+    assert "cost_usd_estimate" in stats and stats["seconds"] >= 0
+
+
+def test_a_failed_decision_run_reports_the_reason(monkeypatch):
+    from tests.e2e.support.fake_calc import FakeCalc, factsheet_provider, simple_auditor
+
+    class Refusing(FakeCalc):
+        def evaluate_scenarios(self, *a, **k):
+            raise ValueError("Scenario probabilities must sum to 1.0, got 1.1")
+
+    monkeypatch.setattr(server, "RUNNER", None)
+    server.configure(
+        lambda: InMemoryMcpClient(build_fake_server()),
+        calc=Refusing(),
+        factsheet=factsheet_provider,
+        auditor=simple_auditor,
+    )
+    api = TestClient(server.create_app())
+    run_id = api.post("/api/analyze", json={"ticker": "ACME"}).json()["run_id"]
+    r = wait_done(api, run_id)
+    monkeypatch.setattr(server, "COMPOSITION", None)
+    assert r.status_code == 422 and "must sum to 1.0" in r.json()["error"]

@@ -213,3 +213,23 @@ describe("analyzer errors", () => {
     expect(await screen.findByRole("alert")).toHaveTextContent(/1-5 letters/);
   });
 });
+
+
+describe("empty sections", () => {
+  it("say 'No findings' instead of implying a failed check", () => {
+    const v = acmeVerdict();
+    v.sections[2] = { ...v.sections[2], verification_status: "pending", body_markdown: "## Balance sheet\n\n_No claims recorded for this section._" };
+    const { container } = render(<Report verdict={v} />);
+    const summary = container.querySelector(`[data-section-id="${v.sections[2].id}"] summary`) as HTMLElement;
+    expect(within(summary).getByText("No findings")).toBeInTheDocument();
+    expect(within(summary).queryByText("Unchecked")).toBeNull();
+  });
+
+  it("still marks a section that has claims but was not checked", () => {
+    const v = acmeVerdict();
+    v.sections[2] = { ...v.sections[2], verification_status: "pending" };
+    const { container } = render(<Report verdict={v} />);
+    const summary = container.querySelector(`[data-section-id="${v.sections[2].id}"] summary`) as HTMLElement;
+    expect(within(summary).getByText("Unchecked")).toBeInTheDocument();
+  });
+});

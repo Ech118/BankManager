@@ -37,7 +37,6 @@ import logging
 from typing import Any
 
 from agents.base import Agent
-from agents.sanitize import neutralize, wrap_document
 from schema.contracts.analysis import Analysis
 from schema.contracts.enums import AgentName
 
@@ -115,12 +114,6 @@ class ValuationAgent(Agent):
         self._upstream_text = ""
 
     # ------------------------------------------------------------------ step 1: plan
-    def _fenced(self, label: str, text: str) -> str:
-        """Peer data and upstream findings are untrusted like any tool output: sanitise and fence."""
-        clean, flags = neutralize(text, label)
-        self.guard_flags += flags
-        return wrap_document(label, label, "", "", clean)
-
     def _plan_check(self, candidates: dict[str, dict]) -> Any:
         def check(data: dict) -> list[str]:
             problems: list[str] = []

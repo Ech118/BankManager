@@ -136,11 +136,161 @@ def _mock_valuation_analysis() -> str:
     return json.dumps(data)
 
 
+def _fixture(name: str) -> dict:
+    return json.loads((_MOCK_DIR / name).read_text(encoding="utf-8"))
+
+
+def _finding(
+    claim: str, trend: str, section: str, quote: str, source_id: str, confidence: str = "medium"
+) -> dict:
+    return {
+        "claim": claim,
+        "trend": trend,
+        "section": section,
+        "confidence": confidence,
+        "fact_ids": [],
+        "evidence": [{"quote": quote, "source_id": source_id}],
+    }
+
+
+def _mock_scenario() -> str:
+    """The frozen scenarios.json as a Scenario Agent output: no eps (calc derives it), no numerals in prose."""
+    sc = _fixture("scenarios.json")
+    cases = {}
+    for name, c in sc["scenarios"].items():
+        cases[name] = {
+            "probability": c["probability"],
+            "probability_rationale": c["probability_rationale"],
+            "horizon_years": c["horizon_years"],
+            "revenue_cagr": c["revenue_cagr"]["value"],
+            "terminal_margin": c["terminal_margin"]["value"],
+            "exit_multiple": c["exit_multiple"]["value"],
+            "rationale": c["rationale"],
+            "evidence": c["evidence"],
+        }
+    risk = "src:edgar:0001234567-26-000010:risk_factors"
+    findings = [
+        _finding(
+            "The bear case is a coherent story: bundled competitor pricing squeezes mid-market margin.",
+            "structurally_negative",
+            "scenarios",
+            "could reduce our gross margin by up to 150 basis points",
+            risk,
+        ),
+        _finding(
+            "The base case is roughly what management guides to, with the multiple normalising.",
+            "neutral",
+            "scenarios",
+            _GUIDANCE,
+            _MDNA,
+        ),
+        _finding(
+            "The bull case needs software mix and switching costs to keep compounding.",
+            "temporarily_positive",
+            "scenarios",
+            "Customers who adopted our software platform renewed at a rate of 94%",
+            "src:edgar:0001234567-26-000010:business",
+        ),
+    ]
+    return json.dumps(
+        {
+            "analysis": {
+                "summary": "Three distinct futures; the base case tracks guidance and the multiple de-rates.",
+                "findings": findings,
+            },
+            "scenarios": cases,
+            "prior_shift": {
+                "value": sc["prior_shift"]["value"],
+                "reason": sc["prior_shift"]["reason"],
+            },
+        }
+    )
+
+
+def _mock_red_team() -> str:
+    rt = _fixture("analysis_red_team.json")
+    findings = [
+        {
+            **{k: f[k] for k in ("claim", "trend", "evidence", "confidence")},
+            "section": "risks",
+            "fact_ids": [],
+        }
+        for f in rt["findings"]
+    ]
+    return json.dumps(
+        {
+            "analysis": {"summary": rt["summary"], "findings": findings},
+            "drawdown_path": _fixture("verdict.json")["red_team"]["drawdown_path"],
+            "prior_shift": {
+                "value": 0,
+                "reason": "The scenario agent already tilted the prior down.",
+            },
+        }
+    )
+
+
+def _mock_synthesizer() -> str:
+    """Prose only, with no numerals. Cites quotes the other mock agents already carry."""
+    rt = _fixture("analysis_red_team.json")
+    debt = rt["findings"][1]["evidence"][0]
+    findings = [
+        _finding(
+            "The business is sound, but the price already discounts more growth than guidance supports.",
+            "structurally_negative",
+            "decision",
+            _GUIDANCE,
+            _MDNA,
+        ),
+        _finding(
+            "The refinancing risk is real but manageable, so it does not change the verdict.",
+            "neutral",
+            "decision",
+            debt["quote"],
+            debt["source_id"],
+        ),
+    ]
+    return json.dumps(
+        {
+            "analysis": {
+                "summary": "Good business, wrong price: hold the index instead.",
+                "findings": findings,
+            },
+            "synthesis": {
+                "thesis": (
+                    "Acme is a good business with real switching costs. The market is pricing years of "
+                    "growth that guidance does not support. Even the base case trails the index as the "
+                    "multiple falls, so we would wait for a much lower price."
+                ),
+                "primary_catalyst": "A shift toward software that lifts gross margin.",
+                "biggest_risk": "The multiple compresses even if guidance is met.",
+                "valuation": "expensive",
+                "business_quality": "good",
+                "financial_strength": "strong",
+                "verdict": "avoid",
+                "ten_thousand_dollar_answer": {
+                    "choice": "sp500",
+                    "reason": "The probability-weighted return is below the index assumption and the base case only breaks even.",
+                },
+                "red_team_responses": (
+                    "R1: Accepted. Valuation risk is the dominant issue and drives the avoid. "
+                    "R2: Rebutted. The refinancing is low risk given ample interest coverage."
+                ),
+            },
+        }
+    )
+
+
 def _mock_text(agent: AgentName, kind: str = "analysis") -> str:
     if agent is AgentName.VERIFIER:
         return _MOCK_VERIFIER
     if agent is AgentName.VALUATION:
         return _mock_valuation_plan() if kind == "plan" else _mock_valuation_analysis()
+    if agent is AgentName.SCENARIO:
+        return _mock_scenario()
+    if agent is AgentName.RED_TEAM:
+        return _mock_red_team()
+    if agent is AgentName.SYNTHESIZER:
+        return _mock_synthesizer()
     path = _MOCK_DIR / f"analysis_{agent.value}.json"
     if not path.exists():
         raise LLMError(f"no mock fixture for agent {agent.value!r} ({path.name})")
