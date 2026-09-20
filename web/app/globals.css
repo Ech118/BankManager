@@ -332,3 +332,42 @@ h2 { font-size: 1.2rem; }
   .horizons th, .horizons td { padding: 10px; }
   .lanes { grid-template-columns: 1fr; }
 }
+
+/* ---------- How it works: hierarchy and flow ---------- */
+.fc h2 { margin: 32px 0 16px; }
+.fc-legend { list-style: none; display: flex; gap: 18px; flex-wrap: wrap; padding: 0; margin: 0 0 8px; color: var(--muted); font-size: 0.85rem; }
+.fc-legend li { display: inline-flex; align-items: center; gap: 6px; }
+.fc-swatch { width: 12px; height: 12px; border-radius: 4px; border: 2px solid var(--kc); background: var(--kbg); }
+.fc-agent { --kc: var(--accent); --kbg: var(--accent-soft); }
+.fc-code { --kc: var(--fact); --kbg: var(--fact-bg); }
+.fc-check { --kc: var(--warn); --kbg: var(--warn-bg); }
+.fc-output { --kc: var(--good); --kbg: var(--good-bg); }
+.fc-coordinator { --kc: var(--assumption); --kbg: var(--assumption-bg); }
+.fc-node { background: var(--surface); border: 1px solid var(--border-strong); border-top: 3px solid var(--kc, var(--border-strong)); border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow); }
+.fc-node p { margin: 4px 0 0; color: var(--muted); font-size: 0.9rem; }
+.fc-node strong { display: block; font-size: 1.02rem; }
+.fc-kind { display: inline-block; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.09em; color: var(--kc); background: var(--kbg); padding: 1px 8px; border-radius: 999px; margin-bottom: 6px; }
+.fc-never { font-size: 0.82rem !important; }
+.fc-never span { color: var(--bad); font-weight: 700; }
+
+.fc-tree { display: flex; flex-direction: column; align-items: center; gap: 0; }
+.fc-coordinator { max-width: 34rem; text-align: center; }
+.fc-branch { width: 2px; height: 22px; background: var(--border-strong); }
+.fc-agents { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding-top: 4px; }
+.fc-chip { padding: 10px 20px; font-weight: 700; }
+.fc-tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 12px; width: 100%; }
+.fc-tools .fc-node { text-align: center; }
+.fc-tree-note { color: var(--muted); font-size: 0.85rem; margin: 10px 0 0; text-align: center; }
+
+.fc-flow { list-style: none; margin: 0; padding: 0; }
+.fc-row { position: relative; padding: 0 0 26px 44px; }
+.fc-row::before { content: ""; position: absolute; left: 13px; top: 28px; bottom: 0; width: 2px; background: var(--border-strong); }
+.fc-row:last-child { padding-bottom: 0; }
+.fc-row:last-child::before { display: none; }
+.fc-step { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 8px; }
+.fc-n { position: absolute; left: 0; top: -2px; width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; background: var(--accent); color: var(--accent-ink); font: 800 0.8rem var(--font-mono); }
+.fc-nodes { display: grid; gap: 12px; }
+.fc-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.fc-note, .fc-retry { margin: 8px 0 0; color: var(--muted); font-size: 0.85rem; }
+.fc-retry { display: inline-block; padding: 6px 12px; border: 1px dashed var(--warn); border-radius: 999px; color: var(--warn); background: var(--warn-bg); }
+@media (max-width: 40rem) { .fc-cols-2 { grid-template-columns: 1fr; } }

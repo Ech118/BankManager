@@ -1,6 +1,7 @@
 import { cleanup, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import { AgentLanes } from "@/components/AgentLanes";
+import { FlowChart } from "@/components/FlowChart";
 import { DISCLAIMER } from "@/components/Disclaimer";
 import { Report } from "@/components/Report";
 import { SiteShell } from "@/components/SiteShell";
@@ -241,5 +242,16 @@ describe("empty sections", () => {
     const { container } = render(<Report verdict={v} />);
     const summary = container.querySelector(`[data-section-id="${v.sections[2].id}"] summary`) as HTMLElement;
     expect(within(summary).getByText("Unchecked")).toBeInTheDocument();
+  });
+});
+
+describe("how it works", () => {
+  it("shows the six agents, the code layers and the retry loop", () => {
+    const { container } = render(<FlowChart />);
+    for (const name of ["Financial Agent", "Business Agent", "Valuation Agent", "Scenario Agent", "Red Team", "Synthesizer", "Verifier"]) {
+      expect(screen.getAllByText(name).length).toBeGreaterThan(0);
+    }
+    expect(container.querySelectorAll(".fc-row").length).toBe(10);
+    expect(container.querySelector(".fc-retry")).toHaveTextContent(/max 2 retries/);
   });
 });
