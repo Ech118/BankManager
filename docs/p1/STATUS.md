@@ -38,6 +38,7 @@ PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
 | Restatement linking | **real** | `superseded_by` + `as_known_on()`; real splits exercise it |
 | Stock splits | **real** | discontinuity detector + split-adjusted derived facts when a ratio is tagged |
 | Derived-fact dating | **real** | `filed_at` = latest input's, never null; `data/normalize/derived.py` |
+| `sp500_baseline` | **real** | SPY quote measured; forward P/E, earnings yield and risk-free rate are reviewed constants typed `assumption` |
 | Market client | **real** | `MarketClient` Protocol; Finnhub impl; 5-min quote cache; `NullMarketClient` for outages |
 | Shares outstanding | **real** | 5-candidate chain behind a public-float floor check (GOOGL, BRK-B) |
 | Market snapshot | **real** | one timestamp for the bundle; EV bridge cites the facts |
@@ -49,7 +50,7 @@ PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
 | Postgres store | not started | migration file lists the tables |
 | `fixtures/real/` demo tickers | not started | Step 6; coordinate the choice via `docs/requests/` |
 
-**Last updated:** 2026-09-20 (derived-fact dating; `get_factsheet` contract)
+**Last updated:** 2026-09-20 (derived-fact dating, `get_factsheet` contract, S&P 500 baseline)
 
 ---
 

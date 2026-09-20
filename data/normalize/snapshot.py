@@ -88,6 +88,16 @@ def _cap_as_of(as_of: ISODate | None, observed_at: ISOTimestamp) -> ISOTimestamp
     return observed_at
 
 
+def observed_timestamp(epoch_seconds: int | None, as_of: ISODate | None) -> ISOTimestamp:
+    """When a quote was observed, never later than the run's cutoff.
+
+    Public because the S&P 500 baseline timestamps its SPY quote the same way,
+    and two modules deciding independently what "now" means is how a factsheet
+    ends up with two different instants in it.
+    """
+    return _cap_as_of(as_of, _timestamp(epoch_seconds))
+
+
 @dataclass
 class SnapshotResult:
     snapshot: MarketSnapshot
