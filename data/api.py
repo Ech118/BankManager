@@ -29,6 +29,18 @@ _MOCK_OUT_OF_SCOPE = {
 }
 
 
+class NoReportableHistory(ValueError):
+    """In scope, but nothing had been filed by `as_of`.
+
+    A subclass of ValueError so every existing caller that catches ValueError
+    still works (docs/mcp-tools.md: an out-of-scope ticker is a ValueError).
+    It exists so `get_factsheet` can return a null factsheet for this case
+    WITHOUT swallowing genuine failures - catching bare ValueError there would
+    turn a validation bug into "this company has no data", which is the kind of
+    error that gets believed.
+    """
+
+
 def _mode() -> str:
     return os.environ.get("MODE", os.environ.get("BM_MODE", "mock")).lower()
 
@@ -98,7 +110,7 @@ def build_factsheet(ticker: str, as_of: str | None = None) -> dict:
         fs = copy.deepcopy(fs)
         fs["financials"] = [p for p in fs["financials"] if p["filed_date"] <= as_of]
         if not fs["financials"]:
-            raise ValueError(f"No filings on or before {as_of}")
+            raise NoReportableHistory(f"No filings on or before {as_of}")
         fs["filing_sections"] = [s for s in fs["filing_sections"] if s["filed_at"] <= as_of]
         fs["news"] = [n for n in fs["news"] if n["date"] <= as_of]
         fs["as_of"] = as_of

@@ -26,7 +26,7 @@ ERRORS
     a failed result; a transport-level exception just aborts their turn.
     ValueError = out of scope, KeyError = unknown id (docs/mcp-tools.md).
 
-TODO(roadmap Step 4, P1): add search_news, calculate_valuation and get_factsheet.
+TODO(roadmap Step 4, P1): add search_news and calculate_valuation.
 """
 
 from __future__ import annotations
@@ -41,6 +41,7 @@ from schema.contracts.tools import TOOL_REQUESTS, TOOL_RESPONSES
 
 from .tools import (
     get_company_profile,
+    get_factsheet,
     get_filing_section,
     get_financial_facts,
     get_market_snapshot,
@@ -61,6 +62,7 @@ _RUNNERS: dict[str, Any] = {
     "get_company_profile": get_company_profile.run,
     "get_peer_companies": get_peer_companies.run,
     "resolve_fact": resolve_fact.run,
+    "get_factsheet": get_factsheet.run,
 }
 
 IMPLEMENTED_TOOLS: tuple[str, ...] = tuple(_RUNNERS)
@@ -109,6 +111,14 @@ _DESCRIPTIONS: dict[str, str] = {
         "Item it lives in. Ranked by relevance, always scoped by ticker and date. "
         "Returns whole sections, never fragments, so a quote has a stable anchor. "
         "An empty list is a valid answer: no section mentioned your terms."
+    ),
+    "get_factsheet": (
+        "The whole reported picture of one company at one date, in one object: "
+        "financials, market snapshot, peers, the S&P 500 baseline and the section "
+        "index. EXPENSIVE - it assembles what the other tools return piecemeal. "
+        "Call it once per run, for the auditor; use get_financial_facts for a "
+        "handful of numbers. A null factsheet means the ticker is in scope but "
+        "had filed nothing by as_of."
     ),
     "resolve_fact": (
         "Turn a fact_id back into the fact. Returns the fact even when it was "

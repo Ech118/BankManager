@@ -3,17 +3,16 @@
 Update whenever a capability moves from mock to real, or when blocked.
 A PR that changes behaviour must update this file.
 
-**Step:** 4 in progress. **Eight of eleven tools are served; XBRL normalization
+**Step:** 4 in progress. **Nine of eleven tools are served; XBRL normalization
 is real and runs against twelve recorded filers.**
-**Next:** `get_factsheet` served, then `get_peer_companies` (SIC + XBRL frames),
-then `build_factsheet` live. Real 10-K section extraction is deferred and is
+**Next:** `get_peer_companies` (SIC + XBRL frames), then `build_factsheet` live. Real 10-K section extraction is deferred and is
 what `search_filing` needs to work in live mode.
 **Blockers:** `get_factsheet` is in the contracts but not yet in `main` -
 PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
 
 | Capability | State | Notes |
 |---|---|---|
-| **MCP server** | **mock, live over MCP** | 8 of 11 tools served over the in-memory transport |
+| **MCP server** | **mock, live over MCP** | 9 of 11 tools served over the in-memory transport |
 | `get_financial_facts` | **served** | as_of + restatement filtering, `periods`, `include_superseded` |
 | `get_market_snapshot` | **served, live** | Finnhub price + filing share count; degrades to price unavailable |
 | `get_company_profile` | **served** | |
@@ -31,7 +30,7 @@ PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
 | **`SEC_USER_AGENT` loading** | **real** | `data/ingest/env.py`; refuses a UA with no contact details |
 | `check_scope` | **real** | three levels: supported / partial / unsupported. Mock path unchanged |
 | `build_factsheet` | mock | returns the ACME fixture; **P3's auditor needs a real one** |
-| `get_factsheet` | not served | new tool (SCHEMA_VERSION 2.1.0); unblocks P3's injected factsheet |
+| `get_factsheet` | **served** | new tool (SCHEMA_VERSION 2.1.0); P3 can drop the injected factsheet |
 | XBRL concept mapping | **real** | per-PERIOD chains, us-gaap; `ifrs-full` slot present and empty |
 | Annual normalization | **real** | 5 fiscal years of 10-K values -> `FinancialFact` |
 | Fiscal year labelling | **real** | from the filer's own numbering; Jan/Jun/Aug/Sep year ends tested |
