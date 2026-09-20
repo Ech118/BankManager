@@ -6,34 +6,46 @@ sign conventions). P1 normalizes the sign, so nothing here has to guess.
 `fcf_conversion` (FCF / net income) is the quiet one: a company whose reported
 profit stops turning into cash is usually the first sign of an accounting
 problem, well before anything shows up in the income statement.
-
-TODO(roadmap Step 2, P2).
 """
 
 from __future__ import annotations
 
+from calc._util import add, div, num, sub
+from calc.lineage import derived_value
 from schema.contracts.common import ValueObject
 from schema.contracts.factsheet import Factsheet
 
 
 def free_cash_flow(factsheet: Factsheet, period: str) -> ValueObject:
     """op_cash_flow - capex for one period."""
-    raise NotImplementedError("TODO(roadmap Step 2, P2)")
+    p = factsheet.period(period)
+    value = sub(num(p.op_cash_flow), num(p.capex)) if p else None
+    return derived_value(value, "usd",
+                          [f"financials.{period}.op_cash_flow", f"financials.{period}.capex"])
 
 
 def fcf_conversion(factsheet: Factsheet, period: str) -> ValueObject:
     """FCF / net income. Below config.FCF_CONVERSION_FLAG raises a quality flag."""
-    raise NotImplementedError("TODO(roadmap Step 2, P2)")
+    p = factsheet.period(period)
+    fcf = free_cash_flow(factsheet, period).value
+    ni = num(p.net_income) if p else None
+    return derived_value(div(fcf, ni), "fraction",
+                          ["cash_flow.fcf", f"financials.{period}.net_income"])
 
 
 def fcf_yield(factsheet: Factsheet, period: str) -> ValueObject:
     """FCF / market cap. The valuation metric least sensitive to accounting choices."""
-    raise NotImplementedError("TODO(roadmap Step 2, P2)")
+    fcf = free_cash_flow(factsheet, period).value
+    market_cap = num(factsheet.market.market_cap)
+    return derived_value(div(fcf, market_cap), "fraction", ["cash_flow.fcf", "market.market_cap"])
 
 
 def capex_intensity(factsheet: Factsheet, period: str) -> ValueObject:
     """Capex / revenue. How much growth has to be bought."""
-    raise NotImplementedError("TODO(roadmap Step 2, P2)")
+    p = factsheet.period(period)
+    value = div(num(p.capex), num(p.revenue)) if p else None
+    return derived_value(value, "fraction",
+                          [f"financials.{period}.capex", f"financials.{period}.revenue"])
 
 
 def ebitda(factsheet: Factsheet, period: str) -> ValueObject:
@@ -43,4 +55,8 @@ def ebitda(factsheet: Factsheet, period: str) -> ValueObject:
     an adjusted figure presented as a standard one is exactly what
     IssueType.ADJUSTED_AS_GAAP exists to catch.
     """
-    raise NotImplementedError("TODO(roadmap Step 2, P2)")
+    p = factsheet.period(period)
+    value = add(num(p.operating_income), num(p.depreciation_amortization)) if p else None
+    return derived_value(value, "usd",
+                          [f"financials.{period}.operating_income",
+                           f"financials.{period}.depreciation_amortization"])

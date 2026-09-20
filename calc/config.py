@@ -104,3 +104,11 @@ SBC_REVENUE_FLAG = 0.05
 FCF_CONVERSION_FLAG = 0.70
 """FCF / net income below this raises a flag: reported profit is not turning
 into cash."""
+
+INVENTORY_DAYS_INCREASE_FLAG = 0.10
+"""Days-inventory-outstanding rise (fraction, year over year) that raises a flag.
+Same semantics as DSO_INCREASE_FLAG: above this, severity steps up from low."""
+
+BUYBACK_DILUTION_FLAG = 0.02
+"""|dilution_yoy| above this, when it is negative and EPS grew, raises
+buyback_flatters_eps: severity steps up from low as the buyback gets larger."""

@@ -16,19 +16,18 @@ should be able to argue the verdict down.
 
 Requested and applied are recorded separately, so an overruled agent stays
 visible in the output.
-
-TODO(roadmap Step 2, P2).
 """
 
 from __future__ import annotations
 
-from schema.contracts.scenario_result import Prior
+from calc import config
+from schema.contracts.scenario_result import HorizonProbabilities, Prior
 from schema.contracts.scenarios import PriorShift
 
 
 def base_rate() -> dict[str, float]:
     """Historical P(beat S&P) per horizon, from config.BASE_RATE_P_BEAT_SP500."""
-    raise NotImplementedError("TODO(roadmap Step 2, P2)")
+    return dict(config.BASE_RATE_P_BEAT_SP500)
 
 
 def apply_shifts(shifts: list[PriorShift]) -> Prior:
@@ -37,9 +36,21 @@ def apply_shifts(shifts: list[PriorShift]) -> Prior:
     The cap is symmetric and absolute: |applied| <= cap, and |applied| may never
     exceed |requested| (code may shrink a request, never enlarge it).
     """
-    raise NotImplementedError("TODO(roadmap Step 2, P2)")
+    requested = sum(s.value for s in shifts)
+    applied = max(-config.PRIOR_SHIFT_CAP, min(config.PRIOR_SHIFT_CAP, requested))
+    return Prior(
+        base_rate=HorizonProbabilities(**base_rate()),
+        requested_shift=requested,
+        applied_shift=applied,
+        cap=config.PRIOR_SHIFT_CAP,
+        shift_reasons=[f"{s.source.value}: {s.reason}" for s in shifts],
+    )
 
 
 def p_beat_sp500(prior: Prior) -> dict[str, float]:
     """Base rate plus the applied shift, clipped to [0, 1], per horizon."""
-    raise NotImplementedError("TODO(roadmap Step 2, P2)")
+    br = prior.base_rate
+    return {
+        h: round(max(0.0, min(1.0, getattr(br, h) + prior.applied_shift)), 4)
+        for h in ("short_term", "medium_term", "long_term")
+    }
