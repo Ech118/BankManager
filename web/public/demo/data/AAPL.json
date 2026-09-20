@@ -1,0 +1,2302 @@
+{
+ "ticker": "AAPL",
+ "company_name": "Apple Inc.",
+ "as_of": "2026-09-19",
+ "scope": {
+  "gaps": [],
+  "in_scope": true,
+  "level": "supported",
+  "reason": null
+ },
+ "scope_level": "supported",
+ "data_quality": {
+  "gaps": [
+   "AAPL: only 2 in-scope companies file under SIC 3571 within 20x of its revenue, so the size cutoff was relaxed to 100x. Peer multiples across that spread compare different businesses.",
+   "FY2025: no us-gaap concept resolved for interest_expense. Reported as unavailable; any metric built on them is unavailable too.",
+   "FY2024: no us-gaap concept resolved for interest_expense. Reported as unavailable; any metric built on them is unavailable too."
+  ],
+  "overall": "partial"
+ },
+ "latest_annual_period": "FY2025",
+ "latest_balance_period": "FY2025",
+ "market": {
+  "price": {
+   "value": 336.13,
+   "unit": "usd_per_share",
+   "status": "ok",
+   "reason": null,
+   "not_applicable": false,
+   "source": {
+    "accession": null,
+    "url": null,
+    "source_id": "src:market:AAPL:20260918T200000Z",
+    "kind": "market"
+   }
+  },
+  "market_cap": {
+   "value": 4905541723400.0,
+   "unit": "usd",
+   "status": "ok",
+   "reason": null,
+   "not_applicable": false,
+   "source": {
+    "accession": null,
+    "url": null,
+    "source_id": null
+   }
+  },
+  "enterprise_value": {
+   "value": 4968264723400.0,
+   "unit": "usd",
+   "status": "ok",
+   "reason": null,
+   "not_applicable": false,
+   "source": {
+    "accession": null,
+    "url": null,
+    "source_id": null
+   }
+  },
+  "shares_outstanding": {
+   "value": 14594180000.0,
+   "unit": "shares",
+   "status": "ok",
+   "reason": null,
+   "not_applicable": false,
+   "source": {
+    "accession": null,
+    "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/0000320193-26-000020-index.htm",
+    "source_id": null
+   }
+  },
+  "as_of": "2026-09-18T20:00:00Z"
+ },
+ "financials": {
+  "periods": [
+   "FY2025",
+   "FY2024",
+   "FY2023",
+   "FY2022",
+   "FY2021"
+  ],
+  "filed": {
+   "FY2025": "2025-10-31",
+   "FY2024": "2025-10-31",
+   "FY2023": "2025-10-31",
+   "FY2022": "2025-10-31",
+   "FY2021": "2024-11-01"
+  },
+  "form": {
+   "FY2025": "10-K",
+   "FY2024": "10-K",
+   "FY2023": "10-K",
+   "FY2022": "10-K",
+   "FY2021": "10-K"
+  },
+  "accession": {
+   "FY2025": "0000320193-25-000079",
+   "FY2024": "0000320193-25-000079",
+   "FY2023": "0000320193-25-000079",
+   "FY2022": "0000320193-25-000079",
+   "FY2021": "0000320193-24-000123"
+  },
+  "rows": [
+   {
+    "key": "revenue",
+    "label": "Revenue",
+    "cells": {
+     "FY2025": {
+      "value": 416161000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2024": {
+      "value": 391035000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2023": {
+      "value": 383285000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2022": {
+      "value": 394328000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-24-000123",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/0000320193-24-000123-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-24-000123",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2021": {
+      "value": 365817000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-23-000106",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/0000320193-23-000106-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-23-000106",
+       "kind": "edgar_xbrl"
+      }
+     }
+    }
+   },
+   {
+    "key": "gross_profit",
+    "label": "Gross profit",
+    "cells": {
+     "FY2025": {
+      "value": 195201000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2024": {
+      "value": 180683000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2023": {
+      "value": 169148000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2022": {
+      "value": 170782000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-24-000123",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/0000320193-24-000123-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-24-000123",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2021": {
+      "value": 152836000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-23-000106",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/0000320193-23-000106-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-23-000106",
+       "kind": "edgar_xbrl"
+      }
+     }
+    }
+   },
+   {
+    "key": "operating_income",
+    "label": "Operating income",
+    "cells": {
+     "FY2025": {
+      "value": 133050000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2024": {
+      "value": 123216000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2023": {
+      "value": 114301000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2022": {
+      "value": 119437000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-24-000123",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/0000320193-24-000123-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-24-000123",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2021": {
+      "value": 108949000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-23-000106",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/0000320193-23-000106-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-23-000106",
+       "kind": "edgar_xbrl"
+      }
+     }
+    }
+   },
+   {
+    "key": "net_income",
+    "label": "Net income",
+    "cells": {
+     "FY2025": {
+      "value": 112010000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2024": {
+      "value": 93736000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2023": {
+      "value": 96995000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2022": {
+      "value": 99803000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-24-000123",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/0000320193-24-000123-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-24-000123",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2021": {
+      "value": 94680000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-23-000106",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/0000320193-23-000106-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-23-000106",
+       "kind": "edgar_xbrl"
+      }
+     }
+    }
+   },
+   {
+    "key": "eps_diluted",
+    "label": "Diluted EPS",
+    "cells": {
+     "FY2025": {
+      "value": 7.46,
+      "unit": "usd_per_share",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2024": {
+      "value": 6.08,
+      "unit": "usd_per_share",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2023": {
+      "value": 6.13,
+      "unit": "usd_per_share",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2022": {
+      "value": 6.11,
+      "unit": "usd_per_share",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-24-000123",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/0000320193-24-000123-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-24-000123",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2021": {
+      "value": 5.61,
+      "unit": "usd_per_share",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-23-000106",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/0000320193-23-000106-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-23-000106",
+       "kind": "edgar_xbrl"
+      }
+     }
+    }
+   },
+   {
+    "key": "shares_diluted",
+    "label": "Diluted shares",
+    "cells": {
+     "FY2025": {
+      "value": 15004697000.0,
+      "unit": "shares",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2024": {
+      "value": 15408095000.0,
+      "unit": "shares",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2023": {
+      "value": 15812547000.0,
+      "unit": "shares",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2022": {
+      "value": 16325819000.0,
+      "unit": "shares",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-24-000123",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/0000320193-24-000123-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-24-000123",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2021": {
+      "value": 16864919000.0,
+      "unit": "shares",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-23-000106",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/0000320193-23-000106-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-23-000106",
+       "kind": "edgar_xbrl"
+      }
+     }
+    }
+   },
+   {
+    "key": "op_cash_flow",
+    "label": "Operating cash flow",
+    "cells": {
+     "FY2025": {
+      "value": 111482000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2024": {
+      "value": 118254000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2023": {
+      "value": 110543000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2022": {
+      "value": 122151000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-24-000123",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/0000320193-24-000123-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-24-000123",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2021": {
+      "value": 104038000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-23-000106",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/0000320193-23-000106-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-23-000106",
+       "kind": "edgar_xbrl"
+      }
+     }
+    }
+   },
+   {
+    "key": "capex",
+    "label": "Capex",
+    "cells": {
+     "FY2025": {
+      "value": 12715000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2024": {
+      "value": 9447000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2023": {
+      "value": 10959000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2022": {
+      "value": 10708000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-24-000123",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/0000320193-24-000123-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-24-000123",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2021": {
+      "value": 11085000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-23-000106",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/0000320193-23-000106-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-23-000106",
+       "kind": "edgar_xbrl"
+      }
+     }
+    }
+   },
+   {
+    "key": "sbc",
+    "label": "Stock compensation",
+    "cells": {
+     "FY2025": {
+      "value": 12863000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2024": {
+      "value": 11688000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2023": {
+      "value": 10833000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2022": {
+      "value": 9038000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-24-000123",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/0000320193-24-000123-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-24-000123",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2021": {
+      "value": 7906000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-23-000106",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/0000320193-23-000106-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-23-000106",
+       "kind": "edgar_xbrl"
+      }
+     }
+    }
+   },
+   {
+    "key": "cash",
+    "label": "Cash",
+    "cells": {
+     "FY2025": {
+      "value": 35934000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2024": {
+      "value": 29943000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2023": {
+      "value": 29965000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-24-000123",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/0000320193-24-000123-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-24-000123",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2022": {
+      "value": 23646000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-23-000106",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/0000320193-23-000106-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-23-000106",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2021": {
+      "value": 34940000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-22-000108",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019322000108/0000320193-22-000108-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-22-000108",
+       "kind": "edgar_xbrl"
+      }
+     }
+    }
+   },
+   {
+    "key": "total_debt",
+    "label": "Total debt",
+    "cells": {
+     "FY2025": {
+      "value": 98657000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2024": {
+      "value": 106629000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2023": {
+      "value": 111088000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-24-000123",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/0000320193-24-000123-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-24-000123",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2022": {
+      "value": 120069000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-23-000106",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/0000320193-23-000106-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-23-000106",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2021": {
+      "value": 124719000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-22-000108",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019322000108/0000320193-22-000108-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-22-000108",
+       "kind": "edgar_xbrl"
+      }
+     }
+    }
+   },
+   {
+    "key": "total_equity",
+    "label": "Total equity",
+    "cells": {
+     "FY2025": {
+      "value": 73733000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2024": {
+      "value": 56950000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2023": {
+      "value": 62146000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2022": {
+      "value": 50672000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-25-000079",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-25-000079",
+       "kind": "edgar_xbrl"
+      }
+     },
+     "FY2021": {
+      "value": 63090000000.0,
+      "unit": "usd",
+      "status": "ok",
+      "reason": null,
+      "not_applicable": false,
+      "source": {
+       "accession": "0000320193-24-000123",
+       "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/0000320193-24-000123-index.htm",
+       "source_id": "src:edgar_xbrl:0000320193-24-000123",
+       "kind": "edgar_xbrl"
+      }
+     }
+    }
+   }
+  ]
+ },
+ "ttm": {
+  "capex": {
+   "value": 10041000000.0,
+   "unit": "usd",
+   "status": "ok",
+   "reason": null,
+   "not_applicable": false,
+   "source": {
+    "accession": null,
+    "url": null,
+    "source_id": "src:edgar_xbrl:0000320193-26-000020"
+   }
+  },
+  "eps_diluted": {
+   "value": 8.719999999999999,
+   "unit": "usd_per_share",
+   "status": "ok",
+   "reason": null,
+   "not_applicable": false,
+   "source": {
+    "accession": null,
+    "url": null,
+    "source_id": "src:edgar_xbrl:0000320193-26-000020"
+   }
+  },
+  "gross_profit": {
+   "value": 227123000000.0,
+   "unit": "usd",
+   "status": "ok",
+   "reason": null,
+   "not_applicable": false,
+   "source": {
+    "accession": null,
+    "url": null,
+    "source_id": "src:edgar_xbrl:0000320193-26-000020"
+   }
+  },
+  "net_income": {
+   "value": 128930000000.0,
+   "unit": "usd",
+   "status": "ok",
+   "reason": null,
+   "not_applicable": false,
+   "source": {
+    "accession": null,
+    "url": null,
+    "source_id": "src:edgar_xbrl:0000320193-26-000020"
+   }
+  },
+  "op_cash_flow": {
+   "value": 146724000000.0,
+   "unit": "usd",
+   "status": "ok",
+   "reason": null,
+   "not_applicable": false,
+   "source": {
+    "accession": null,
+    "url": null,
+    "source_id": "src:edgar_xbrl:0000320193-26-000020"
+   }
+  },
+  "operating_income": {
+   "value": 154859000000.0,
+   "unit": "usd",
+   "status": "ok",
+   "reason": null,
+   "not_applicable": false,
+   "source": {
+    "accession": null,
+    "url": null,
+    "source_id": "src:edgar_xbrl:0000320193-26-000020"
+   }
+  },
+  "revenue": {
+   "value": 466823000000.0,
+   "unit": "usd",
+   "status": "ok",
+   "reason": null,
+   "not_applicable": false,
+   "source": {
+    "accession": null,
+    "url": null,
+    "source_id": "src:edgar_xbrl:0000320193-26-000020"
+   }
+  },
+  "sbc": {
+   "value": 13706000000.0,
+   "unit": "usd",
+   "status": "ok",
+   "reason": null,
+   "not_applicable": false,
+   "source": {
+    "accession": null,
+    "url": null,
+    "source_id": "src:edgar_xbrl:0000320193-26-000020"
+   }
+  }
+ },
+ "metrics": {
+  "margins": {
+   "FY2025": {
+    "gross": {
+     "value": 0.4690516411,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2025.gross_profit",
+      "financials.FY2025.revenue"
+     ],
+     "fact_id": "fact:AAPL:gross_margin:FY2025"
+    },
+    "operating": {
+     "value": 0.3197079976,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2025.operating_income",
+      "financials.FY2025.revenue"
+     ],
+     "fact_id": "fact:AAPL:operating_margin:FY2025"
+    },
+    "net": {
+     "value": 0.2691506412,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2025.net_income",
+      "financials.FY2025.revenue"
+     ],
+     "fact_id": "fact:AAPL:net_margin:FY2025"
+    },
+    "fcf": {
+     "value": 0.2373288223,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2025.op_cash_flow",
+      "financials.FY2025.capex",
+      "financials.FY2025.revenue"
+     ],
+     "fact_id": "fact:AAPL:fcf_margin:FY2025"
+    }
+   },
+   "FY2024": {
+    "gross": {
+     "value": 0.4620634982,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2024.gross_profit",
+      "financials.FY2024.revenue"
+     ],
+     "fact_id": "fact:AAPL:gross_margin:FY2024"
+    },
+    "operating": {
+     "value": 0.3151022287,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2024.operating_income",
+      "financials.FY2024.revenue"
+     ],
+     "fact_id": "fact:AAPL:operating_margin:FY2024"
+    },
+    "net": {
+     "value": 0.2397125577,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2024.net_income",
+      "financials.FY2024.revenue"
+     ],
+     "fact_id": "fact:AAPL:net_margin:FY2024"
+    },
+    "fcf": {
+     "value": 0.2782538647,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2024.op_cash_flow",
+      "financials.FY2024.capex",
+      "financials.FY2024.revenue"
+     ],
+     "fact_id": "fact:AAPL:fcf_margin:FY2024"
+    }
+   },
+   "FY2023": {
+    "gross": {
+     "value": 0.4413112958,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2023.gross_profit",
+      "financials.FY2023.revenue"
+     ],
+     "fact_id": "fact:AAPL:gross_margin:FY2023"
+    },
+    "operating": {
+     "value": 0.2982141227,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2023.operating_income",
+      "financials.FY2023.revenue"
+     ],
+     "fact_id": "fact:AAPL:operating_margin:FY2023"
+    },
+    "net": {
+     "value": 0.2530623426,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2023.net_income",
+      "financials.FY2023.revenue"
+     ],
+     "fact_id": "fact:AAPL:net_margin:FY2023"
+    },
+    "fcf": {
+     "value": 0.2598171074,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2023.op_cash_flow",
+      "financials.FY2023.capex",
+      "financials.FY2023.revenue"
+     ],
+     "fact_id": "fact:AAPL:fcf_margin:FY2023"
+    }
+   },
+   "FY2022": {
+    "gross": {
+     "value": 0.4330963056,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2022.gross_profit",
+      "financials.FY2022.revenue"
+     ],
+     "fact_id": "fact:AAPL:gross_margin:FY2022"
+    },
+    "operating": {
+     "value": 0.302887444,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2022.operating_income",
+      "financials.FY2022.revenue"
+     ],
+     "fact_id": "fact:AAPL:operating_margin:FY2022"
+    },
+    "net": {
+     "value": 0.2530964071,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2022.net_income",
+      "financials.FY2022.revenue"
+     ],
+     "fact_id": "fact:AAPL:net_margin:FY2022"
+    },
+    "fcf": {
+     "value": 0.2826149804,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2022.op_cash_flow",
+      "financials.FY2022.capex",
+      "financials.FY2022.revenue"
+     ],
+     "fact_id": "fact:AAPL:fcf_margin:FY2022"
+    }
+   },
+   "FY2021": {
+    "gross": {
+     "value": 0.4177935963,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2021.gross_profit",
+      "financials.FY2021.revenue"
+     ],
+     "fact_id": "fact:AAPL:gross_margin:FY2021"
+    },
+    "operating": {
+     "value": 0.2978237753,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2021.operating_income",
+      "financials.FY2021.revenue"
+     ],
+     "fact_id": "fact:AAPL:operating_margin:FY2021"
+    },
+    "net": {
+     "value": 0.2588179336,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2021.net_income",
+      "financials.FY2021.revenue"
+     ],
+     "fact_id": "fact:AAPL:net_margin:FY2021"
+    },
+    "fcf": {
+     "value": 0.2540969939,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2021.op_cash_flow",
+      "financials.FY2021.capex",
+      "financials.FY2021.revenue"
+     ],
+     "fact_id": "fact:AAPL:fcf_margin:FY2021"
+    }
+   }
+  },
+  "growth": {
+   "FY2025": {
+    "revenue_yoy": {
+     "value": 0.0642551178,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2025.revenue",
+      "financials.FY2024.revenue"
+     ],
+     "fact_id": "fact:AAPL:revenue_yoy:FY2025"
+    },
+    "net_income_yoy": {
+     "value": 0.1949517795,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2025.net_income",
+      "financials.FY2024.net_income"
+     ],
+     "fact_id": "fact:AAPL:net_income_yoy:FY2025"
+    },
+    "eps_yoy": {
+     "value": 0.2269736842,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2025.eps_diluted",
+      "financials.FY2024.eps_diluted"
+     ],
+     "fact_id": "fact:AAPL:eps_yoy:FY2025"
+    },
+    "fcf_yoy": {
+     "value": -0.0922734751,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2025.op_cash_flow",
+      "financials.FY2025.capex",
+      "financials.FY2024.op_cash_flow",
+      "financials.FY2024.capex"
+     ],
+     "fact_id": "fact:AAPL:fcf_yoy:FY2025"
+    }
+   },
+   "FY2024": {
+    "revenue_yoy": {
+     "value": 0.0202199408,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2024.revenue",
+      "financials.FY2023.revenue"
+     ],
+     "fact_id": "fact:AAPL:revenue_yoy:FY2024"
+    },
+    "net_income_yoy": {
+     "value": -0.0335996701,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2024.net_income",
+      "financials.FY2023.net_income"
+     ],
+     "fact_id": "fact:AAPL:net_income_yoy:FY2024"
+    },
+    "eps_yoy": {
+     "value": -0.0081566069,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2024.eps_diluted",
+      "financials.FY2023.eps_diluted"
+     ],
+     "fact_id": "fact:AAPL:eps_yoy:FY2024"
+    },
+    "fcf_yoy": {
+     "value": 0.0926152796,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2024.op_cash_flow",
+      "financials.FY2024.capex",
+      "financials.FY2023.op_cash_flow",
+      "financials.FY2023.capex"
+     ],
+     "fact_id": "fact:AAPL:fcf_yoy:FY2024"
+    }
+   },
+   "FY2023": {
+    "revenue_yoy": {
+     "value": -0.0280046053,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2023.revenue",
+      "financials.FY2022.revenue"
+     ],
+     "fact_id": "fact:AAPL:revenue_yoy:FY2023"
+    },
+    "net_income_yoy": {
+     "value": -0.0281354268,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2023.net_income",
+      "financials.FY2022.net_income"
+     ],
+     "fact_id": "fact:AAPL:net_income_yoy:FY2023"
+    },
+    "eps_yoy": {
+     "value": 0.0032733224,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2023.eps_diluted",
+      "financials.FY2022.eps_diluted"
+     ],
+     "fact_id": "fact:AAPL:eps_yoy:FY2023"
+    },
+    "fcf_yoy": {
+     "value": -0.1064131439,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2023.op_cash_flow",
+      "financials.FY2023.capex",
+      "financials.FY2022.op_cash_flow",
+      "financials.FY2022.capex"
+     ],
+     "fact_id": "fact:AAPL:fcf_yoy:FY2023"
+    }
+   },
+   "FY2022": {
+    "revenue_yoy": {
+     "value": 0.077937876,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2022.revenue",
+      "financials.FY2021.revenue"
+     ],
+     "fact_id": "fact:AAPL:revenue_yoy:FY2022"
+    },
+    "net_income_yoy": {
+     "value": 0.0541085763,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2022.net_income",
+      "financials.FY2021.net_income"
+     ],
+     "fact_id": "fact:AAPL:net_income_yoy:FY2022"
+    },
+    "eps_yoy": {
+     "value": 0.0891265597,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2022.eps_diluted",
+      "financials.FY2021.eps_diluted"
+     ],
+     "fact_id": "fact:AAPL:eps_yoy:FY2022"
+    },
+    "fcf_yoy": {
+     "value": 0.1989177326,
+     "unit": "fraction",
+     "status": "ok",
+     "reason": null,
+     "not_applicable": false,
+     "basis": null,
+     "derived_from": [
+      "financials.FY2022.op_cash_flow",
+      "financials.FY2022.capex",
+      "financials.FY2021.op_cash_flow",
+      "financials.FY2021.capex"
+     ],
+     "fact_id": "fact:AAPL:fcf_yoy:FY2022"
+    }
+   }
+  },
+  "cagr": {
+   "revenue": {
+    "value": 0.0327599163,
+    "unit": "fraction",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": null,
+    "derived_from": [
+     "financials.FY2025.revenue",
+     "financials.FY2021.revenue"
+    ],
+    "fact_id": "fact:AAPL:revenue_cagr:FY2025"
+   },
+   "net_income": {
+    "value": 0.0429167365,
+    "unit": "fraction",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": null,
+    "derived_from": [
+     "financials.FY2025.net_income",
+     "financials.FY2021.net_income"
+    ],
+    "fact_id": "fact:AAPL:net_income_cagr:FY2025"
+   },
+   "eps_diluted": {
+    "value": 0.0738509151,
+    "unit": "fraction",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": null,
+    "derived_from": [
+     "financials.FY2025.eps_diluted",
+     "financials.FY2021.eps_diluted"
+    ],
+    "fact_id": "fact:AAPL:eps_diluted_cagr:FY2025"
+   },
+   "fcf": {
+    "value": 0.0152829965,
+    "unit": "fraction",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": null,
+    "derived_from": [
+     "financials.FY2025.op_cash_flow",
+     "financials.FY2025.capex",
+     "financials.FY2021.op_cash_flow",
+     "financials.FY2021.capex"
+    ],
+    "fact_id": "fact:AAPL:fcf_cagr:FY2025"
+   },
+   "years": 4,
+   "from_period": "FY2021",
+   "to_period": "FY2025"
+  },
+  "cash_flow": {
+   "fcf": {
+    "value": 98767000000.0,
+    "unit": "usd",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": null,
+    "derived_from": [
+     "financials.FY2025.op_cash_flow",
+     "financials.FY2025.capex"
+    ],
+    "fact_id": "fact:AAPL:fcf:FY2025"
+   },
+   "fcf_base": {
+    "value": 102386000000.0,
+    "unit": "usd",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": "3-year average",
+    "derived_from": [
+     "financials.FY2025.op_cash_flow",
+     "financials.FY2024.op_cash_flow",
+     "financials.FY2023.op_cash_flow",
+     "financials.FY2025.capex",
+     "financials.FY2024.capex",
+     "financials.FY2023.capex"
+    ],
+    "fact_id": "fact:AAPL:fcf_average_3y:FY2025"
+   },
+   "fcf_conversion": {
+    "value": 0.8817694849,
+    "unit": "fraction",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": null,
+    "derived_from": [
+     "cash_flow.fcf",
+     "financials.FY2025.net_income"
+    ],
+    "fact_id": "fact:AAPL:fcf_conversion:FY2025"
+   },
+   "fcf_yield": {
+    "value": 0.0201337601,
+    "unit": "fraction",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": null,
+    "derived_from": [
+     "cash_flow.fcf",
+     "market.market_cap"
+    ],
+    "fact_id": "fact:AAPL:fcf_yield:FY2025"
+   },
+   "ebitda": {
+    "value": 144748000000.0,
+    "unit": "usd",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": null,
+    "derived_from": [
+     "financials.FY2025.operating_income",
+     "financials.FY2025.depreciation_amortization"
+    ],
+    "fact_id": "fact:AAPL:ebitda:FY2025"
+   }
+  },
+  "balance_sheet": {
+   "net_debt": {
+    "value": 62723000000.0,
+    "unit": "usd",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": null,
+    "derived_from": [
+     "financials.FY2025.total_debt",
+     "financials.FY2025.cash"
+    ],
+    "fact_id": "fact:AAPL:net_debt:FY2025"
+   },
+   "net_debt_to_ebitda": {
+    "value": 0.4333255036,
+    "unit": "multiple",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": null,
+    "derived_from": [
+     "balance_sheet.net_debt",
+     "cash_flow.ebitda"
+    ],
+    "fact_id": "fact:AAPL:net_debt_to_ebitda:FY2025"
+   },
+   "interest_coverage": {
+    "value": null,
+    "unit": "multiple",
+    "status": "unavailable",
+    "reason": "interest_expense is not tagged by this filer (Apple nets it inside other income), so coverage would divide by nothing; a 0 here would read as distress",
+    "not_applicable": false,
+    "basis": null,
+    "derived_from": [
+     "financials.FY2025.operating_income",
+     "financials.FY2025.interest_expense"
+    ],
+    "fact_id": null
+   },
+   "current_ratio": {
+    "value": 0.8932929222,
+    "unit": "ratio",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": null,
+    "derived_from": [
+     "financials.FY2025.current_assets",
+     "financials.FY2025.current_liabilities"
+    ],
+    "fact_id": "fact:AAPL:current_ratio:FY2025"
+   }
+  },
+  "per_share": {
+   "dilution_yoy": {
+    "value": -0.0261809133,
+    "unit": "fraction",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": null,
+    "derived_from": [
+     "financials.FY2025.shares_diluted",
+     "financials.FY2024.shares_diluted"
+    ],
+    "fact_id": "fact:AAPL:dilution_yoy:FY2025"
+   },
+   "sbc_pct_revenue": {
+    "value": 0.0309087108,
+    "unit": "fraction",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": null,
+    "derived_from": [
+     "financials.FY2025.sbc",
+     "financials.FY2025.revenue"
+    ],
+    "fact_id": "fact:AAPL:sbc_pct_revenue:FY2025"
+   },
+   "sbc_pct_fcf": {
+    "value": 0.1302358075,
+    "unit": "fraction",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": null,
+    "derived_from": [
+     "financials.FY2025.sbc",
+     "cash_flow.fcf"
+    ],
+    "fact_id": "fact:AAPL:sbc_pct_fcf:FY2025"
+   },
+   "book_value_per_share": {
+    "value": 4.9139945978,
+    "unit": "usd_per_share",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": null,
+    "derived_from": [
+     "financials.FY2025.total_equity",
+     "financials.FY2025.shares_diluted"
+    ],
+    "fact_id": "fact:AAPL:book_value_per_share:FY2025"
+   }
+  },
+  "returns": {
+   "roe": {
+    "value": 1.5191298333,
+    "unit": "fraction",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": null,
+    "derived_from": [
+     "financials.FY2025.net_income",
+     "financials.FY2025.total_equity"
+    ],
+    "fact_id": "fact:AAPL:roe:FY2025"
+   }
+  },
+  "quality_flags": [
+   {
+    "flag": "dso_rising",
+    "detail": "Days sales outstanding rose from 31.2 to 34.9 days (FY2024 to FY2025): receivables grew faster than revenue.",
+    "severity": "low"
+   },
+   {
+    "flag": "buyback_flatters_eps",
+    "detail": "Diluted share count fell 2.6%, adding roughly 2.6 points to the 22.7% EPS growth.",
+    "severity": "low"
+   }
+  ]
+ },
+ "valuation": {
+  "primary_multiple": "pe",
+  "basis": {
+   "earnings_basis": "ttm",
+   "by_multiple": {
+    "pe": "ttm",
+    "ev_ebitda": "latest_full_year",
+    "ev_revenue": "ttm",
+    "p_s": "ttm",
+    "p_fcf": "ttm",
+    "p_b": "latest_balance_sheet"
+   },
+   "ttm_multiples": [
+    "ev_revenue",
+    "p_fcf",
+    "p_s",
+    "pe"
+   ],
+   "full_year_multiples": [
+    "ev_ebitda"
+   ],
+   "earnings_period": "TTM",
+   "latest_annual_period": "FY2025",
+   "balance_period": "FY2025",
+   "note": "ev_revenue, p_fcf, p_s, pe divide a TRAILING TWELVE MONTH figure, the basis a data provider quotes. ev_ebitda divides the latest full year (FY2025). `by_multiple` labels each one."
+  },
+  "multiples": [
+   {
+    "key": "pe",
+    "label": "P/E",
+    "value": 38.5470183486,
+    "unit": "multiple",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": "ttm",
+    "derived_from": [
+     "market.price",
+     "ttm.eps_diluted"
+    ],
+    "fact_id": "fact:AAPL:pe:FY2025"
+   },
+   {
+    "key": "p_s",
+    "label": "P/S",
+    "value": 10.5083548227,
+    "unit": "multiple",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": "ttm",
+    "derived_from": [
+     "market.market_cap",
+     "ttm.revenue"
+    ],
+    "fact_id": "fact:AAPL:p_s:FY2025"
+   },
+   {
+    "key": "p_fcf",
+    "label": "P/FCF",
+    "value": 35.8899184493,
+    "unit": "multiple",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": "ttm",
+    "derived_from": [
+     "market.market_cap",
+     "ttm.fcf"
+    ],
+    "fact_id": "fact:AAPL:p_fcf:FY2025"
+   },
+   {
+    "key": "p_b",
+    "label": "P/B",
+    "value": 66.5311559736,
+    "unit": "multiple",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": "latest_balance_sheet",
+    "derived_from": [
+     "market.market_cap",
+     "financials.FY2025.total_equity"
+    ],
+    "fact_id": "fact:AAPL:p_b:FY2025"
+   },
+   {
+    "key": "ev_ebitda",
+    "label": "EV/EBITDA",
+    "value": 34.323546601,
+    "unit": "multiple",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": "latest_full_year",
+    "derived_from": [
+     "market.enterprise_value",
+     "cash_flow.ebitda"
+    ],
+    "fact_id": "fact:AAPL:ev_ebitda:FY2025"
+   },
+   {
+    "key": "ev_revenue",
+    "label": "EV/Revenue",
+    "value": 10.6427162402,
+    "unit": "multiple",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": "ttm",
+    "derived_from": [
+     "market.enterprise_value",
+     "ttm.revenue"
+    ],
+    "fact_id": "fact:AAPL:ev_revenue:FY2025"
+   }
+  ],
+  "methods_used": [
+   "pe",
+   "ev_ebitda",
+   "ev_revenue",
+   "p_fcf",
+   "p_s",
+   "p_b",
+   "peer_median",
+   "dcf",
+   "reverse_dcf"
+  ],
+  "methods_skipped": {
+   "forward_pe": "no next-year consensus EPS on the factsheet, so a forward multiple would be our own forecast dressed as the market's",
+   "historical": "no price history source"
+  },
+  "dcf": {
+   "value_per_share": {
+    "value": 117.5409911538,
+    "unit": "usd_per_share",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": null,
+    "derived_from": [
+     "valuation.dcf.fcf_base",
+     "financials.FY2025.total_debt",
+     "financials.FY2025.cash",
+     "market.shares_outstanding"
+    ],
+    "fact_id": "fact:AAPL:dcf_value_per_share:FY2025"
+   },
+   "upside_to_price": {
+    "value": -0.6503109179,
+    "unit": "fraction",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": null,
+    "derived_from": [
+     "valuation.dcf.value_per_share",
+     "market.price"
+    ],
+    "fact_id": null
+   },
+   "assumptions": {
+    "discount_rate": 0.09,
+    "terminal_growth": 0.03,
+    "fcf_growth": {
+     "value": 0.0327599163,
+     "unit": "fraction",
+     "type": "assumption",
+     "status": "ok",
+     "source_id": "src:config:calc_assumptions",
+     "requested": 0.0327599163,
+     "cap": 0.15,
+     "floor": 0.03,
+     "was_clamped": false,
+     "was_floored": false,
+     "basis": "trailing_revenue_cagr",
+     "fades_to": 0.03,
+     "note": "trailing revenue CAGR of 3.3%/yr, inside [3%, 15%]",
+     "fade": "year 1 grows at 3.3% and year 10 at 3.0%, interpolating linearly"
+    },
+    "rates_are_nominal": true
+   }
+  }
+ },
+ "peers": {
+  "median": {
+   "pe": {
+    "value": 45.6460702527,
+    "unit": "multiple",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": null,
+    "derived_from": [
+     "peers[*].pe"
+    ],
+    "fact_id": null,
+    "usable_peers": 4,
+    "peer_count": 6
+   },
+   "p_s": {
+    "value": 2.7664595792,
+    "unit": "multiple",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": null,
+    "derived_from": [
+     "peers[*].p_s"
+    ],
+    "fact_id": null,
+    "usable_peers": 4,
+    "peer_count": 6
+   },
+   "ev_ebitda": {
+    "value": null,
+    "unit": "multiple",
+    "status": "unavailable",
+    "reason": "no peer carries this multiple, and the raw fields to compute it are not on the factsheet's peers either",
+    "not_applicable": false,
+    "basis": null,
+    "derived_from": [
+     "peers[*].ev_ebitda"
+    ],
+    "fact_id": null,
+    "usable_peers": 0,
+    "peer_count": 6
+   },
+   "p_b": {
+    "value": null,
+    "unit": "multiple",
+    "status": "unavailable",
+    "reason": "no peer carries this multiple, and the raw fields to compute it are not on the factsheet's peers either",
+    "not_applicable": false,
+    "basis": null,
+    "derived_from": [
+     "peers[*].p_b"
+    ],
+    "fact_id": null,
+    "usable_peers": 0,
+    "peer_count": 6
+   }
+  },
+  "premium": {
+   "pe": {
+    "value": -0.1555238351,
+    "unit": "fraction",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": null,
+    "derived_from": [
+     "valuation.pe",
+     "peers[*].pe"
+    ],
+    "fact_id": "fact:AAPL:pe_premium_vs_peers:FY2025"
+   },
+   "p_s": {
+    "value": 2.7984848583,
+    "unit": "fraction",
+    "status": "ok",
+    "reason": null,
+    "not_applicable": false,
+    "basis": null,
+    "derived_from": [
+     "valuation.p_s",
+     "peers[*].p_s"
+    ],
+    "fact_id": "fact:AAPL:p_s_premium_vs_peers:FY2025"
+   },
+   "ev_ebitda": {
+    "value": null,
+    "unit": "fraction",
+    "status": "unavailable",
+    "reason": "no peer carries this multiple, and the raw fields to compute it are not on the factsheet's peers either",
+    "not_applicable": false,
+    "basis": null,
+    "derived_from": [
+     "valuation.ev_ebitda",
+     "peers[*].ev_ebitda"
+    ],
+    "fact_id": null
+   },
+   "p_b": {
+    "value": null,
+    "unit": "fraction",
+    "status": "unavailable",
+    "reason": "no peer carries this multiple, and the raw fields to compute it are not on the factsheet's peers either",
+    "not_applicable": false,
+    "basis": null,
+    "derived_from": [
+     "valuation.p_b",
+     "peers[*].p_b"
+    ],
+    "fact_id": null
+   }
+  },
+  "rows": [
+   {
+    "ticker": "DELL",
+    "market_cap": 361179810875.90735,
+    "selection_reason": "SIC 3571; 3.7x apart on CY2025 revenue",
+    "multiples": {
+     "pe": 60.845655471,
+     "p_s": 3.181135927,
+     "p_fcf": null,
+     "p_b": null,
+     "ev_ebitda": null,
+     "ev_revenue": null
+    }
+   },
+   {
+    "ticker": "SMCI",
+    "market_cap": 25680776244.032715,
+    "selection_reason": "SIC 3571; 18.9x apart on CY2025 revenue",
+    "multiples": {
+     "pe": 24.484605335,
+     "p_s": 1.1687933349,
+     "p_fcf": null,
+     "p_b": null,
+     "ev_ebitda": null,
+     "ev_revenue": null
+    }
+   },
+   {
+    "ticker": "SNDK",
+    "market_cap": 262356506333.94632,
+    "selection_reason": "Market data provider's peer list; too few in-scope companies share this SIC code to rank by size.",
+    "multiples": {
+     "pe": null,
+     "p_s": null,
+     "p_fcf": null,
+     "p_b": null,
+     "ev_ebitda": null,
+     "ev_revenue": null
+    }
+   },
+   {
+    "ticker": "WDC",
+    "market_cap": 183729360000.0,
+    "selection_reason": "Market data provider's peer list; too few in-scope companies share this SIC code to rank by size.",
+    "multiples": {
+     "pe": null,
+     "p_s": null,
+     "p_fcf": null,
+     "p_b": null,
+     "ev_ebitda": null,
+     "ev_revenue": null
+    }
+   },
+   {
+    "ticker": "HPE",
+    "market_cap": 80656757699.35321,
+    "selection_reason": "Market data provider's peer list; too few in-scope companies share this SIC code to rank by size.",
+    "multiples": {
+     "pe": 1415.0308368308,
+     "p_s": 2.3517832313,
+     "p_fcf": null,
+     "p_b": null,
+     "ev_ebitda": null,
+     "ev_revenue": null
+    }
+   },
+   {
+    "ticker": "NTAP",
+    "market_cap": 38849714903.93205,
+    "selection_reason": "Market data provider's peer list; too few in-scope companies share this SIC code to rank by size.",
+    "multiples": {
+     "pe": 30.4464850344,
+     "p_s": 5.6100671341,
+     "p_fcf": null,
+     "p_b": null,
+     "ev_ebitda": null,
+     "ev_revenue": null
+    }
+   }
+  ]
+ },
+ "reverse_dcf": {
+  "implied_fcf_cagr": {
+   "value": 0.1709965872,
+   "unit": "fraction",
+   "status": "ok",
+   "reason": null,
+   "not_applicable": false,
+   "basis": null,
+   "derived_from": [
+    "market.enterprise_value",
+    "cash_flow.fcf"
+   ],
+   "fact_id": "fact:AAPL:implied_fcf_cagr:FY2025"
+  },
+  "implied_fcf_cagr_smoothed_base": {
+   "value": 0.1662230252,
+   "unit": "fraction",
+   "status": "ok",
+   "reason": null,
+   "not_applicable": false,
+   "basis": "3-year average",
+   "derived_from": [
+    "market.enterprise_value",
+    "valuation.dcf.fcf_base"
+   ],
+   "fact_id": "fact:AAPL:implied_fcf_cagr_smoothed_base:FY2025"
+  },
+  "assumptions": {
+   "discount_rate": 0.09,
+   "terminal_growth": 0.03,
+   "horizon_years": 10
+  },
+  "grid": [
+   {
+    "discount_rate": 0.08,
+    "terminal_growth": 0.02,
+    "implied_fcf_cagr": 0.1611498895
+   },
+   {
+    "discount_rate": 0.08,
+    "terminal_growth": 0.03,
+    "implied_fcf_cagr": 0.1433749464
+   },
+   {
+    "discount_rate": 0.08,
+    "terminal_growth": 0.04,
+    "implied_fcf_cagr": 0.1215453876
+   },
+   {
+    "discount_rate": 0.09,
+    "terminal_growth": 0.02,
+    "implied_fcf_cagr": 0.1860865055
+   },
+   {
+    "discount_rate": 0.09,
+    "terminal_growth": 0.03,
+    "implied_fcf_cagr": 0.1709965872
+   },
+   {
+    "discount_rate": 0.09,
+    "terminal_growth": 0.04,
+    "implied_fcf_cagr": 0.1530529115
+   },
+   {
+    "discount_rate": 0.1,
+    "terminal_growth": 0.02,
+    "implied_fcf_cagr": 0.2091780921
+   },
+   {
+    "discount_rate": 0.1,
+    "terminal_growth": 0.03,
+    "implied_fcf_cagr": 0.1960685896
+   },
+   {
+    "discount_rate": 0.1,
+    "terminal_growth": 0.04,
+    "implied_fcf_cagr": 0.1808347521
+   }
+  ]
+ },
+ "notes": [
+  "forward_pe: skipped - no next-year consensus EPS on the factsheet, so a forward multiple would be our own forecast dressed as the market's",
+  "historical: skipped - no price history source"
+ ],
+ "filings": [
+  {
+   "accession": "0000320193-25-000079",
+   "item": "business",
+   "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/aapl-20250927.htm"
+  },
+  {
+   "accession": "0000320193-25-000079",
+   "item": "risk_factors",
+   "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/aapl-20250927.htm"
+  }
+ ],
+ "generated_by": "calc.api.calculate_valuation over fixtures/real (no LLM, no network)"
+}

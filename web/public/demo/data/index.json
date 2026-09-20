@@ -1,0 +1,53 @@
+{
+ "tickers": [
+  "AAPL",
+  "NVDA",
+  "MSFT",
+  "KO",
+  "JPM"
+ ],
+ "rows": [
+  {
+   "ticker": "AAPL",
+   "company_name": "Apple Inc.",
+   "as_of": "2026-09-19",
+   "scope_level": "supported",
+   "price": 336.13,
+   "primary_multiple": "pe"
+  },
+  {
+   "ticker": "NVDA",
+   "company_name": "NVIDIA CORP",
+   "as_of": "2026-09-19",
+   "scope_level": "supported",
+   "price": 222.27,
+   "primary_multiple": "pe"
+  },
+  {
+   "ticker": "MSFT",
+   "company_name": "MICROSOFT CORP",
+   "as_of": "2026-09-19",
+   "scope_level": "supported",
+   "price": 493.78,
+   "primary_multiple": "pe"
+  },
+  {
+   "ticker": "KO",
+   "company_name": "COCA COLA CO",
+   "as_of": "2026-09-19",
+   "scope_level": "supported",
+   "price": 88.25,
+   "primary_multiple": "pe"
+  },
+  {
+   "ticker": "JPM",
+   "company_name": "JPMORGAN CHASE & CO",
+   "as_of": "2026-09-19",
+   "scope_level": "partial",
+   "price": 349.67,
+   "primary_multiple": "p_b"
+  }
+ ],
+ "generated_at": "2026-09-20T13:52:48Z",
+ "source": "fixtures/real recordings of SEC EDGAR filings; numbers computed by calc/"
+}

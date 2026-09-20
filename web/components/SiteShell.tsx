@@ -13,7 +13,8 @@ export function SiteShell({ children }: { children: ReactNode }) {
         <span className="tagline">AI equity research, checked</span>
         <nav>
           <Link href="/">Analyze</Link>
-          <Link href="/demo">ACME demo</Link>
+          <Link href="/data">Live SEC data</Link>
+          <Link href="/demo">Full AI report example</Link>
         </nav>
       </header>
       <main>{children}</main>

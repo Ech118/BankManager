@@ -1,0 +1,1141 @@
+{
+  "schema_version": "2.1.0",
+  "ticker": "AAPL",
+  "as_of": "2026-09-20",
+  "generated_at": "2026-09-20T13:43:40Z",
+  "mode": "live",
+  "disclaimer": "This is AI-generated research for educational purposes only. It is not investment advice or a recommendation to buy or sell any security.",
+  "card": {
+    "company": "Apple Inc.",
+    "ticker": "AAPL",
+    "price": {
+      "value": 336.13,
+      "unit": "usd_per_share",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:market:AAPL:20260918T200000Z",
+      "derived_from": []
+    },
+    "market_cap": {
+      "value": 4905541723400.0,
+      "unit": "usd",
+      "type": "fact",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "market.price",
+        "market.shares_outstanding"
+      ]
+    },
+    "thesis": "Apple remains a dominant, cash-generative franchise, but the market is pricing in a growth trajectory that recent earnings-quality signals do not clearly support: a tax-rate driven earnings boost, cash flow falling short of reported profit, and capital spending outrunning depreciation all surfaced in the same period. Where we differ from a simple bullish read is in treating those signals as a genuine warning on cash conversion rather than noise, which is enough to tip the modeled outcome below a plain index allocation.",
+    "scores": {
+      "short_term": 3,
+      "medium_term": 3,
+      "long_term": 3
+    },
+    "p_beat_sp500_5y": 0.34,
+    "expected_5y_return": {
+      "value": -0.1021488257,
+      "unit": "fraction",
+      "type": "estimate",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "scenario_result.scenarios.*.annualized_return",
+        "scenario_result.weights"
+      ]
+    },
+    "expected_return_vs_sp500": {
+      "short_term": {
+        "value": -0.1721488257,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      },
+      "medium_term": {
+        "value": -0.1721488257,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      },
+      "long_term": {
+        "value": -0.1721488257,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      }
+    },
+    "primary_catalyst": "Clarity in coming filings on whether the tax-rate tailwind and the cash-flow-to-earnings gap are transitory accounting effects or the start of a structural shift in cash conversion.",
+    "biggest_risk": "A richly priced business needs accelerating free cash flow to justify its multiple, and the most recent data point is cash conversion moving in the opposite direction.",
+    "valuation": "expensive",
+    "business_quality": "good",
+    "financial_strength": "strong",
+    "verdict": "avoid",
+    "ten_thousand_dollar_answer": {
+      "choice": "sp500",
+      "reason": "With the modeled probability-weighted return trailing the index by a wide margin and the odds of beating the index below even, a diversified index position is the more rational use of the marginal dollar than this single, richly priced name."
+    }
+  },
+  "sections": [
+    {
+      "id": "company",
+      "title": "Company",
+      "body_markdown": "## Company\n\n_No claims recorded for this section._",
+      "agent": "business",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "financials",
+      "title": "Financial quality",
+      "body_markdown": "## Financial quality\n\n_No claims recorded for this section._",
+      "agent": "financial",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "balance_sheet",
+      "title": "Balance sheet strength",
+      "body_markdown": "## Balance sheet strength\n\n_No claims recorded for this section._",
+      "agent": "financial",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "cash_flow",
+      "title": "Free cash flow",
+      "body_markdown": "## Free cash flow\n\n_No claims recorded for this section._",
+      "agent": "financial",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "earnings_quality",
+      "title": "Earnings quality",
+      "body_markdown": "## Earnings quality\n\n_No claims recorded for this section._",
+      "agent": "financial",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "management",
+      "title": "Management and guidance",
+      "body_markdown": "## Management and guidance\n\n_No claims recorded for this section._",
+      "agent": "business",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "competitive_position",
+      "title": "Competitive position",
+      "body_markdown": "## Competitive position\n\n_No claims recorded for this section._",
+      "agent": "business",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "valuation",
+      "title": "Valuation",
+      "body_markdown": "## Valuation\n\n_No claims recorded for this section._",
+      "agent": "valuation",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "expectations",
+      "title": "Expectations vs reality",
+      "body_markdown": "## Expectations vs reality\n\n_No claims recorded for this section._",
+      "agent": "valuation",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "catalysts",
+      "title": "Catalysts",
+      "body_markdown": "## Catalysts\n\n_No claims recorded for this section._",
+      "agent": "business",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "risks",
+      "title": "Risks",
+      "body_markdown": "## Risks\n\n_No claims recorded for this section._",
+      "agent": "red_team",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "scenarios",
+      "title": "Bull / base / bear",
+      "body_markdown": "## Bull / base / bear\n\n- The scenario weights proposed by the agent were within the permitted band and were used as proposed.\n- The bear case price target is the value shown. ($99.17 \u00b7 estimate) _[fact:AAPL:eps_diluted:FY2025]_\n- The base case price target is the value shown. ($218.28 \u00b7 estimate) _[fact:AAPL:eps_diluted:FY2025]_\n- The bull case price target is the value shown. ($372.91 \u00b7 estimate) _[fact:AAPL:eps_diluted:FY2025]_",
+      "agent": "scenario",
+      "evidence": [],
+      "verification_status": "verified",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "sp500_comparison",
+      "title": "S&P 500 comparison",
+      "body_markdown": "## S&P 500 comparison\n\n- The probability-weighted expected return trails the assumed index return. (-17.2% \u00b7 estimate) _[fact:AAPL:eps_diluted:FY2025]_",
+      "agent": "scenario",
+      "evidence": [],
+      "verification_status": "verified",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "decision",
+      "title": "Investment committee decision",
+      "body_markdown": "## Investment committee decision\n\n_No claims recorded for this section._",
+      "agent": "synthesizer",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    }
+  ],
+  "red_team": {
+    "summary": "The bull case rests on an unusually fragile assumption: that Apple's reported earnings growth reflects durable operating leverage, when the facts show FY2025 net income growth outpaced pretax income growth by a wide margin (implying a tax-rate tailwind), operating cash flow fell below net income for the first time in five years, capex jumped above depreciation for the first time in the same window, and negative working capital widened in dollar terms even as headline deleveraging is touted. Layer onto that the valuation agent's own admission that the market is pricing in a roughly 17% FCF CAGR, and the setup is a richly priced business whose cash conversion is deteriorating exactly when accelerating free cash flow is required to justify the price.",
+    "responses_by_synthesizer": "On the claim that the bull case wrongly assumes durable operating leverage: accepted, the tax-rate effect looks like a temporary tailwind rather than structural margin gain. On the claim that cash flow falling below net income and capex rising above depreciation signal deteriorating cash quality: accepted, and this is treated as the decisive negative in the synthesis. On the claim that widening negative working capital undercuts the deleveraging narrative: accepted as a mixed, not dispositive, signal. On the claim that the market's embedded free-cash-flow growth expectation is aggressive relative to the recent uneven revenue trajectory: accepted, and combined with the cash-quality concerns this is why the verdict is bearish rather than a simple hold, consistent with the modeled expected return trailing the index by a wide margin.",
+    "drawdown_path": "Step 1 (visible in the next quarter or two): cash-conversion metrics keep weakening \u2014 capex stays above depreciation and operating cash flow tracks at or below net income, so free-cash-flow growth decelerates even as the P&L still looks fine. Step 2: the effective tax rate normalizes back toward its FY2023-level relationship to pretax income (it already swung once in this five-year window), so EPS growth stalls or reverses even with steady revenue, producing a headline 'earnings miss' that is really a reversal of a prior tax tailwind. Step 3: receivables growth that has outpaced revenue growth draws scrutiny (press, sell-side channel checks) over collection quality or channel loading, feeding a narrative shift on earnings quality. Step 4: with current liabilities already exceeding current assets and that gap having widened over several years, any need for incremental financing (buybacks, capex funding, or working-capital stress) forces higher debt issuance, undercutting the 'steady deleveraging' story markets have been given credit for. Step 5: as these threads accumulate, the market re-rates the roughly $4.97T enterprise value away from the ~17% FCF CAGR baked into current pricing toward a more conservative high-single-digit growth assumption; multiple compression on that repricing alone, without any revenue shock, is sufficient to produce a decline well past 30%. Early warning signs a reader would see first: a widening gap between capex and depreciation, operating cash flow tracking below net income for consecutive quarters, and receivables growing faster than revenue for two or more quarters running.",
+    "requested_prior_shift": -0.08
+  },
+  "agent_outputs": {
+    "financial": {
+      "schema_version": "2.1.0",
+      "agent": "financial",
+      "ticker": "AAPL",
+      "as_of": "2026-09-20",
+      "model": "claude-sonnet-5",
+      "summary": "Apple's FY2025 results show revenue and operating income growth continuing, but the earnings picture across FY2021-FY2025 is complicated by a large unexplained tax-rate swing in FY2024 (compressing net income despite higher pretax income) that appears to reverse in FY2025 (net income up more than pretax income), plus a first-time-in-the-period dip in operating cash flow relative to net income and a jump in capex above depreciation. The balance sheet shows steady deleveraging (total debt down five straight years) offset by a persistently negative working-capital position. No filing text (MD&A, notes) was supplied for this run, so qualitative explanations for these numeric patterns (e.g., the tax charge, receivables growth, covenant status) cannot be quoted or confirmed and are flagged as data gaps.",
+      "findings": [],
+      "tokens_in": 7314,
+      "tokens_out": 7686
+    },
+    "business": {
+      "schema_version": "2.1.0",
+      "agent": "business",
+      "ticker": "AAPL",
+      "as_of": "2026-09-20",
+      "model": "claude-sonnet-5",
+      "summary": "No filing sections, news, or company profile text were provided as documents in this run, so no qualitative claims about Apple's moat, competitive dynamics, management credibility, or catalysts can be sourced with verbatim quotes as required. Only quantitative facts were supplied, and those belong to the financial analysis, not this business-qualitative section.",
+      "findings": [],
+      "tokens_in": 7210,
+      "tokens_out": 893
+    },
+    "valuation": {
+      "schema_version": "2.1.0",
+      "agent": "valuation",
+      "ticker": "AAPL",
+      "as_of": "2026-09-20",
+      "model": "claude-sonnet-5",
+      "summary": "Apple's headline multiples are mixed and hard to benchmark: it trades at a modest discount to peer-median P/E but a very large premium on P/S, using a peer set (DELL, SMCI, SNDK, WDC, HPE, NTAP) that is a default hardware/storage group with weak business comparability and only partial multiple coverage. The reverse DCF implies a base-case ~17% FCF CAGR under a 9% discount rate/3% terminal growth assumption, a bar that looks aggressive against Apple's uneven recent revenue trajectory, but with no filing text supplied this run there is no management guidance or qualitative evidence to confirm or refute that the market's growth expectations are supportable.",
+      "findings": [],
+      "tokens_in": 11504,
+      "tokens_out": 7829,
+      "valuation_plan": {
+        "methods": {
+          "p_fcf": "Financial agent flagged a first-time dip in operating cash flow relative to net income and a jump in capex above depreciation; free cash flow is harder to distort than earnings, so P/FCF and FCF yield give the most robust read on current value despite that dip.",
+          "ev_ebitda": "EV/EBITDA is useful here because it is insulated from the unexplained tax-rate swing that compressed FY2024 net income and reversed in FY2025; it also lets us compare against peers (DELL, HPE, NTAP, etc.) that carry different leverage and financing structures than Apple.",
+          "pe": "P/E is included for completeness and cross-checking, but must be read cautiously given the upstream financial finding of a large, unexplained FY2024 tax-rate swing that compressed net income and then reversed in FY2025 - earnings are not fully representative across the period.",
+          "peer_median": "Comparing Apple's multiples to the median of the peer set contextualizes whether Apple trades at a premium or discount, though the peer set is weak given large size/business-model gaps (noted below), so this should be read with reduced confidence.",
+          "reverse_dcf": "Given the financial agent's flag of decelerating cash conversion and rising capex intensity, a reverse DCF is essential to test whether the current price already assumes cash-flow growth that recent trends and the (missing) qualitative evidence can actually support.",
+          "historical": "Comparing current multiples to Apple's own trailing history helps separate a re-rating from a mechanical effect of the FY2024 tax anomaly and FY2025 reversal identified in the financial section."
+        },
+        "peers": {
+          "DELL": "Kept from default list: same SIC 3571 (electronic computers) as Apple, though 3.7x apart on CY2025 revenue, so it is a directionally relevant but imperfect size comparable.",
+          "SMCI": "Kept from default list: same SIC 3571, but 18.9x apart on CY2025 revenue, making it a weak size comparable that should be weighted lightly in any median calculation.",
+          "SNDK": "Kept from default market-data-provider peer list; SIC code unclear and too few in-scope companies share it to rank by size, so comparability to Apple's integrated hardware/services model is limited and should be treated as low-confidence.",
+          "WDC": "Kept from default list for the same reason as SNDK - a storage-hardware peer supplied because too few same-SIC companies exist to rank by size; not a close business-model match to Apple.",
+          "HPE": "Kept from default list; supplied via market-data provider peer grouping rather than SIC-based size ranking, so it is a broad enterprise-hardware comparable rather than a close match to Apple's consumer ecosystem.",
+          "NTAP": "Kept from default list for consistency with the other market-data-provider-sourced peers; storage/enterprise focus differs materially from Apple's consumer hardware-plus-services model."
+        },
+        "notes": "Kept the full default peer list rather than trimming it. None of the six candidates is a close comparable to Apple in scale or business mix (DELL and SMCI are large size gaps within the same SIC code; SNDK, WDC, HPE, and NTAP come from a market-data provider's broader peer grouping rather than SIC-based size ranking and skew toward storage/enterprise hardware rather than Apple's integrated consumer hardware-and-services model). Removing the weakest names would leave too few peers to compute a meaningful median, so all six are retained but the peer_median comparison should be flagged as low-confidence given how few peers are truly close in size or business model.",
+        "calc_notes": [
+          "historical: skipped - no price history source"
+        ]
+      }
+    },
+    "scenario": {
+      "schema_version": "2.1.0",
+      "agent": "scenario",
+      "ticker": "AAPL",
+      "as_of": "2026-09-20",
+      "model": "claude-sonnet-5",
+      "summary": "No filing sections (MD&A, risk factors, notes) were supplied for this run, so all qualitative color below is sourced only from the upstream cross-agent findings summary rather than primary filing text; the scenario set is therefore built primarily on the multi-year financial facts, with earnings-quality anomalies (a tax-driven margin swing, a cash-flow/capex divergence, and persistent negative working capital) treated as unresolved data gaps that bound the bear case and temper the bull case.",
+      "findings": [],
+      "tokens_in": 9841,
+      "tokens_out": 4687,
+      "scenarios_proposal": {
+        "schema_version": "2.0.0",
+        "ticker": "AAPL",
+        "as_of": "2026-09-20",
+        "scenarios": {
+          "bear": {
+            "probability": 0.3,
+            "probability_rationale": "The unexplained FY2024 tax-rate swing and the FY2025 cash-flow/capex divergence are unresolved earnings-quality flags that, absent filing text to explain them, justify keeping meaningful weight on a case where margins and cash conversion do not sustain their FY2025 levels; the persistently negative working-capital position (upstream finding) is treated as a latent risk in this case.",
+            "horizon_years": 5,
+            "revenue_cagr": {
+              "value": 0.02,
+              "unit": "fraction",
+              "type": "assumption",
+              "status": "ok",
+              "source_id": "src:llm:scenario",
+              "derived_from": []
+            },
+            "terminal_margin": {
+              "value": 0.21,
+              "unit": "fraction",
+              "type": "assumption",
+              "status": "ok",
+              "source_id": "src:llm:scenario",
+              "derived_from": []
+            },
+            "eps_at_horizon": {
+              "value": null,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "unavailable",
+              "source_id": null,
+              "derived_from": [
+                "scenarios.bear.revenue_cagr",
+                "scenarios.bear.terminal_margin",
+                "market.shares_outstanding"
+              ]
+            },
+            "exit_multiple": {
+              "value": 15.0,
+              "unit": "multiple",
+              "type": "assumption",
+              "status": "ok",
+              "source_id": "src:llm:scenario",
+              "derived_from": []
+            },
+            "rationale": "Revenue growth stalls near the low end of the FY2021-FY2025 range implied by the facts, the FY2025 net-margin recovery (fact:AAPL:net_income:FY2025 / fact:AAPL:revenue:FY2025) proves to be the temporary artifact flagged upstream rather than a new normal, margins revert toward the FY2024 trough level, operating cash flow continues to lag net income as capex stays elevated above depreciation, and the market re-rates the multiple down accordingly.",
+            "evidence": []
+          },
+          "base": {
+            "probability": 0.5,
+            "probability_rationale": "This is the modal outcome consistent with the facts as given: revenue and operating income growth continuing (per the upstream financial summary) at roughly the pace observed across FY2021-FY2025, with the FY2025 margin level (fact:AAPL:net_income:FY2025, fact:AAPL:revenue:FY2025) persisting rather than fully reverting, while the cash-flow anomaly and negative working capital remain manageable but unresolved data gaps rather than active deterioration.",
+            "horizon_years": 5,
+            "revenue_cagr": {
+              "value": 0.06,
+              "unit": "fraction",
+              "type": "assumption",
+              "status": "ok",
+              "source_id": "src:llm:scenario",
+              "derived_from": []
+            },
+            "terminal_margin": {
+              "value": 0.26,
+              "unit": "fraction",
+              "type": "assumption",
+              "status": "ok",
+              "source_id": "src:llm:scenario",
+              "derived_from": []
+            },
+            "eps_at_horizon": {
+              "value": null,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "unavailable",
+              "source_id": null,
+              "derived_from": [
+                "scenarios.base.revenue_cagr",
+                "scenarios.base.terminal_margin",
+                "market.shares_outstanding"
+              ]
+            },
+            "exit_multiple": {
+              "value": 22.0,
+              "unit": "multiple",
+              "type": "assumption",
+              "status": "ok",
+              "source_id": "src:llm:scenario",
+              "derived_from": []
+            },
+            "rationale": "Revenue and operating income growth continues at a pace between the FY2021-FY2025 trailing trend and recent single-year results, net margin stabilizes near the FY2025 level once the tax-driven distortion normalizes, and deleveraging (fact:AAPL:total_debt:FY2021 through fact:AAPL:total_debt:FY2025) continues to support balance-sheet quality even as the negative working-capital position persists unresolved.",
+            "evidence": []
+          },
+          "bull": {
+            "probability": 0.2,
+            "probability_rationale": "A bull case requires the cash-flow/capex divergence and tax volatility to resolve favorably with no adverse explanation, which is plausible but cannot be confirmed since no filing text or management commentary was supplied this run to corroborate the market's embedded growth expectations; probability is capped lower than base/bear given this evidentiary gap.",
+            "horizon_years": 5,
+            "revenue_cagr": {
+              "value": 0.1,
+              "unit": "fraction",
+              "type": "assumption",
+              "status": "ok",
+              "source_id": "src:llm:scenario",
+              "derived_from": []
+            },
+            "terminal_margin": {
+              "value": 0.29,
+              "unit": "fraction",
+              "type": "assumption",
+              "status": "ok",
+              "source_id": "src:llm:scenario",
+              "derived_from": []
+            },
+            "eps_at_horizon": {
+              "value": null,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "unavailable",
+              "source_id": null,
+              "derived_from": [
+                "scenarios.bull.revenue_cagr",
+                "scenarios.bull.terminal_margin",
+                "market.shares_outstanding"
+              ]
+            },
+            "exit_multiple": {
+              "value": 28.0,
+              "unit": "multiple",
+              "type": "assumption",
+              "status": "ok",
+              "source_id": "src:llm:scenario",
+              "derived_from": []
+            },
+            "rationale": "The FY2025 net-margin expansion (fact:AAPL:net_income:FY2025 relative to fact:AAPL:revenue:FY2025) proves durable rather than tax-driven, operating cash flow re-converges with net income as elevated capex (fact:AAPL:capex:FY2025) begins generating returns, and continued deleveraging (fact:AAPL:total_debt:FY2025 vs prior years) lets the market extend a premium multiple; this case is explicitly not confirmable from filing text this run.",
+            "evidence": []
+          }
+        },
+        "prior_shift": {
+          "value": 0.0,
+          "reason": "No filing-sourced, company-specific evidence was available this run (documents section was empty) to justify tilting the base rate of beating the index either up or down; the unresolved tax-swing and cash-flow anomalies flagged upstream are ambiguous rather than clearly favorable or unfavorable, so no shift is requested.",
+          "source": "scenario"
+        }
+      }
+    },
+    "red_team": {
+      "schema_version": "2.1.0",
+      "agent": "red_team",
+      "ticker": "AAPL",
+      "as_of": "2026-09-20",
+      "model": "claude-sonnet-5",
+      "summary": "The bull case rests on an unusually fragile assumption: that Apple's reported earnings growth reflects durable operating leverage, when the facts show FY2025 net income growth outpaced pretax income growth by a wide margin (implying a tax-rate tailwind), operating cash flow fell below net income for the first time in five years, capex jumped above depreciation for the first time in the same window, and negative working capital widened in dollar terms even as headline deleveraging is touted. Layer onto that the valuation agent's own admission that the market is pricing in a roughly 17% FCF CAGR, and the setup is a richly priced business whose cash conversion is deteriorating exactly when accelerating free cash flow is required to justify the price.",
+      "findings": [],
+      "tokens_in": 9492,
+      "tokens_out": 10611,
+      "drawdown_path": "Step 1 (visible in the next quarter or two): cash-conversion metrics keep weakening \u2014 capex stays above depreciation and operating cash flow tracks at or below net income, so free-cash-flow growth decelerates even as the P&L still looks fine. Step 2: the effective tax rate normalizes back toward its FY2023-level relationship to pretax income (it already swung once in this five-year window), so EPS growth stalls or reverses even with steady revenue, producing a headline 'earnings miss' that is really a reversal of a prior tax tailwind. Step 3: receivables growth that has outpaced revenue growth draws scrutiny (press, sell-side channel checks) over collection quality or channel loading, feeding a narrative shift on earnings quality. Step 4: with current liabilities already exceeding current assets and that gap having widened over several years, any need for incremental financing (buybacks, capex funding, or working-capital stress) forces higher debt issuance, undercutting the 'steady deleveraging' story markets have been given credit for. Step 5: as these threads accumulate, the market re-rates the roughly $4.97T enterprise value away from the ~17% FCF CAGR baked into current pricing toward a more conservative high-single-digit growth assumption; multiple compression on that repricing alone, without any revenue shock, is sufficient to produce a decline well past 30%. Early warning signs a reader would see first: a widening gap between capex and depreciation, operating cash flow tracking below net income for consecutive quarters, and receivables growing faster than revenue for two or more quarters running.",
+      "requested_prior_shift": -0.08,
+      "prior_shift_reason": "Earnings quality looks weaker than the leading view credits: FY2025 EPS growth is disproportionately tax-driven rather than operational, operating cash flow fell below net income for the first time in five years, capex now exceeds depreciation for the first time in the window, and negative working capital has widened in dollar terms \u2014 all while the valuation the market pays embeds an aggressive ~17% FCF CAGR per the valuation agent's own reverse DCF that these same facts call into question."
+    },
+    "synthesizer": {
+      "schema_version": "2.1.0",
+      "agent": "synthesizer",
+      "ticker": "AAPL",
+      "as_of": "2026-09-20",
+      "model": "claude-sonnet-5",
+      "summary": "The available evidence for this run is limited to an untrusted cross-agent findings summary with no verifiable filing quotes, but even on that basis the picture is consistent: Apple's recent earnings quality has deteriorated in ways that undercut the growth assumptions embedded in its valuation, and the model's own output shows the stock's probability-weighted return trailing the index by a wide margin. Because no primary-source quotes were supplied this run, all findings below are marked low confidence and carry no verbatim evidence.",
+      "findings": [],
+      "tokens_in": 5790,
+      "tokens_out": 3329,
+      "synthesis_fields": {
+        "thesis": "Apple remains a dominant, cash-generative franchise, but the market is pricing in a growth trajectory that recent earnings-quality signals do not clearly support: a tax-rate driven earnings boost, cash flow falling short of reported profit, and capital spending outrunning depreciation all surfaced in the same period. Where we differ from a simple bullish read is in treating those signals as a genuine warning on cash conversion rather than noise, which is enough to tip the modeled outcome below a plain index allocation.",
+        "primary_catalyst": "Clarity in coming filings on whether the tax-rate tailwind and the cash-flow-to-earnings gap are transitory accounting effects or the start of a structural shift in cash conversion.",
+        "biggest_risk": "A richly priced business needs accelerating free cash flow to justify its multiple, and the most recent data point is cash conversion moving in the opposite direction.",
+        "valuation": "expensive",
+        "business_quality": "good",
+        "financial_strength": "strong",
+        "verdict": "avoid",
+        "ten_thousand_dollar_answer": {
+          "choice": "sp500",
+          "reason": "With the modeled probability-weighted return trailing the index by a wide margin and the odds of beating the index below even, a diversified index position is the more rational use of the marginal dollar than this single, richly priced name."
+        },
+        "red_team_responses": "On the claim that the bull case wrongly assumes durable operating leverage: accepted, the tax-rate effect looks like a temporary tailwind rather than structural margin gain. On the claim that cash flow falling below net income and capex rising above depreciation signal deteriorating cash quality: accepted, and this is treated as the decisive negative in the synthesis. On the claim that widening negative working capital undercuts the deleveraging narrative: accepted as a mixed, not dispositive, signal. On the claim that the market's embedded free-cash-flow growth expectation is aggressive relative to the recent uneven revenue trajectory: accepted, and combined with the cash-quality concerns this is why the verdict is bearish rather than a simple hold, consistent with the modeled expected return trailing the index by a wide margin."
+      }
+    }
+  },
+  "scenario_result": {
+    "schema_version": "2.0.0",
+    "ticker": "AAPL",
+    "as_of": "2026-09-20",
+    "scenarios": {
+      "bear": {
+        "probability": 0.3,
+        "price_target": {
+          "value": 99.1729181835,
+          "unit": "usd_per_share",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenarios.bear.eps_at_horizon",
+            "scenarios.bear.exit_multiple"
+          ]
+        },
+        "annualized_return": {
+          "value": -0.2166115514,
+          "unit": "fraction",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenario_result.scenarios.bear.price_target",
+            "market.price"
+          ]
+        },
+        "eps_at_horizon": {
+          "value": 6.6115278789,
+          "unit": "usd_per_share",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenarios.bear.revenue_cagr",
+            "scenarios.bear.terminal_margin",
+            "market.shares_outstanding",
+            "financials.FY2025.revenue"
+          ],
+          "formula": "revenue[FY2025] * (1 + revenue_cagr) ** 5 * terminal_margin / market.shares_outstanding"
+        },
+        "horizon_years": 5,
+        "by_horizon": {
+          "short_term": {
+            "value_per_share": {
+              "value": 263.3203592438,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bear.annualized_return",
+                "market.price"
+              ]
+            },
+            "cumulative_return": {
+              "value": -0.2166115514,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bear.annualized_return"
+              ]
+            },
+            "annualized_return": {
+              "value": -0.2166115514,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bear.annualized_return"
+              ]
+            },
+            "years": 1.0
+          },
+          "medium_term": {
+            "value_per_share": {
+              "value": 161.5990360223,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bear.annualized_return",
+                "market.price"
+              ]
+            },
+            "cumulative_return": {
+              "value": -0.5192364977,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bear.annualized_return"
+              ]
+            },
+            "annualized_return": {
+              "value": -0.2166115514,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bear.annualized_return"
+              ]
+            },
+            "years": 3.0
+          },
+          "long_term": {
+            "value_per_share": {
+              "value": 99.1729181835,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bear.annualized_return",
+                "market.price"
+              ]
+            },
+            "cumulative_return": {
+              "value": -0.7049566591,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bear.annualized_return"
+              ]
+            },
+            "annualized_return": {
+              "value": -0.2166115514,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bear.annualized_return"
+              ]
+            },
+            "years": 5.0
+          }
+        }
+      },
+      "base": {
+        "probability": 0.5,
+        "price_target": {
+          "value": 218.2765270202,
+          "unit": "usd_per_share",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenarios.base.eps_at_horizon",
+            "scenarios.base.exit_multiple"
+          ]
+        },
+        "annualized_return": {
+          "value": -0.0827241661,
+          "unit": "fraction",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenario_result.scenarios.base.price_target",
+            "market.price"
+          ]
+        },
+        "eps_at_horizon": {
+          "value": 9.9216603191,
+          "unit": "usd_per_share",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenarios.base.revenue_cagr",
+            "scenarios.base.terminal_margin",
+            "market.shares_outstanding",
+            "financials.FY2025.revenue"
+          ],
+          "formula": "revenue[FY2025] * (1 + revenue_cagr) ** 5 * terminal_margin / market.shares_outstanding"
+        },
+        "horizon_years": 5,
+        "by_horizon": {
+          "short_term": {
+            "value_per_share": {
+              "value": 308.3239260352,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.base.annualized_return",
+                "market.price"
+              ]
+            },
+            "cumulative_return": {
+              "value": -0.0827241661,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.base.annualized_return"
+              ]
+            },
+            "annualized_return": {
+              "value": -0.0827241661,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.base.annualized_return"
+              ]
+            },
+            "years": 1.0
+          },
+          "medium_term": {
+            "value_per_share": {
+              "value": 259.4221959899,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.base.annualized_return",
+                "market.price"
+              ]
+            },
+            "cumulative_return": {
+              "value": -0.2282087407,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.base.annualized_return"
+              ]
+            },
+            "annualized_return": {
+              "value": -0.0827241661,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.base.annualized_return"
+              ]
+            },
+            "years": 3.0
+          },
+          "long_term": {
+            "value_per_share": {
+              "value": 218.2765270202,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.base.annualized_return",
+                "market.price"
+              ]
+            },
+            "cumulative_return": {
+              "value": -0.3506187278,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.base.annualized_return"
+              ]
+            },
+            "annualized_return": {
+              "value": -0.0827241661,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.base.annualized_return"
+              ]
+            },
+            "years": 5.0
+          }
+        }
+      },
+      "bull": {
+        "probability": 0.2,
+        "price_target": {
+          "value": 372.9075145796,
+          "unit": "usd_per_share",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenarios.bull.eps_at_horizon",
+            "scenarios.bull.exit_multiple"
+          ]
+        },
+        "annualized_return": {
+          "value": 0.0209836137,
+          "unit": "fraction",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenario_result.scenarios.bull.price_target",
+            "market.price"
+          ]
+        },
+        "eps_at_horizon": {
+          "value": 13.3181255207,
+          "unit": "usd_per_share",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenarios.bull.revenue_cagr",
+            "scenarios.bull.terminal_margin",
+            "market.shares_outstanding",
+            "financials.FY2025.revenue"
+          ],
+          "formula": "revenue[FY2025] * (1 + revenue_cagr) ** 5 * terminal_margin / market.shares_outstanding"
+        },
+        "horizon_years": 5,
+        "by_horizon": {
+          "short_term": {
+            "value_per_share": {
+              "value": 343.1832220642,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bull.annualized_return",
+                "market.price"
+              ]
+            },
+            "cumulative_return": {
+              "value": 0.0209836137,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bull.annualized_return"
+              ]
+            },
+            "annualized_return": {
+              "value": 0.0209836137,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bull.annualized_return"
+              ]
+            },
+            "years": 1.0
+          },
+          "medium_term": {
+            "value_per_share": {
+              "value": 357.7367780721,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bull.annualized_return",
+                "market.price"
+              ]
+            },
+            "cumulative_return": {
+              "value": 0.0642810165,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bull.annualized_return"
+              ]
+            },
+            "annualized_return": {
+              "value": 0.0209836137,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bull.annualized_return"
+              ]
+            },
+            "years": 3.0
+          },
+          "long_term": {
+            "value_per_share": {
+              "value": 372.9075145796,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bull.annualized_return",
+                "market.price"
+              ]
+            },
+            "cumulative_return": {
+              "value": 0.1094145556,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bull.annualized_return"
+              ]
+            },
+            "annualized_return": {
+              "value": 0.0209836137,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bull.annualized_return"
+              ]
+            },
+            "years": 5.0
+          }
+        }
+      }
+    },
+    "weights": {
+      "bear": 0.3,
+      "base": 0.5,
+      "bull": 0.2,
+      "clamps": [
+        {
+          "scenario": "bear",
+          "requested": 0.3,
+          "clamped_to": 0.3,
+          "applied": 0.3,
+          "default_weight": 0.3,
+          "band": 0.15,
+          "was_clamped": false,
+          "was_renormalized": false,
+          "reason": "The unexplained FY2024 tax-rate swing and the FY2025 cash-flow/capex divergence are unresolved earnings-quality flags that, absent filing text to explain them, justify keeping meaningful weight on a case where margins and cash conversion do not sustain their FY2025 levels; the persistently negative working-capital position (upstream finding) is treated as a latent risk in this case."
+        },
+        {
+          "scenario": "base",
+          "requested": 0.5,
+          "clamped_to": 0.5,
+          "applied": 0.5,
+          "default_weight": 0.5,
+          "band": 0.15,
+          "was_clamped": false,
+          "was_renormalized": false,
+          "reason": "This is the modal outcome consistent with the facts as given: revenue and operating income growth continuing (per the upstream financial summary) at roughly the pace observed across FY2021-FY2025, with the FY2025 margin level (fact:AAPL:net_income:FY2025, fact:AAPL:revenue:FY2025) persisting rather than fully reverting, while the cash-flow anomaly and negative working capital remain manageable but unresolved data gaps rather than active deterioration."
+        },
+        {
+          "scenario": "bull",
+          "requested": 0.2,
+          "clamped_to": 0.2,
+          "applied": 0.2,
+          "default_weight": 0.2,
+          "band": 0.15,
+          "was_clamped": false,
+          "was_renormalized": false,
+          "reason": "A bull case requires the cash-flow/capex divergence and tax volatility to resolve favorably with no adverse explanation, which is plausible but cannot be confirmed since no filing text or management commentary was supplied this run to corroborate the market's embedded growth expectations; probability is capped lower than base/bear given this evidentiary gap."
+        }
+      ],
+      "any_clamped": false,
+      "renormalized": false
+    },
+    "expected_annualized_return": {
+      "value": -0.1021488257,
+      "unit": "fraction",
+      "type": "estimate",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "scenario_result.scenarios.*.annualized_return",
+        "scenario_result.weights"
+      ]
+    },
+    "sp500_expected_return": {
+      "value": 0.07,
+      "unit": "fraction",
+      "type": "assumption",
+      "status": "ok",
+      "source_id": "src:config:calc_assumptions",
+      "derived_from": [],
+      "basis": "config",
+      "baseline": {
+        "forward_pe": {
+          "value": 22.0,
+          "unit": "multiple",
+          "type": "assumption",
+          "status": "ok",
+          "source_id": "src:config:sp500_baseline:2026.09",
+          "derived_from": []
+        },
+        "earnings_yield": {
+          "value": 0.0455,
+          "unit": "fraction",
+          "type": "assumption",
+          "status": "ok",
+          "source_id": "src:config:sp500_baseline:2026.09",
+          "derived_from": []
+        },
+        "risk_free_rate": {
+          "value": 0.0425,
+          "unit": "fraction",
+          "type": "assumption",
+          "status": "ok",
+          "source_id": "src:config:sp500_baseline:2026.09",
+          "derived_from": []
+        },
+        "as_of": "2026-09-20"
+      }
+    },
+    "expected_return_vs_sp500": {
+      "short_term": {
+        "value": -0.1721488257,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      },
+      "medium_term": {
+        "value": -0.1721488257,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      },
+      "long_term": {
+        "value": -0.1721488257,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      }
+    },
+    "excess_vs_sp500": {
+      "short_term": {
+        "value": -0.1721488257,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      },
+      "medium_term": {
+        "value": -0.1721488257,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      },
+      "long_term": {
+        "value": -0.1721488257,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      }
+    },
+    "p_beat_sp500": {
+      "short_term": 0.39,
+      "medium_term": 0.36,
+      "long_term": 0.34
+    },
+    "prior": {
+      "base_rate": {
+        "short_term": 0.47,
+        "medium_term": 0.44,
+        "long_term": 0.42
+      },
+      "requested_shift": -0.08,
+      "applied_shift": -0.08,
+      "cap": 0.15,
+      "shift_reasons": [
+        "scenario: no filing-sourced, company-specific evidence was available this run (documents section was empty) to justify tilting the base rate of beating the index either up or down; the unresolved tax-swing and cash-flow anomalies flagged upstream are ambiguous rather than clearly favorable or unfavorable, so no shift is requested.",
+        "red_team: earnings quality looks weaker than the leading view credits: FY2025 EPS growth is disproportionately tax-driven rather than operational, operating cash flow fell below net income for the first time in five years, capex now exceeds depreciation for the first time in the window, and negative working capital has widened in dollar terms \u2014 all while the valuation the market pays embeds an aggressive ~17% FCF CAGR per the valuation agent's own reverse DCF that these same facts call into question."
+      ]
+    },
+    "scores": {
+      "short_term": 3,
+      "medium_term": 3,
+      "long_term": 3
+    },
+    "consistency": {
+      "ok": true,
+      "issues": []
+    },
+    "sensitivity": {
+      "flips_at_bear_probability": -0.7527809588,
+      "current_bear_probability": 0.3,
+      "allowed_band": [
+        0.15,
+        0.45
+      ],
+      "reachable": false,
+      "inside_allowed_band": false,
+      "target": 0.07,
+      "bear_return": -0.21661155135281152,
+      "base_bull_blend": -0.0530933719,
+      "reason": "no bear weight in [0, 1] flips the verdict: lowering it past the limit would be needed. With the bear case at 0% the expected return is -5.3%/yr against the index's 7.0%/yr."
+    }
+  },
+  "audit": {
+    "schema_version": "2.1.0",
+    "passed": true,
+    "issues": [],
+    "claims_checked": 5,
+    "claims_verified": 0,
+    "claims_unverified": 5,
+    "llm_checks_run": 0,
+    "retries_issued": [],
+    "notes": [
+      "MINIMAL GATE: only unresolved_fact ran. Every claim is reported unverified because the other checks in docs/verification.md are not built yet - an unchecked claim must not read as a verified one."
+    ]
+  },
+  "data_quality": {
+    "overall": "partial",
+    "gaps": [
+      "No business section found in the filings available as of 2026-09-20",
+      "No debt_note section found in the filings available as of 2026-09-20",
+      "No mdna section found in the filings available as of 2026-09-20",
+      "No risk_factors section found in the filings available as of 2026-09-20",
+      "No sbc_note section found in the filings available as of 2026-09-20"
+    ]
+  },
+  "metrics_ref": null,
+  "state_version": "1.0.0"
+}

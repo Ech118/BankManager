@@ -157,3 +157,16 @@ h2 { font-size: 1.2rem; }
 .ticker-chip:hover {
   text-decoration: underline;
 }
+
+/* Live SEC data page */
+.card { margin: 1.5rem 0; padding: 1rem 1.2rem; border: 1px solid rgba(127,127,127,0.35); border-radius: 10px; }
+.card h2 { margin-top: 0; }
+.kv { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: 0.6rem 1rem; margin: 0.5rem 0; }
+.kv dt { font-size: 0.8rem; opacity: 0.7; }
+.kv dd { margin: 0; font-size: 1.05rem; font-variant-numeric: tabular-nums; }
+.table-scroll { overflow-x: auto; }
+.data-table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.data-table th, .data-table td { padding: 0.3rem 0.5rem; text-align: right; border-bottom: 1px solid rgba(127,127,127,0.2); white-space: nowrap; }
+.data-table thead th, .data-table tbody th { text-align: left; }
+.data-table tr.computed td, .data-table tr.computed th { opacity: 0.85; font-style: italic; }
+.data-table .sub, p.sub { display: block; font-size: 0.75rem; opacity: 0.6; font-style: normal; white-space: normal; }
