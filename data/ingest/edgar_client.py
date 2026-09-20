@@ -83,7 +83,7 @@ def _fetch(url: str) -> bytes:
     raise RuntimeError(f"unreachable: retry loop exhausted for {url}")
 
 
-def _cached_fetch(url: str, key: str, ttl: float | None) -> bytes:
+def cached_fetch(url: str, key: str, ttl: float | None) -> bytes:
     """Fetch through the cache. `ttl=None` means the payload is immutable."""
     hit = cache.get(key) if ttl is None else cache.get_fresh(key, ttl)
     if hit is not None:
@@ -112,7 +112,7 @@ def fetch_ticker_map() -> dict[str, str]:
     Keys are normalised, so both BRK.B and BRK-B resolve through
     `normalize_ticker` before lookup.
     """
-    raw = _cached_fetch(COMPANY_TICKERS_URL, "sec/company_tickers.json", TICKER_MAP_TTL)
+    raw = cached_fetch(COMPANY_TICKERS_URL, "sec/company_tickers.json", TICKER_MAP_TTL)
     entries: Any = json.loads(raw)
 
     # SEC ships this as {"0": {...}, "1": {...}}, not a list.
@@ -129,10 +129,21 @@ def fetch_ticker_map() -> dict[str, str]:
 def lookup_cik(ticker: Ticker) -> str:
     """Resolve a ticker to a zero-padded CIK via the SEC company_tickers file.
 
+    An override in data/ingest/ticker_overrides.py wins, because SEC's map
+    points at the CURRENT registrant: after a holding-company reorganisation
+    the ticker moves to a CIK with no filing history while every 10-K stays
+    under the predecessor.
+
     Raises KeyError when the ticker is not an SEC filer - which is a real
     answer, not a failure: ADRs, delisted names and typos all land here, and
     check_scope turns it into a sentence a user can read.
     """
+    from data.ingest.ticker_overrides import override_for
+
+    override = override_for(ticker)
+    if override is not None:
+        return override.cik.zfill(10)
+
     normalized = normalize_ticker(ticker)
     mapping = fetch_ticker_map()
     if normalized not in mapping:
@@ -152,7 +163,7 @@ def fetch_submissions(cik: str) -> dict:
     This is the source of `filed_at`, which every point-in-time query depends on.
     """
     padded = str(cik).zfill(10)
-    raw = _cached_fetch(
+    raw = cached_fetch(
         SUBMISSIONS_URL.format(cik=padded), f"sec/submissions/{padded}.json", SUBMISSIONS_TTL
     )
     return json.loads(raw)
@@ -221,4 +232,4 @@ def fetch_document(cik: str, accession: str, document: str) -> bytes:
         accession_nodash=accession.replace("-", ""),
         document=document,
     )
-    return _cached_fetch(url, cache.accession_key(accession, document), None)
+    return cached_fetch(url, cache.accession_key(accession, document), None)

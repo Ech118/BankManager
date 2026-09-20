@@ -55,10 +55,19 @@ def check_scope(ticker: str, as_of: str | None = None) -> dict:
 
     Rejects financials, REITs and pre-revenue companies (docs/sec-pitfalls.md,
     error H). Must be called before build_factsheet.
+
+    LIVE: three outcomes, not two. `level` rides in the extra fields as
+    supported | partial | unsupported, and a bank, an insurer, a REIT or a
+    foreign private issuer is `partial` - in scope, with the reason attached as
+    a data_quality gap - rather than refused outright. Only `unsupported` sets
+    in_scope False. See data/normalize/scope.py.
     """
     if not _TICKER_RE.match(ticker or ""):
         return {"in_scope": False, "reason": f"Invalid ticker format: {ticker!r}"}
-    _require_mock("check_scope")
+    if _mode() == "live":
+        from data.normalize import scope as scope_rules
+
+        return scope_rules.check_scope(ticker, as_of).model_dump(mode="json")
     if ticker in _MOCK_OUT_OF_SCOPE:
         return {"in_scope": False, "reason": _MOCK_OUT_OF_SCOPE[ticker]}
     if ticker != "ACME":

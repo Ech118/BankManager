@@ -3,10 +3,10 @@
 Update whenever a capability moves from mock to real, or when blocked.
 A PR that changes behaviour must update this file.
 
-**Step:** 3 in progress. **Seven of ten tools are served; P3 is unblocked on the
-filing tools it was waiting for.**
-**Next:** the XBRL concept map and normalization, then `search_filing` (Postgres
-full-text search) and `search_news`.
+**Step:** 3 in progress. **Seven of ten tools are served; XBRL normalization is
+real and runs against twelve recorded filers.**
+**Next:** `get_market_snapshot` (Finnhub + dei shares), then peers, then
+`build_factsheet`, then live filing sections, then the last three tools.
 **Blockers:** none.
 
 | Capability | State | Notes |
@@ -27,18 +27,75 @@ full-text search) and `search_news`.
 | **rate limiting** | **real** | token bucket at 8 req/s; escalating 429/503 backoff |
 | **on-disk cache** | **real** | by accession for filings; `get_fresh()` for the ticker map |
 | **`SEC_USER_AGENT` loading** | **real** | `data/ingest/env.py`; refuses a UA with no contact details |
-| `check_scope` | mock | ACME in scope, BANKX rejected; real SIC classification is Step 3 |
+| `check_scope` | **real** | three levels: supported / partial / unsupported. Mock path unchanged |
 | `build_factsheet` | mock | returns the ACME fixture; **P3's auditor needs a real one** |
-| XBRL concept mapping | not started | Step 3; map drafted in `normalize/concept_map.py` |
-| YTD differencing / Q4 derivation | not started | Step 3 |
-| Restatement linking | not started | Step 3; one restatement exists in the fixtures |
+| XBRL concept mapping | **real** | per-PERIOD chains, us-gaap; `ifrs-full` slot present and empty |
+| Annual normalization | **real** | 5 fiscal years of 10-K values -> `FinancialFact` |
+| Fiscal year labelling | **real** | from the filer's own numbering; Jan/Jun/Aug/Sep year ends tested |
+| Total debt | **real** | derived fact; components emitted and linked by `Derivation` |
+| Restatement linking | **real** | `superseded_by` + `as_known_on()`; real splits exercise it |
+| Point-in-time reads | **real** | facts filed after `as_of` are never read |
+| YTD differencing / Q4 derivation | not started | annual only for now; both raise rather than guess |
+| ticker -> CIK overrides | **real** | `data/ingest/ticker_overrides.py`; XOM is the only one in the top 100 |
+| `fixtures/real/` recorded filers | **real** | 12 companies, trimmed companyfacts + submissions |
 | Section parsing | mock | serves `fixtures/mock/sections/*.txt`; real 10-K parsing is Step 7 |
 | Postgres store | not started | migration file lists the tables |
 | `fixtures/real/` demo tickers | not started | Step 6; coordinate the choice via `docs/requests/` |
 
-**Last updated:** 2026-09-19 (Step 3: `search_filings` and `get_filing_section` served)
+**Last updated:** 2026-09-19 (Step 3: XBRL normalization, scope and recorded fixtures)
 
 ---
+
+## What twelve real filers changed about the design
+
+Surveyed AAPL, MSFT, NVDA, AMZN, GOOGL, KO, WDFC, JPM, O, TSM, XOM and BRK.B
+before writing the concept map. Seven findings, each of which would have
+produced a confident wrong number rather than an error.
+
+1. **A chain must resolve per FISCAL PERIOD, not per company.** NVDA's capex is
+   `PaymentsToAcquirePropertyPlantAndEquipment` for FY2010-FY2012 and
+   `PaymentsToAcquireProductiveAssets` from FY2022; AAPL's revenue tag changes in
+   FY2018; KO stopped tagging `LongTermDebt` after FY2023. A chain resolved once
+   per company loses years.
+
+2. **`fy` on a companyfacts entry is the FILING's fiscal year, not the fact's.**
+   NVDA's year ending 2023-01-29 carries `fy` 2023, 2024 and 2025, because later
+   10-Ks repeat it as a comparative. The filer's own label is the `fy` of the
+   EARLIEST-filed 10-K entry for that period. That gives FY2026 for NVDA's
+   January year end and FY2025 for WD-40's August one, with no calendar guessing.
+
+3. **companyfacts is point-in-time capable, contradicting docs/sec-pitfalls.md 1.**
+   It keeps every filed version, each with its own `accn` and `filed`. The trap is
+   narrower than "never use companyfacts": it bites code that takes the last entry
+   per period without reading `filed`. One fetch per company therefore replaces
+   ~20 companyconcept requests. Filed as
+   `docs/requests/2026-09-19-p1-to-coordinator-companyfacts-is-point-in-time.md`.
+
+4. **companyfacts carries no dimensioned facts at all.** Across four filers the
+   union of entry keys is exactly `accn, end, filed, form, fp, frame, fy, start,
+   val`. Company totals are safe by construction - and a dimensioned-only
+   disclosure VANISHES rather than arriving sliced, which is how GOOGL loses
+   `dei:EntityCommonStockSharesOutstanding` entirely (it tags per share class).
+
+5. **Debt double-counting is real.** NVDA tags `DebtCurrent` and
+   `LongTermDebtCurrent` as the same 999M, and `LongTermDebt` already contains
+   both; summing naively overstates by 12%. `LongTermDebtAndCapitalLeaseObligations`
+   is NONCURRENT (KO's FY2023 value equals `LongTermDebtNoncurrent`, not the
+   total). Hence disjoint buckets with a `covers_current` flag.
+
+6. **XOM resolves to a company with no history.** `company_tickers.json` maps XOM
+   to ExxonMobil Holdings Corp (CIK 2115436), registered in 2026, zero 10-Ks.
+   `data/ingest/ticker_overrides.py` redirects it to CIK 34088. An audit of the
+   100 largest US companies (`python -m data.record.cik_history`) found **no other
+   ticker** needing an override; the one other miss, MMC, is simply a ticker that
+   no longer exists (Marsh & McLennan now files as MRSH).
+
+7. **The restatements in real data are stock splits.** NVDA's 10-for-1 (FY2024
+   diluted shares 2,494M -> 24,940M), AMZN's and GOOGL's 20-for-1. A run dated
+   before the split must see the pre-split count, which is exactly what
+   `restatements.as_known_on()` now reproduces.
+
+### Two earlier findings, still true
 
 ## Two findings from real SEC data that change Step 3's design
 
