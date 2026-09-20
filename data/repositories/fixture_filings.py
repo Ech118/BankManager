@@ -97,26 +97,25 @@ class FixtureFilingRepository:
         items: list[str] | None = None,
         limit: int = 10,
     ) -> list[FilingSection]:
-        """Naive substring match. Postgres full-text search replaces this later.
+        """BM25 over this ticker's sections (data/sections/search.py).
 
-        Deliberately not ranked: a fixture of five sections cannot demonstrate
-        relevance ordering, and a fake ranking here would hide the fact that the
-        real one does not exist yet.
+        The ranking is shared with live mode rather than reimplemented here, so
+        a relevance bug shows up in the offline suite instead of only against
+        real filings.
         """
-        needle = query.lower()
-        wanted_forms = {str(f) for f in forms} if forms else None
-        wanted_items = {str(i) for i in items} if items else None
-        rows = [
-            s
-            for s in self._sections.values()
-            if s.company_id == ticker
-            and (not as_of or s.filed_at <= as_of)
-            and (wanted_forms is None or str(s.form) in wanted_forms)
-            and (wanted_items is None or str(s.item) in wanted_items)
-            and needle in s.text.lower()
-        ]
-        rows.sort(key=lambda s: (s.filed_at, s.section_id), reverse=True)
-        return rows[:limit] if limit else rows
+        from data.sections import search as section_search
+
+        rows = [s for s in self._sections.values() if s.company_id == ticker]
+        hits = section_search.search(
+            rows,
+            [s.text for s in rows],
+            query,
+            as_of=as_of,
+            forms=forms,
+            items=items,
+            limit=limit or len(rows),
+        )
+        return [hit.section for hit in hits]
 
     def put_filing(self, filing: Filing, sections: list[FilingSection]) -> int:
         """The fixture store is read-only; live ingestion writes to Postgres."""

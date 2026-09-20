@@ -1,0 +1,207 @@
+{
+ "ticker": "AAPL",
+ "start": "2026-08-20",
+ "end": "2026-09-19",
+ "items": [
+  {
+   "datetime": 1789855620,
+   "headline": "Bank of America does the math on Apple's $1,200 iPhone offer",
+   "summary": "The credit is bigger this year. The bill at the register still isn\u2019t zero.",
+   "url": "https://finnhub.io/api/news?id=77ae12ba886dec647639ba223f44cc987803b99e1b59b0e733992f395fee804e",
+   "source": "Yahoo",
+   "id": 142275802
+  },
+  {
+   "datetime": 1789845180,
+   "headline": "Cramer strongly recommends buying beaten-down 90s tech legend",
+   "summary": "Jim Cramer touts a former mobile phone king as an AI buy, though its Q2 cash flow raises questions.",
+   "url": "https://finnhub.io/api/news?id=c0c92924ae13cb6f019c9e221fca221df8b2936806878be8b9ee43a0d423aa82",
+   "source": "Yahoo",
+   "id": 142273792
+  },
+  {
+   "datetime": 1789843800,
+   "headline": "Forget Buying All Seven: The \"Magnificent Seven\" Stock Most Likely to Double by 2028",
+   "summary": "I believe investors are underrating the potential of this compounding machine.",
+   "url": "https://finnhub.io/api/news?id=e7c88893e45fbbc500a296482ce0c87e9709b092bc2dcd956c578f26ddcad785",
+   "source": "Yahoo",
+   "id": 142273787
+  },
+  {
+   "datetime": 1789833780,
+   "headline": "Apple gets bullish Wall Street call as iPhone demand jumps",
+   "summary": "Apple\u2019s price target hike comes on the heels of surprising consumer survey findings.",
+   "url": "https://finnhub.io/api/news?id=58b9203811fc59e3162b59b966223d56f324222c1c67a4c83e5afe24e2110bc9",
+   "source": "Yahoo",
+   "id": 142272955
+  },
+  {
+   "datetime": 1789830671,
+   "headline": "Coinbase Files With CFTC To List US Single-Stock Perpetual Futures, Including AAPL And TSLA Contracts",
+   "summary": "Coinbase\u2019s filing used an Apple contract as its model, which is cash-settled, has no fixed expiration, and would trade from Sunday to Friday.",
+   "url": "https://finnhub.io/api/news?id=fbf822b1a1edb9f93faaedea12bfb16fa622ace06cadfefe458bcad49a850766",
+   "source": "Yahoo",
+   "id": 142272114
+  },
+  {
+   "datetime": 1789830300,
+   "headline": "The Stock Market's Biggest Companies Are Losing Their Grip. Here's the ETF I'd Buy If History Repeats.",
+   "summary": "As the market rotates away from large-cap stocks, new opportunities have emerged in their place.",
+   "url": "https://finnhub.io/api/news?id=4d81a180e6f8e18c98e7f7f44ee77306e9a702930d559d9446b189a7f8237f78",
+   "source": "Yahoo",
+   "id": 142272106
+  },
+  {
+   "datetime": 1789822200,
+   "headline": "John Ternus's First iPhone Launch Prompted a Bank of America Price Target Cut. Is Apple Stock a Buy?",
+   "summary": "Apple stock just got a price target cut due to the memory processor crunch.",
+   "url": "https://finnhub.io/api/news?id=814e533b97d603798092a58557d5257cd58ff9b553db16b0b83fc6c164476a1f",
+   "source": "Yahoo",
+   "id": 142270865
+  },
+  {
+   "datetime": 1789816920,
+   "headline": "History Says You Should Know These 3 Things Before Buying Apple Stock (AAPL)",
+   "summary": "The pride of Cupertino continues its winning ways, and investors are eager to jump on the bandwagon.",
+   "url": "https://finnhub.io/api/news?id=3b414a219e85ef32df40dd5598b187c14281f58d7d811d16ed4d4254de35fef0",
+   "source": "Yahoo",
+   "id": 142270180
+  },
+  {
+   "datetime": 1789813830,
+   "headline": "Warren Buffett found the most boring way to bet on AI",
+   "summary": "Warren Buffett became the world\u2019s most famous investor by betting on the boring stuff.",
+   "url": "https://finnhub.io/api/news?id=569d989d9e4140e2c947766dd99a3bebcdd39cae7071ae1d8cb1140344e5c3ba",
+   "source": "Yahoo",
+   "id": 142270196
+  },
+  {
+   "datetime": 1789808400,
+   "headline": "The S&P 500 Has Returned About 11% Annually Since 1958. Here's the ETF I'd Trust for the Next 30 Years.",
+   "summary": "Investors need something that evolves with a changing economy.",
+   "url": "https://finnhub.io/api/news?id=13f780888e8f80a1dd6391f3566fca74c418354f968b1de73cb4854818c0ee6f",
+   "source": "Yahoo",
+   "id": 142269641
+  },
+  {
+   "datetime": 1789806624,
+   "headline": "Intel, Apple, Nvidia and More: 5 Stocks Investors Couldn't Stop Buzzing About This Week",
+   "summary": "Retail investors talked up 5 stocks during the week (Sept. 14 to Sept.18) on X and Reddit&#39;s r/WallStreetBets: INTC, AAPL, NVDA, NBIS, ORCL",
+   "url": "https://finnhub.io/api/news?id=8c22fd8d481fea3088a442fc3333cd3f5813e30d4559399fcb24d9867f2b5ca4",
+   "source": "Benzinga",
+   "id": 142270986
+  },
+  {
+   "datetime": 1789781471,
+   "headline": "Bill Ackman Says Nike \u2018Needs Help\u2019 as Alexandre Arnault Joins Board: \u2018Great Development\u2019",
+   "summary": "Investment firm Pershing Square Inc. founder Bill Ackman said Wednesday that Nike Inc.\u2019s decision to add Deputy CEO of LVMH\u2019s Mo\u00ebt Hennessy division Alexandre Arnault to its board was a \u201cgreat development\u201d for the retailer, which is working through a...",
+   "url": "https://finnhub.io/api/news?id=7c8e90cc553de27bdab7853f76754c9bc142a8266ac0fae2cad517624946de38",
+   "source": "Yahoo",
+   "id": 142267304
+  },
+  {
+   "datetime": 1789773138,
+   "headline": "Here\u2019s A Stock That Jim Cramer Like Before But Now He Just Doesn\u2019t Want To Buy It",
+   "summary": "Glass technology products manufacturer Corning Incorporated (NYSE:GLW) has had an interesting relationship with Jim Cramer\u2019s radar. Late last year, the CNBC TV host was one of the firm\u2019s strongest supporters as he praised it for its partnership with Apple to bring manufacturing back to the US under President Trump\u2019s initiatives. However, more recently, he has [\u2026]",
+   "url": "https://finnhub.io/api/news?id=aaa9f2dc0209d5ddab1e75ce28d0dadc8542140fef23a585f33a5a369a73dabd",
+   "source": "Yahoo",
+   "id": 142264580
+  },
+  {
+   "datetime": 1789768800,
+   "headline": "John Ternus has the 'Apple DNA' that will push company to the 'next level'",
+   "summary": "CFRA Research senior vice president Angelo Zino discusses why new Apple (AAPL) CEO John Ternus may be the right man for the job, especially after the release of the new iPhone 18 Pro and unveiling of the foldable iPhone Duo.",
+   "url": "https://finnhub.io/api/news?id=cf7a67c084ea63bcb417d903ad3fc12008da999abbe9e37712e1aa515bfaf28a",
+   "source": "Yahoo",
+   "id": 142264568
+  },
+  {
+   "datetime": 1789765290,
+   "headline": "Coinbase Files to List Single-Stock Perps on Apple, Tesla and Nvidia",
+   "summary": "The filing seeks CFTC approval for contracts giving US traders 24/5 leveraged exposure to individual stocks without ownership.",
+   "url": "https://finnhub.io/api/news?id=5e42e3b920ebd3317db6c18727698362c541ddeb139e09848f40d6d19b4e11fa",
+   "source": "Yahoo",
+   "id": 142261539
+  },
+  {
+   "datetime": 1789765041,
+   "headline": "Stock Market Today: Nasdaq, S&P Reverse Slightly Higher; Sandisk, Lumentum Lead This Tech Rally (Live Coverage)",
+   "summary": "Stock Market Today: The Dow Jones index falls Friday as oil prices reverse higher. Apple, AMD, Micron and Sandisk are key movers.",
+   "url": "https://finnhub.io/api/news?id=e3af098458f9a0beaa2b04ff4e097daf7d06b8abd21453f00b28e2d75b4ae1b5",
+   "source": "Yahoo",
+   "id": 142261558
+  },
+  {
+   "datetime": 1789763700,
+   "headline": "GM is re-downloading Apple CarPlay, Android Auto to its cars",
+   "summary": "General Motors (GM) will reinstall Apple's (AAPL) CarPlay and Android Auto in its vehicles after initially planning to remove the software from new cars. Yahoo Finance Senior Autos Reporter Pras Subramanian explains the consumer reaction that led to this decision.",
+   "url": "https://finnhub.io/api/news?id=e2a11418050a909bee1794c2740a93d44ebeb2362de049f5537898beec3cde42",
+   "source": "Yahoo",
+   "id": 142261557
+  },
+  {
+   "datetime": 1789762880,
+   "headline": "Apple Stock Gets Stunning Price Target Hike on Strong iPhone Demand",
+   "summary": "Evercore Delivers Bullish $380 Price Target for Apple Stock",
+   "url": "https://finnhub.io/api/news?id=1b31ab7450c84ff379deb80d2a13a20a6d41845686af4e48e332ad4c57804f0c",
+   "source": "Yahoo",
+   "id": 142261553
+  },
+  {
+   "datetime": 1789762174,
+   "headline": "Apple will essentially sell 'every single' iPhone Duo it makes: CFRA",
+   "summary": "Apple's (AAPL) iPhone 18 Pro has hit store shelves on Friday, coming out a full month before the foldable iPhone Duo's release in late October. CFRA Research senior vice president and equity analyst Angelo Zino comes on Market Domination to discuss his forecast surrounding demand for the foldable iPhone.",
+   "url": "https://finnhub.io/api/news?id=79ed4a40b029765a0b9953d0c50f57466b5a877b9f880cab1e59f2c42df367a2",
+   "source": "Yahoo",
+   "id": 142261552
+  },
+  {
+   "datetime": 1789762006,
+   "headline": "Apple Stock Near Buy Point As iPhone 18 Pro Goes On Sale",
+   "summary": "Apple began selling its latest premium smartphones Friday and analysts are cautiously optimistic about its prospects.",
+   "url": "https://finnhub.io/api/news?id=74137b3be8176ceb189457dfd3226779cdc3846d9e9345ebc7ddfdf4a7986aa0",
+   "source": "Yahoo",
+   "id": 142261554
+  },
+  {
+   "datetime": 1789761433,
+   "headline": "Sector Update: Tech Stocks Rise Late Afternoon",
+   "summary": "Tech stocks rose late Friday afternoon, with the State Street Technology Select Sector SPDR ETF (XLK",
+   "url": "https://finnhub.io/api/news?id=eae90ef194a394f998edd55e8000cc2893e298a80525499a63a5f742b03c52b8",
+   "source": "Yahoo",
+   "id": 142260464
+  },
+  {
+   "datetime": 1789759774,
+   "headline": "Jim Cramer shares his expectations for Apple's new hardware releases",
+   "summary": "'Mad Money' host Jim Cramer shares his expectations for the latest Apple hardware and what market moving moments are on the docket for next week.",
+   "url": "https://finnhub.io/api/news?id=e9da0b73b12578d13d05da8fdd14dc1fefc9a729affe91a16f80b3d499e9063e",
+   "source": "CNBC",
+   "id": 142272656
+  },
+  {
+   "datetime": 1789759477,
+   "headline": "Where AAPL Stock's $510 Billion Of Shareholder Cash Came From",
+   "summary": "One of the world\u2019s largest companies has become a cash-return machine of historic scale, but its engine is now facing a serious test.",
+   "url": "https://finnhub.io/api/news?id=d619fe748ffe6a8da06b527c53226697c45a0fcaeed9b1a21108d818d1ebe057",
+   "source": "Yahoo",
+   "id": 142259281
+  },
+  {
+   "datetime": 1789758600,
+   "headline": "Intel vs. SK Hynix: Which Chip Stock Is Worth Chasing After This Week's Surge?",
+   "summary": "Intel (INTC) and SK Hynix (SKHY) have been among this week's hottest semiconductor stocks as investors react to reports that the companies are exploring partnership opportunities.",
+   "url": "https://finnhub.io/api/news?id=78a32cefff3b734a602cec1107d0af9612b36dcbd1da4258455cd14ace8a28a3",
+   "source": "Yahoo",
+   "id": 142259071
+  },
+  {
+   "datetime": 1789756877,
+   "headline": "Apple Stock Drops as 1,600+ Italian Workers Strike on iPhone 18 Pro Launch",
+   "summary": "Apple's Italian stores remained open as unions pressed for more hiring, permanent contracts and increased hours for part-time employees",
+   "url": "https://finnhub.io/api/news?id=78dac5b19e49737ab2663a7ff39c104d70ca1093477fb8c274998e3450a0ab93",
+   "source": "Yahoo",
+   "id": 142259059
+  }
+ ]
+}

@@ -33,7 +33,15 @@ from __future__ import annotations
 import datetime as dt
 from dataclasses import dataclass, field
 
-from data.normalize import concept_map, dimensions, periods, restatements, splits
+from data.normalize import (
+    concept_map,
+    derived,
+    dimensions,
+    periods,
+    restatements,
+    splits,
+    ttm,
+)
 from data.normalize.concept_map import US_GAAP
 from schema.contracts.common import ISODate, ISOTimestamp, Ticker
 from schema.contracts.enums import FilingType, PeriodType, SourceKind, Unit
@@ -282,7 +290,13 @@ def _debt_facts(
         )
 
     total = sum(float(p.value or 0.0) for p in parts)
-    newest = max(entries, key=lambda e: (e.get("filed") or ""))
+    # The total became knowable when its LAST component was filed, and carries
+    # that filing's accession so the two agree (data/normalize/derived.py).
+    # Components usually share a filing; they do not have to.
+    newest_fact = derived.last_filed(parts) or parts[-1]
+    newest = next(
+        e for e in entries if e.get("accn") == newest_fact.accession_number
+    )
     return [
         *parts,
         FinancialFact(
@@ -298,9 +312,9 @@ def _debt_facts(
             period_start=None,
             period_end=period.period_end,
             fiscal_period=period.label,
-            filing_type=filing_type_of(newest.get("form", ""))[0],
-            accession_number=newest.get("accn"),
-            filed_at=newest.get("filed"),
+            filing_type=newest_fact.filing_type,
+            accession_number=newest_fact.accession_number,
+            filed_at=newest_fact.filed_at,
             retrieved_at=retrieved_at,
             source_url=source_url_for(cik, newest.get("accn")),
             source_location=" + ".join(f"{US_GAAP}:{e['concept']}" for e in entries),
@@ -419,6 +433,20 @@ def normalize_companyfacts(
     result.facts.extend(adjusted)
     result.gaps.extend(notes)
     result.split_events = events
+
+    # Trailing twelve months, from the latest 10-Q. Last, because it reads the
+    # annual facts this function just built.
+    trailing = ttm.build(
+        ticker,
+        companyfacts,
+        result.facts,
+        as_of=as_of,
+        taxonomy=taxonomy,
+        cik=cik,
+        retrieved_at=retrieved_at,
+    )
+    result.facts.extend(trailing.facts)
+    result.gaps.extend(trailing.gaps)
     return result
 
 

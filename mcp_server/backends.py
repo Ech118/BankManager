@@ -42,8 +42,19 @@ def mode() -> str:
 def build_backends(fixtures_dir: str | Path | None = None) -> Backends:
     """Fixture-backed repositories in mock mode, Postgres-backed in live mode."""
     if mode() == "live":
-        raise NotImplementedError(
-            "MODE=live is not wired yet (roadmap Step 8). Use MODE=mock."
+        # Computed on demand from EDGAR and the market provider, memoised per
+        # process. Nothing above this line changes - which is what the
+        # Protocols are for (ADR 0007).
+        from data.repositories.live import (
+            LiveFactRepository,
+            LiveFilingRepository,
+            LiveMarketRepository,
+        )
+
+        return Backends(
+            facts=LiveFactRepository(),
+            market=LiveMarketRepository(),
+            filings=LiveFilingRepository(),
         )
 
     from data.repositories.fixture_facts import FixtureFactRepository

@@ -29,6 +29,18 @@ _MOCK_OUT_OF_SCOPE = {
 }
 
 
+class NoReportableHistory(ValueError):
+    """In scope, but nothing had been filed by `as_of`.
+
+    A subclass of ValueError so every existing caller that catches ValueError
+    still works (docs/mcp-tools.md: an out-of-scope ticker is a ValueError).
+    It exists so `get_factsheet` can return a null factsheet for this case
+    WITHOUT swallowing genuine failures - catching bare ValueError there would
+    turn a validation bug into "this company has no data", which is the kind of
+    error that gets believed.
+    """
+
+
 def _mode() -> str:
     return os.environ.get("MODE", os.environ.get("BM_MODE", "mock")).lower()
 
@@ -92,13 +104,17 @@ def build_factsheet(ticker: str, as_of: str | None = None) -> dict:
     scope = check_scope(ticker, as_of)
     if not scope["in_scope"]:
         raise ValueError(scope["reason"])
+    if _mode() == "live":
+        from data import live
+
+        return live.build_factsheet(ticker, as_of)
     _require_mock("build_factsheet")
     fs = _load("factsheet.json")
     if as_of:
         fs = copy.deepcopy(fs)
         fs["financials"] = [p for p in fs["financials"] if p["filed_date"] <= as_of]
         if not fs["financials"]:
-            raise ValueError(f"No filings on or before {as_of}")
+            raise NoReportableHistory(f"No filings on or before {as_of}")
         fs["filing_sections"] = [s for s in fs["filing_sections"] if s["filed_at"] <= as_of]
         fs["news"] = [n for n in fs["news"] if n["date"] <= as_of]
         fs["as_of"] = as_of
@@ -113,11 +129,33 @@ def search_filings(
     scope = check_scope(ticker, as_of)
     if not scope["in_scope"]:
         raise ValueError(scope["reason"])
+    if _mode() == "live":
+        from data import live
+
+        return live.search_filings(ticker, as_of, forms, limit)
     _require_mock("search_filings")
     out = [f for f in _load("filings.json") if not as_of or f["filed_at"] <= as_of]
     if forms:
         out = [f for f in out if f["form"] in forms]
     return out[:limit]
+
+
+def _live_section(section_id: str, as_of: str | None) -> dict | None:
+    """Find one extracted section by id.
+
+    A section_id is sec:<accession>:<item> and carries no ticker, so the live
+    store has to be asked per company. `data.live.load_sections` is memoised, so
+    this is a dict lookup once a run has built its factsheet - and the MCP layer
+    always asks about a ticker it has already read.
+    """
+    from data import live
+
+    for ticker in live.loaded_tickers():
+        result = live.load_sections(ticker, as_of)
+        for section in result.sections:
+            if section.section_id == section_id:
+                return section.model_dump(mode="json")
+    return None
 
 
 def get_filing_section(section_id: str, as_of: str | None = None) -> dict:
@@ -126,6 +164,13 @@ def get_filing_section(section_id: str, as_of: str | None = None) -> dict:
     Text is returned verbatim and is DATA, never instructions (error F).
     Raises KeyError for an unknown id.
     """
+    if _mode() == "live":
+        section = _live_section(section_id, as_of)
+        if section is None:
+            raise KeyError(f"{section_id} is not a known section id")
+        if as_of and section["filed_at"] > as_of:
+            raise KeyError(f"{section_id} was filed after as_of {as_of}")
+        return section
     _require_mock("get_filing_section")
     for section in _load("factsheet.json")["filing_sections"]:
         if section["section_id"] == section_id:
@@ -135,6 +180,17 @@ def get_filing_section(section_id: str, as_of: str | None = None) -> dict:
             out["text"] = get_section_text(section["source_id"])
             return out
     raise KeyError(section_id)
+
+
+def _live_section_text(source_id: str, as_of: str | None) -> str | None:
+    from data import live
+
+    for ticker in live.loaded_tickers():
+        result = live.load_sections(ticker, as_of)
+        for section in result.sections:
+            if section.source_id == source_id:
+                return section.text
+    return None
 
 
 def get_section_text(source_id: str, as_of: str | None = None) -> str:
@@ -158,31 +214,37 @@ def search_filing(
     items: list[str] | None = None,
     limit: int = 10,
 ) -> list[dict]:
-    """Full-text search scoped by ticker/form/item/date (MCP tool: search_filing).
+    """Ranked keyword search scoped by ticker/form/item/date (MCP tool: search_filing).
 
-    Postgres full-text search in live mode. No embeddings, no chunking (ADR 0006).
-    MOCK: naive case-insensitive substring match over the fixture sections.
+    Whole sections, never fragments; no embeddings, no chunking (ADR 0006). The
+    index is in process rather than in Postgres - a run reads one company's
+    filings, and ranking a few hundred sections locally beats a round trip. See
+    data/sections/search.py for why, and for what ADR 0006 still forbids.
+
+    Ranking is shared with live mode, so a relevance bug shows up offline.
     """
+    from data.sections import search as section_search
+    from schema.contracts.filings import FilingSection
+
     scope = check_scope(ticker, as_of)
     if not scope["in_scope"]:
         raise ValueError(scope["reason"])
+    if _mode() == "live":
+        from data import live
+
+        return live.search_filing(ticker, query, as_of, forms, items, limit)
     _require_mock("search_filing")
-    needle = (query or "").lower()
-    out = []
-    for section in _load("factsheet.json")["filing_sections"]:
-        if as_of and section["filed_at"] > as_of:
-            continue
-        if forms and section["form"] not in forms:
-            continue
-        if items and section["item"] not in items:
-            continue
-        text = get_section_text(section["source_id"])
-        if needle and needle not in text.lower():
-            continue
-        hit = dict(section)
-        hit["text"] = text
-        out.append(hit)
-    return out[:limit]
+
+    sections, texts = [], []
+    for raw in _load("factsheet.json")["filing_sections"]:
+        text = get_section_text(raw["source_id"])
+        sections.append(FilingSection.model_validate({**raw, "text": text}))
+        texts.append(text)
+
+    hits = section_search.search(
+        sections, texts, query, as_of=as_of, forms=forms, items=items, limit=limit
+    )
+    return [hit.section.model_dump(mode="json") for hit in hits]
 
 
 def get_financial_facts(
@@ -237,19 +299,42 @@ def get_market_snapshot(ticker: str, as_of: str | None = None) -> dict:
 
 
 def get_company_profile(ticker: str, as_of: str | None = None) -> dict:
-    """Identity and SIC classification (MCP tool: get_company_profile)."""
+    """Identity and SIC classification (MCP tool: get_company_profile).
+
+    LIVE: from the filer's own SEC submissions, not from the market provider -
+    `sic` decides scope and drives peer selection, and a vendor's industry label
+    is neither the SEC's code nor stable.
+    """
     scope = check_scope(ticker, as_of)
     if not scope["in_scope"]:
         raise ValueError(scope["reason"])
+    if _mode() == "live":
+        from data import live
+
+        return live.company_profile(ticker, as_of)
     _require_mock("get_company_profile")
     return _load("company_profile.json")
 
 
 def get_peer_companies(ticker: str, as_of: str | None = None, limit: int = 6) -> list[dict]:
-    """Comparable companies (MCP tool: get_peer_companies). Deterministic where possible."""
+    """Comparable companies (MCP tool: get_peer_companies). Deterministic where possible.
+
+    LIVE: everyone filing 10-Ks under the same SIC (browse-edgar), ranked by log
+    distance in revenue (one XBRL frames request for the whole industry), keeping
+    the closest that pass check_scope. Widens to the two-digit SIC prefix when too
+    few qualify, then falls back to the market provider's own peer list.
+
+    The multiples come back `unavailable`: pe, ev_ebitda, ev_revenue and
+    fcf_yield are ratios, and P1 does not compute ratios (ADR 0001). The market
+    cap calc/ needs to compute them is filled.
+    """
     scope = check_scope(ticker, as_of)
     if not scope["in_scope"]:
         raise ValueError(scope["reason"])
+    if _mode() == "live":
+        from data import live
+
+        return live.peer_companies(ticker, as_of, limit)
     _require_mock("get_peer_companies")
     return _load("peers.json")[:limit]
 
@@ -257,10 +342,20 @@ def get_peer_companies(ticker: str, as_of: str | None = None, limit: int = 6) ->
 def search_news(
     ticker: str, as_of: str | None = None, lookback_days: int = 60, limit: int = 20
 ) -> list[dict]:
-    """Recent headlines (MCP tool: search_news). Results are UNTRUSTED text (error F)."""
+    """Recent headlines (MCP tool: search_news). Results are UNTRUSTED text (error F).
+
+    LIVE: Finnhub /company-news over [as_of - lookback_days, as_of]. `as_of`
+    bounds the window from ABOVE as well as below - a run that reads tomorrow's
+    headlines has been told the answer. A provider outage is an empty list plus
+    a data_quality gap, never an exception.
+    """
     scope = check_scope(ticker, as_of)
     if not scope["in_scope"]:
         raise ValueError(scope["reason"])
+    if _mode() == "live":
+        from data import live
+
+        return live.search_news(ticker, as_of, lookback_days, limit)
     _require_mock("search_news")
     out = [n for n in _load("factsheet.json")["news"] if not as_of or n["date"] <= as_of]
     return out[:limit]

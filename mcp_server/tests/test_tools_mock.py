@@ -14,8 +14,16 @@ import pytest
 from mcp import Client
 
 from mcp_server.server import IMPLEMENTED_TOOLS, build_server
-from mcp_server.tests.support import LATEST, TICKER, call, list_tool_names, ok
-from schema.contracts.tools import TOOL_REQUESTS, TOOL_RESPONSES
+from mcp_server.tests.support import (
+    BEFORE_FY2025_10K,
+    LATEST,
+    TICKER,
+    call,
+    error_text,
+    list_tool_names,
+    ok,
+)
+from schema.contracts.tools import COMPUTE_TOOLS, TOOL_REQUESTS, TOOL_RESPONSES
 
 BEFORE_RESTATEMENT = "2025-06-01"
 """After the FY2024 10-K (filed 2025-02-21), before the FY2025 10-K
@@ -56,7 +64,18 @@ def test_advertised_schema_matches_the_contract_model(name):
     assert advertised == expected, f"{name}: advertised {advertised}, contract {expected}"
 
 
-@pytest.mark.parametrize("name", sorted(IMPLEMENTED_TOOLS))
+DATA_TOOLS = sorted(set(IMPLEMENTED_TOOLS) - COMPUTE_TOOLS)
+"""Everything served except the compute tool.
+
+`calculate_valuation` takes no `as_of` by design: the factsheet it works from
+already carries the authoritative one, and a second date could silently
+disagree with the first (amendment 2). Excluding it here rather than weakening
+the assertion keeps "every DATA tool requires as_of" a real check - and
+tests/contracts/test_models.py asserts the other half, that a compute tool does
+not take one."""
+
+
+@pytest.mark.parametrize("name", DATA_TOOLS)
 def test_every_data_tool_requires_as_of(name):
     """ADR 0003: there is no way to query the data layer without a cutoff."""
 
@@ -68,7 +87,7 @@ def test_every_data_tool_requires_as_of(name):
     assert "as_of" in tool.input_schema.get("required", []), f"{name} must require as_of"
 
 
-@pytest.mark.parametrize("name", sorted(IMPLEMENTED_TOOLS))
+@pytest.mark.parametrize("name", DATA_TOOLS)
 def test_omitting_as_of_is_an_error(name):
     result = call(name, {"ticker": TICKER})
     assert result.is_error, f"{name} accepted a call with no as_of"
@@ -327,3 +346,103 @@ def test_out_of_scope_ticker_is_refused_on_every_tool():
     ):
         result = call(tool, {"ticker": "BANKX", "as_of": LATEST, **args})
         assert result.is_error, f"{tool} did not refuse BANKX"
+
+
+# --------------------------------------------------------------------------
+# search_news: untrusted, bounded above as well as below
+# --------------------------------------------------------------------------
+def test_search_news_is_advertised():
+    assert "search_news" in list_tool_names()
+
+
+def test_search_news_returns_contract_items():
+    payload = ok("search_news", {"ticker": TICKER, "as_of": LATEST})
+    parsed = TOOL_RESPONSES["search_news"].model_validate(payload)
+    for entry in parsed.news:
+        assert entry.url.startswith(("http://", "https://"))
+        assert entry.source_id
+
+
+def test_search_news_never_returns_anything_after_as_of():
+    payload = ok("search_news", {"ticker": TICKER, "as_of": BEFORE_FY2025_10K})
+    assert all(n["date"] <= BEFORE_FY2025_10K for n in payload["news"])
+
+
+def test_search_news_requires_as_of():
+    assert call("search_news", {"ticker": TICKER}).is_error
+
+
+def test_search_news_rejects_an_out_of_scope_ticker():
+    assert "BANKX" in error_text("search_news", {"ticker": "BANKX", "as_of": LATEST})
+
+
+def test_search_news_empty_is_not_an_error():
+    """A provider outage must reach the agent as no news plus a gap, never as a
+    failed call."""
+    result = call("search_news", {"ticker": TICKER, "as_of": "2000-01-01"})
+    assert not result.is_error
+    assert result.structured_content["news"] == []
+
+
+# --------------------------------------------------------------------------
+# calculate_valuation: the one sanctioned cross-partition import
+# --------------------------------------------------------------------------
+def test_calculate_valuation_is_advertised():
+    assert "calculate_valuation" in list_tool_names()
+
+
+def test_calculate_valuation_takes_no_as_of():
+    """A function given a factsheet must not take a second, possibly
+    conflicting date (amendment 2)."""
+    schema = TOOL_REQUESTS["calculate_valuation"].model_json_schema()
+    assert "as_of" not in schema.get("properties", {})
+
+
+def test_calculate_valuation_returns_a_contract_response():
+    payload = ok(
+        "calculate_valuation",
+        {"ticker": TICKER, "methods": ["pe", "ev_revenue", "reverse_dcf"]},
+    )
+    TOOL_RESPONSES["calculate_valuation"].model_validate(payload)
+
+
+def test_calculate_valuation_always_returns_a_sensitivity_grid():
+    """Never a single point value (error D)."""
+    payload = ok("calculate_valuation", {"ticker": TICKER, "methods": ["reverse_dcf"]})
+    assert payload.get("reverse_dcf")
+    assert payload["reverse_dcf"].get("sensitivity_grid")
+
+
+def test_an_unknown_method_is_skipped_with_a_reason_not_raised():
+    """One bad method name in an LLM's request must not lose the other six."""
+    payload = ok(
+        "calculate_valuation",
+        {"ticker": TICKER, "methods": ["pe", "not_a_real_method"]},
+    )
+    skipped = payload["metrics"]["valuation"]["methods_skipped"]
+    assert "not_a_real_method" in skipped
+    assert skipped["not_a_real_method"]
+
+
+def test_calculate_valuation_rejects_an_out_of_scope_ticker():
+    assert "BANKX" in error_text(
+        "calculate_valuation", {"ticker": "BANKX", "methods": ["pe"]}
+    )
+
+
+def test_the_wrapper_holds_no_arithmetic():
+    """ADR 0007: arithmetic in this file is a defect. Checked mechanically
+    because a reviewer will not notice a single `/` added later."""
+    import ast
+    import inspect
+
+    from mcp_server.tools import calculate_valuation
+
+    tree = ast.parse(inspect.getsource(calculate_valuation))
+    operators = [
+        node
+        for node in ast.walk(tree)
+        if isinstance(node, ast.BinOp)
+        and isinstance(node.op, ast.Add | ast.Sub | ast.Mult | ast.Div | ast.Pow)
+    ]
+    assert not operators, "valuation arithmetic belongs in calc/, not in the wrapper"

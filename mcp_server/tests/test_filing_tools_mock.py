@@ -217,3 +217,87 @@ def test_max_chars_larger_than_the_section_does_not_truncate():
 def test_omitting_as_of_is_an_error():
     assert call("get_filing_section", {"section_id": section_id("mdna")}).is_error
     assert call("search_filings", {"ticker": TICKER}).is_error
+
+
+# --------------------------------------------------------------------------
+# search_filing: ranked, in-process, whole sections (ADR 0006)
+# --------------------------------------------------------------------------
+def test_search_filing_is_advertised():
+    assert "search_filing" in list_tool_names()
+
+
+def test_search_filing_ranks_the_most_relevant_section_first():
+    """"debt" appears in several ACME sections; the debt note is what an agent
+    asking about debt should get."""
+    payload = ok(
+        "search_filing", {"ticker": TICKER, "query": "debt", "as_of": LATEST}
+    )
+    assert payload["sections"]
+    assert payload["sections"][0]["item"] == "debt_note"
+
+
+def test_search_filing_returns_whole_sections_not_fragments():
+    payload = ok(
+        "search_filing", {"ticker": TICKER, "query": "debt", "as_of": LATEST}
+    )
+    section = payload["sections"][0]
+    assert len(section["text"]) == SECTION_LENGTHS["debt_note"]
+    assert section["char_end"] - section["char_start"] == section["char_count"]
+
+
+def test_search_filing_finds_nothing_rather_than_returning_the_best_of_a_bad_set():
+    payload = ok(
+        "search_filing",
+        {"ticker": TICKER, "query": "zzzznotinanyfiling", "as_of": LATEST},
+    )
+    assert payload["sections"] == []
+    assert payload["truncated"] is False
+
+
+def test_search_filing_respects_as_of():
+    """The FY2025 10-K's sections did not exist on 2025-06-01."""
+    payload = ok(
+        "search_filing",
+        {"ticker": TICKER, "query": "debt", "as_of": BEFORE_FY2025_10K},
+    )
+    assert all(s["filed_at"] <= BEFORE_FY2025_10K for s in payload["sections"])
+    assert not [s for s in payload["sections"] if s["accession"] == FY2025_10K]
+
+
+def test_search_filing_filters_by_item():
+    payload = ok(
+        "search_filing",
+        {
+            "ticker": TICKER,
+            "query": "debt",
+            "as_of": LATEST,
+            "items": ["risk_factors"],
+        },
+    )
+    assert {s["item"] for s in payload["sections"]} <= {"risk_factors"}
+
+
+def test_search_filing_reports_truncation_honestly():
+    """limit=1 on a query that matches more than one section."""
+    unlimited = ok(
+        "search_filing", {"ticker": TICKER, "query": "debt risk", "as_of": LATEST}
+    )
+    assert len(unlimited["sections"]) > 1
+
+    limited = ok(
+        "search_filing",
+        {"ticker": TICKER, "query": "debt risk", "as_of": LATEST, "limit": 1},
+    )
+    assert len(limited["sections"]) == 1
+    assert limited["truncated"] is True
+
+
+def test_search_filing_rejects_an_out_of_scope_ticker():
+    message = error_text(
+        "search_filing", {"ticker": "BANKX", "query": "debt", "as_of": LATEST}
+    )
+    assert "BANKX" in message
+
+
+def test_search_filing_requires_as_of():
+    assert call("search_filing", {"ticker": TICKER, "query": "debt"}).is_error

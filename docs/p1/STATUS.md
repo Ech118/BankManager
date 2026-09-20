@@ -3,50 +3,63 @@
 Update whenever a capability moves from mock to real, or when blocked.
 A PR that changes behaviour must update this file.
 
-**Step:** 3 in progress. **Seven of ten tools are served; XBRL normalization is
-real and runs against twelve recorded filers.**
-**Next:** `get_peer_companies` (SIC + XBRL frames), then `build_factsheet`,
-then live filing sections, then the last three tools.
-**Blockers:** none.
+**Step:** 4 complete. **All eleven tools are served and live; XBRL normalization
+is real and runs against twelve recorded filers.**
+**Next:** Q4 derivation, and Postgres if the corpus outgrows one company per
+run. Both still raise rather than guess.
+**Blockers:** `calc/` is on `p2-port` and not yet merged to `main`, so the
+wrapper is tested against that branch's `calc/` locally. Real 10-K section extraction is deferred and is
+what `search_filing` needs to work in live mode.
+**Blockers:** `get_factsheet` is in the contracts but not yet in `main` -
+PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
 
 | Capability | State | Notes |
 |---|---|---|
-| **MCP server** | **mock, live over MCP** | 7 of 10 tools served over the in-memory transport |
-| `get_financial_facts` | **served** | as_of + restatement filtering, `periods`, `include_superseded` |
+| **MCP server** | **mock + LIVE** | **all 11 tools**; in-memory transport in mock, stdio subprocess in live |
+| `get_financial_facts` | **served, live** | as_of + restatement filtering, `periods`, `include_superseded` |
 | `get_market_snapshot` | **served, live** | Finnhub price + filing share count; degrades to price unavailable |
-| `get_company_profile` | **served** | |
-| `get_peer_companies` | **served** | `limit` + `truncated` |
-| `resolve_fact` | **served** | flags `is_superseded` / `is_future` separately |
-| `search_filings` | **served** | newest first, `forms` filter, `limit` + `truncated` |
-| `get_filing_section` | **served** | verbatim; errors on unknown id AND on one filed after `as_of` |
-| `search_filing` | not served | Step 3; needs Postgres full-text search |
-| `search_news` | not served | Step 4 |
-| `calculate_valuation` | not served | Step 4; waits on P2's `calc.api` |
+| `get_company_profile` | **served, live** | from SEC submissions, not the vendor: `sic` decides scope |
+| `get_peer_companies` | **served, live** | SIC + XBRL frames ranking; `limit` + `truncated` |
+| `resolve_fact` | **served, live** | flags `is_superseded` / `is_future` separately |
+| `search_filings` | **served, live** | newest first, `forms` filter, `limit` + `truncated` |
+| `get_filing_section` | **served, live** | verbatim; errors on unknown id AND on one filed after `as_of` |
+| `search_filing` | **served, live** | BM25 over the extracted Item 1 / 1A sections, in process |
+| `search_news` | **served, live** | Finnhub /company-news; `as_of` bounds the window from above too |
+| `calculate_valuation` | **served, live** | pass-through to `calc.api`; the one sanctioned cross-partition import |
 | **EDGAR client** | **real** | submissions, filings, documents; responses replayed in tests |
 | **ticker → CIK** | **real** | `BRK.B` / `BRK-B` / `brk-b` all normalise |
 | **rate limiting** | **real** | token bucket at 8 req/s; escalating 429/503 backoff |
 | **on-disk cache** | **real** | by accession for filings; `get_fresh()` for the ticker map |
 | **`SEC_USER_AGENT` loading** | **real** | `data/ingest/env.py`; refuses a UA with no contact details |
 | `check_scope` | **real** | three levels: supported / partial / unsupported. Mock path unchanged |
-| `build_factsheet` | mock | returns the ACME fixture; **P3's auditor needs a real one** |
+| `build_factsheet` | **real** | assembled from the same facts and the same market observation the tools answer from |
+| `get_factsheet` | **served** | new tool (SCHEMA_VERSION 2.1.0); P3 can drop the injected factsheet |
+| `fixtures/real/<T>/factsheet.json` | **real** | AAPL, JPM, NVDA, KO, MSFT; now carry TTM, sections, news and peer figures |
 | XBRL concept mapping | **real** | per-PERIOD chains, us-gaap; `ifrs-full` slot present and empty |
 | Annual normalization | **real** | 5 fiscal years of 10-K values -> `FinancialFact` |
 | Fiscal year labelling | **real** | from the filer's own numbering; Jan/Jun/Aug/Sep year ends tested |
 | Total debt | **real** | derived fact; components emitted and linked by `Derivation` |
 | Restatement linking | **real** | `superseded_by` + `as_known_on()`; real splits exercise it |
 | Stock splits | **real** | discontinuity detector + split-adjusted derived facts when a ratio is tagged |
+| Derived-fact dating | **real** | `filed_at` = latest input's, never null; `data/normalize/derived.py` |
+| Peer selection | **real** | browse-edgar SIC (paged) + frames revenue ranking, log-distance cutoff, provider fallback |
+| Peer figures | **real** | revenue + net income per peer from the same frames; unblocks calc's `peer_median` |
+| `sp500_baseline` | **real** | SPY quote measured; forward P/E, earnings yield and risk-free rate are reviewed constants typed `assumption` |
 | Market client | **real** | `MarketClient` Protocol; Finnhub impl; 5-min quote cache; `NullMarketClient` for outages |
 | Shares outstanding | **real** | 5-candidate chain behind a public-float floor check (GOOGL, BRK-B) |
 | Market snapshot | **real** | one timestamp for the bundle; EV bridge cites the facts |
 | Point-in-time reads | **real** | facts filed after `as_of` are never read |
-| YTD differencing / Q4 derivation | not started | annual only for now; both raise rather than guess |
+| TTM flow facts | **real** | `<metric>_ttm` + the `_ytd` facts they cite; `ttm` block on the factsheet |
+| Q4 derivation | not started | TTM covers the trailing year; a single Q4 still raises rather than guesses |
 | ticker -> CIK overrides | **real** | `data/ingest/ticker_overrides.py`; XOM is the only one in the top 100 |
 | `fixtures/real/` recorded filers | **real** | 12 companies, trimmed companyfacts + submissions |
-| Section parsing | mock | serves `fixtures/mock/sections/*.txt`; real 10-K parsing is Step 7 |
-| Postgres store | not started | migration file lists the tables |
+| Section parsing | **real** | 10-K Item 1 + 1A from the primary document; TOC, letter-spacing and cross-references handled |
+| Postgres store | not started | live repositories compute on demand instead; migration file lists the tables |
+| Live repositories | **real** | `data/repositories/live.py` implements the three Protocols |
+| Live e2e over stdio | **real** | `BM_LIVE_TESTS=1 pytest mcp_server/tests/test_live_e2e.py`; 25 checks, all eleven tools |
 | `fixtures/real/` demo tickers | not started | Step 6; coordinate the choice via `docs/requests/` |
 
-**Last updated:** 2026-09-19 (Step 3: XBRL normalization, scope and recorded fixtures)
+**Last updated:** 2026-09-20 (`calculate_valuation`, TTM facts, peer figures)
 
 ---
 
@@ -122,6 +135,93 @@ produced a confident wrong number rather than an error.
    every class. `data/normalize/shares.py` therefore tries five candidates and
    keeps the first that survives a public-float floor check. AAPL, NVDA and
    GOOGL market caps come out equal to the provider's to the dollar.
+
+10. **A derived fact copied from one of its inputs inherits the wrong date.**
+    The split-adjusted facts were `model_copy` of the as-filed fact, so they
+    carried the as-filed `filed_at`. NVDA's FY2022 EPS was filed 2024-02-21 and
+    the 10-for-1 ratio first tagged 2025-05-28, so a run anywhere in those
+    fifteen months saw a split-adjusted number computed from a ratio that was
+    not yet in the data. The rule is now one function
+    (`data/normalize/derived.py`): a derived fact's `filed_at` is the LATEST
+    `filed_at` among its inputs, never null, and it carries that filing's
+    accession so the two agree. Total debt already followed the rule
+    implicitly; it now calls the same helper. Raised with P3 and P2 in
+    `docs/requests/2026-09-19-p3-report-inputs-response.md`.
+
+11. **browse-edgar does not support a SIC prefix, and does not order by size.**
+    `SIC=35` returns ZERO rows - it is read as an unknown code, not a wildcard -
+    so the planned "widen to the two-digit prefix" step would have looked
+    correct, never fired, and quietly left every short peer set short. Widening
+    the SIZE tolerance replaces it. Separately, a SIC page caps at 100 rows
+    ordered by neither size nor relevance: SIC 6021 puts Bank of America on
+    page 1, Citigroup on page 2 and Wells Fargo on neither, and SIC 2080 has
+    PepsiCo on page 2. Peer selection pages four deep.
+
+12. **Three findings that each produced a plausible wrong peer set.**
+    (a) SIC alone is not enough: Apple's SIC 3571 holds Dell at 3.7x revenue and
+    then Socket Mobile at 27,600x. Without a distance cutoff a $200M company
+    lands in Apple's peer median. (b) Banks tag `RevenuesNetOfInterestExpense`
+    and nothing else - its CY2025 frame holds 42 companies - so without that
+    concept every bank has no revenue, every candidate is dropped, and JPM's
+    ranking silently returns nothing. (c) Inverting SEC's ticker -> CIK map
+    naively keeps whichever ticker the iteration ended on, which put `SMCIP`
+    (a preferred) and `BSQKZ` in peer sets instead of the common stock; a market
+    cap read off a thinly traded preferred is not the company's.
+
+13. **Five real factsheets, and what they say.** Market caps at recording
+    time: AAPL $4,905.5B, NVDA $5,356.7B, MSFT $3,666.6B, JPM $929.5B,
+    KO $379.7B - each equal to its own price times its own share count, which
+    is the check that catches a provider cap pasted beside an unrelated share
+    count. Period labels come out FY2026 for NVDA (January year end) and MSFT
+    (June), FY2025 for KO, from the filer's own numbering. Data quality reads
+    `ok` for KO, `partial` for AAPL/MSFT/NVDA and `degraded` for JPM with 47
+    gaps - a bank has no operating income, no capex, no gross profit and no
+    inventory, and every one of them is `unavailable` rather than zero.
+
+14. **Four ways a 10-K parser confidently returns the wrong text.** Each was
+    found against a recorded filing, and each produces plausible content rather
+    than an error. (a) The contents block names every Item, so the first match
+    is a line like "Item 1. Business 3"; the fix is to require a real body after
+    the heading. (b) "Take the occurrence with the most text after it" always
+    picks the LAST one, because its span runs to end-of-file - JPMorgan
+    cross-references "Item 1A: Risk Factors" 590KB from the end, which beat the
+    real section at offset 279,411. (c) A cross-reference inside a sentence
+    looks exactly like a heading: NVIDIA says "see Item 1A. Risk Factors' for a
+    discussion" 6,000 characters early, so a heading now has to start its own
+    line. (d) Microsoft LETTER-SPACES its headings - the text reads "ITEM 1. B
+    USINESS" and "ITEM 1A. RIS K FACTORS" - which no regex over the visible text
+    can match, so matching runs against a whitespace-free copy with an offset
+    map back.
+
+15. **Item 1A cannot be ended by the next recognised heading.** A risk factors
+    section cross-references Item 1 and Item 8 inside its own body - Coca-Cola
+    does it twice in the first 5,000 characters - so ending there truncates the
+    section to a tenth of itself while looking entirely successful. It ends at
+    Item 1B, 1C, 2 or 3, none of which is a phrase a risk factor uses in
+    passing.
+
+16. **A 10-K filed after the last 10-Q makes the obvious TTM formula
+    double-count.** `FY + current YTD - prior-year YTD` assumes the fiscal year
+    ENDS BEFORE the quarter. Microsoft's FY2026 10-K (year ended 2026-06-30) was
+    filed 2026-07-29, after its Q3 10-Q (quarter ended 2026-03-31), so the year
+    already contains that quarter: adding its year-to-date counted nine months
+    twice and produced capex of $148.6B against a full year of $115.9B. The test
+    is whether the fiscal year ends after the quarter, not which document
+    arrived last, and it holds for four months of every year - not an edge case.
+
+17. **The `fy` trap bites quarters too.** Both year-to-date rows in a 10-Q - the
+    current one and the prior-year comparative - carry the FILING's fiscal year,
+    so labelling the comparative from its own `fy` gives two facts the same
+    `Q3-2026` id and one silently overwrites the other. The comparative's label
+    is derived by subtracting a year from the current one.
+
+18. **A bank tagging `RevenueFromContractWithCustomer` is reporting FEE
+    income, not revenue.** ASC 606 does not cover interest, which is the rest of
+    the business. Taking the first concept that matches gave Capital One $8.1B
+    against a real $53.4B - which ranks it as a small company and hands calc/ a
+    P/S five times too high. For SIC 6xxx the chain is reordered to try
+    `RevenuesNetOfInterestExpense` first; every other filer keeps the existing
+    order. Reordered, never shortened.
 
 ### Two earlier findings, still true
 

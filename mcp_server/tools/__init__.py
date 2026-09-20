@@ -4,7 +4,7 @@ Each module exposes a single `run(request, backends) -> response` function,
 validates its arguments with the contract model, and does nothing else. A tool
 that starts to contain a formula belongs in calc/ instead (docs/adr/0007).
 
-Nine tools wrap data/. One - calculate_valuation - wraps calc/, and is the only
+Ten tools wrap data/. One - calculate_valuation - wraps calc/, and is the only
 place mcp_server imports another partition.
 """
 
@@ -21,5 +21,6 @@ TOOL_MODULES: tuple[str, ...] = (
     "search_news",
     "calculate_valuation",
     "resolve_fact",
+    "get_factsheet",
 )
-"""The ten tools. Must stay in step with schema.contracts.tools.TOOL_REQUESTS."""
+"""The eleven tools. Must stay in step with schema.contracts.tools.TOOL_REQUESTS."""
