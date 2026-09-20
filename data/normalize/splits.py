@@ -49,7 +49,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from data.normalize import concept_map, dimensions, periods
+from data.normalize import concept_map, derived, dimensions, periods
 from data.normalize.concept_map import US_GAAP
 from schema.contracts.common import ISODate, ISOTimestamp, Ticker
 from schema.contracts.enums import PeriodType, SourceKind, Unit
@@ -338,6 +338,11 @@ def adjusted_facts(
             f"{e.ratio:g}" for e in applicable
         )
 
+        # The adjusted fact is a copy of the as-filed one, so without this it
+        # would inherit the as-filed `filed_at` - a date BEFORE the split it
+        # cites was public. NVDA's FY2022 value was filed 2024-02-21 and the
+        # ratio months later, so a run in between would have seen a
+        # split-adjusted number for a split that had not been announced.
         out.append(
             fact.model_copy(
                 update={
@@ -354,6 +359,7 @@ def adjusted_facts(
                         computed_by=to_facts.COMPUTED_BY,
                     ),
                     "superseded_by": None,
+                    **derived.provenance([fact, *inputs]),
                 }
             )
         )

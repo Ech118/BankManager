@@ -27,6 +27,7 @@ import pytest
 from data.ingest.ticker_overrides import override_for
 from data.normalize import (
     concept_map,
+    derived,
     dimensions,
     periods,
     restatements,
@@ -653,3 +654,118 @@ def test_a_ratio_below_the_floor_is_ignored():
         }
     }
     assert splits.split_events(payload) == []
+
+
+# --------------------------------------------------------------------------
+# when a derived fact became knowable (data/normalize/derived.py)
+# --------------------------------------------------------------------------
+def _fact(fact_id, filed_at, accession):
+    """A minimal reported fact, for exercising the rule without a payload."""
+    return FinancialFact(
+        fact_id=f"fact:T:m:{fact_id}",
+        company_id="T",
+        metric="m",
+        value=1.0,
+        unit="usd",
+        currency="USD",
+        period_type="instant",
+        period_end="2025-12-31",
+        fiscal_period="FY2025",
+        accession_number=accession,
+        filed_at=filed_at,
+        retrieved_at="2026-09-19T00:00:00Z",
+        source_kind="xbrl_reported",
+    )
+
+
+def test_derived_filed_at_is_the_latest_input_not_the_earliest():
+    """The value was not knowable until its LAST input was filed."""
+    inputs = [
+        _fact("a", "2025-10-30", "0000-1"),
+        _fact("b", "2026-02-01", "0000-2"),
+        _fact("c", "2025-11-15", "0000-3"),
+    ]
+    assert derived.filed_at(inputs) == "2026-02-01"
+
+
+def test_derived_accession_names_the_same_filing_as_the_date():
+    """A date from one input and an accession from another is a dead link."""
+    inputs = [_fact("a", "2025-10-30", "0000-1"), _fact("b", "2026-02-01", "0000-2")]
+    provenance = derived.provenance(inputs)
+    assert provenance["filed_at"] == "2026-02-01"
+    assert provenance["accession_number"] == "0000-2"
+
+
+def test_derived_filed_at_breaks_ties_deterministically():
+    """Two facts from the same day must not let dict order pick the winner."""
+    same_day = [_fact("a", "2026-02-01", "0000-2"), _fact("b", "2026-02-01", "0000-1")]
+    assert derived.provenance(same_day)["accession_number"] == "0000-2"
+    assert derived.provenance(list(reversed(same_day)))["accession_number"] == "0000-2"
+
+
+def test_total_debt_is_dated_by_its_last_component(recorded):
+    """AAPL's total is summed from components; it is as new as the newest one."""
+    result = normalize(recorded, "AAPL")
+    by_id = {f.fact_id: f for f in result.facts}
+    total = value_of(result, "total_debt", "FY2025")
+    assert total.source_kind.value == "derived"
+
+    components = [by_id[i] for i in total.derivation.input_fact_ids]
+    assert total.filed_at == max(c.filed_at for c in components)
+    assert total.accession_number in {c.accession_number for c in components}
+
+
+def test_split_adjusted_fact_is_dated_by_the_ratio_not_by_the_value(recorded):
+    """The bug this rule exists for.
+
+    NVDA's FY2022 EPS was filed 2024-02-21; the 10-for-1 ratio is first TAGGED
+    in a 10-Q filed 2025-05-28. A copy of the as-filed fact inherits the
+    February 2024 date, claiming a split-adjusted number was knowable fifteen
+    months before we could have computed one.
+
+    The date we use is when the ratio was first tagged in XBRL, which can be
+    later than the split's effective date (2024-06-30 here) and later than its
+    announcement. That errs in the safe direction: a point-in-time run is never
+    shown a number earlier than the data it was computed from existed.
+    """
+    result = normalize(recorded, "NVDA")
+    by_id = {f.fact_id: f for f in result.facts}
+    adjusted = value_of(result, "eps_diluted_split_adjusted", "FY2022")
+    as_filed = value_of(result, "eps_diluted", "FY2022")
+
+    inputs = [by_id[i] for i in adjusted.derivation.input_fact_ids]
+    ratio = next(f for f in inputs if f.metric == splits.SPLIT_RATIO_METRIC)
+
+    assert adjusted.filed_at == ratio.filed_at
+    assert adjusted.filed_at > as_filed.filed_at
+    assert adjusted.accession_number == ratio.accession_number
+
+
+def test_a_run_between_the_value_and_the_ratio_sees_no_adjusted_fact(recorded):
+    """The point-in-time consequence of the rule, end to end."""
+    result = normalize(recorded, "NVDA")
+    adjusted = value_of(result, "eps_diluted_split_adjusted", "FY2022")
+
+    day_before = restatements.as_known_on(result.facts, _day_before(adjusted.filed_at))
+    assert not [f for f in day_before if f.metric.endswith(splits.ADJUSTED_SUFFIX)]
+
+    on_the_day = restatements.as_known_on(result.facts, adjusted.filed_at)
+    assert [f for f in on_the_day if f.metric.endswith(splits.ADJUSTED_SUFFIX)]
+
+
+def _day_before(iso: str) -> str:
+    from datetime import date, timedelta
+
+    return (date.fromisoformat(iso) - timedelta(days=1)).isoformat()
+
+
+@pytest.mark.parametrize("ticker", OPERATING_COMPANIES)
+def test_no_derived_fact_anywhere_is_undated(recorded, ticker):
+    """A null filed_at is invisible to the point-in-time filter, so it leaks."""
+    result = normalize(recorded, ticker)
+    undated = [
+        f.fact_id
+        for f in result.facts
+        if f.source_kind.value == "derived" and not f.filed_at
+    ]
+    assert undated == []

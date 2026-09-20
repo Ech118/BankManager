@@ -3,15 +3,16 @@
 Update whenever a capability moves from mock to real, or when blocked.
 A PR that changes behaviour must update this file.
 
-**Step:** 3 in progress. **Seven of ten tools are served; XBRL normalization is
-real and runs against twelve recorded filers.**
-**Next:** `get_peer_companies` (SIC + XBRL frames), then `build_factsheet`,
-then live filing sections, then the last three tools.
-**Blockers:** none.
+**Step:** 4 in progress. **Seven of eleven tools are served; XBRL normalization
+is real and runs against twelve recorded filers.**
+**Next:** `get_factsheet` served, then `sp500_baseline`, then `search_filing`,
+then `get_peer_companies` (SIC + XBRL frames), then `build_factsheet` live.
+**Blockers:** `get_factsheet` is in the contracts but not yet in `main` -
+PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
 
 | Capability | State | Notes |
 |---|---|---|
-| **MCP server** | **mock, live over MCP** | 7 of 10 tools served over the in-memory transport |
+| **MCP server** | **mock, live over MCP** | 7 of 11 tools served over the in-memory transport |
 | `get_financial_facts` | **served** | as_of + restatement filtering, `periods`, `include_superseded` |
 | `get_market_snapshot` | **served, live** | Finnhub price + filing share count; degrades to price unavailable |
 | `get_company_profile` | **served** | |
@@ -19,7 +20,7 @@ then live filing sections, then the last three tools.
 | `resolve_fact` | **served** | flags `is_superseded` / `is_future` separately |
 | `search_filings` | **served** | newest first, `forms` filter, `limit` + `truncated` |
 | `get_filing_section` | **served** | verbatim; errors on unknown id AND on one filed after `as_of` |
-| `search_filing` | not served | Step 3; needs Postgres full-text search |
+| `search_filing` | not served | in-process keyword index over extracted sections, not Postgres |
 | `search_news` | not served | Step 4 |
 | `calculate_valuation` | not served | Step 4; waits on P2's `calc.api` |
 | **EDGAR client** | **real** | submissions, filings, documents; responses replayed in tests |
@@ -29,12 +30,14 @@ then live filing sections, then the last three tools.
 | **`SEC_USER_AGENT` loading** | **real** | `data/ingest/env.py`; refuses a UA with no contact details |
 | `check_scope` | **real** | three levels: supported / partial / unsupported. Mock path unchanged |
 | `build_factsheet` | mock | returns the ACME fixture; **P3's auditor needs a real one** |
+| `get_factsheet` | not served | new tool (SCHEMA_VERSION 2.1.0); unblocks P3's injected factsheet |
 | XBRL concept mapping | **real** | per-PERIOD chains, us-gaap; `ifrs-full` slot present and empty |
 | Annual normalization | **real** | 5 fiscal years of 10-K values -> `FinancialFact` |
 | Fiscal year labelling | **real** | from the filer's own numbering; Jan/Jun/Aug/Sep year ends tested |
 | Total debt | **real** | derived fact; components emitted and linked by `Derivation` |
 | Restatement linking | **real** | `superseded_by` + `as_known_on()`; real splits exercise it |
 | Stock splits | **real** | discontinuity detector + split-adjusted derived facts when a ratio is tagged |
+| Derived-fact dating | **real** | `filed_at` = latest input's, never null; `data/normalize/derived.py` |
 | Market client | **real** | `MarketClient` Protocol; Finnhub impl; 5-min quote cache; `NullMarketClient` for outages |
 | Shares outstanding | **real** | 5-candidate chain behind a public-float floor check (GOOGL, BRK-B) |
 | Market snapshot | **real** | one timestamp for the bundle; EV bridge cites the facts |
@@ -46,7 +49,7 @@ then live filing sections, then the last three tools.
 | Postgres store | not started | migration file lists the tables |
 | `fixtures/real/` demo tickers | not started | Step 6; coordinate the choice via `docs/requests/` |
 
-**Last updated:** 2026-09-19 (Step 3: XBRL normalization, scope and recorded fixtures)
+**Last updated:** 2026-09-20 (derived-fact dating; `get_factsheet` contract)
 
 ---
 
@@ -122,6 +125,18 @@ produced a confident wrong number rather than an error.
    every class. `data/normalize/shares.py` therefore tries five candidates and
    keeps the first that survives a public-float floor check. AAPL, NVDA and
    GOOGL market caps come out equal to the provider's to the dollar.
+
+10. **A derived fact copied from one of its inputs inherits the wrong date.**
+    The split-adjusted facts were `model_copy` of the as-filed fact, so they
+    carried the as-filed `filed_at`. NVDA's FY2022 EPS was filed 2024-02-21 and
+    the 10-for-1 ratio first tagged 2025-05-28, so a run anywhere in those
+    fifteen months saw a split-adjusted number computed from a ratio that was
+    not yet in the data. The rule is now one function
+    (`data/normalize/derived.py`): a derived fact's `filed_at` is the LATEST
+    `filed_at` among its inputs, never null, and it carries that filing's
+    accession so the two agree. Total debt already followed the rule
+    implicitly; it now calls the same helper. Raised with P3 and P2 in
+    `docs/requests/2026-09-19-p3-report-inputs-response.md`.
 
 ### Two earlier findings, still true
 
