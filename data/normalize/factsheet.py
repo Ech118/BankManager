@@ -64,14 +64,31 @@ provenance only - `value` is already normalized (CLAUDE.md)."""
 XBRL_SOURCE_PREFIX = "src:edgar_xbrl"
 
 
-UNRESOLVED_CONCEPT_MARKER = "no concept matched "
-"""How data/normalize/to_facts.py words a metric that no chain resolved.
+REDUNDANT_GAP_MARKERS: tuple[str, ...] = (
+    "no concept matched ",
+    "so a trailing figure needs a year to start from",
+    "no full-year ",
+)
+"""Gap wordings the factsheet's own per-period summary already covers.
 
-The factsheet says the same thing, once per PERIOD rather than once per metric
-per period, so the normalizer's lines are dropped as the factsheet's are added.
-Keeping both made JPM report 47 gaps for 12 distinct problems and AAPL 5 for 3 -
-a banner that inflates with the verbosity of whichever layer noticed first,
-which teaches a reader to ignore the count."""
+`no concept matched <metric>` comes from data/normalize/to_facts.py, once per
+metric per period. `no full-year <metric>` comes from data/normalize/ttm.py when
+a trailing figure has no year to start from - which is true precisely because
+the metric was already reported missing.
+
+The factsheet says all of it once per PERIOD instead, so these are dropped as
+its own lines are added. Keeping them made JPM report 47 gaps for 12 distinct
+problems, and then 10 for 7 once the trailing facts arrived. A banner that
+inflates with the verbosity of whichever layer noticed first teaches a reader to
+ignore the count."""
+
+UNRESOLVED_CONCEPT_MARKER = REDUNDANT_GAP_MARKERS[0]
+"""Kept as a name because the tests and other callers read it."""
+
+
+def is_redundant(gap: str) -> bool:
+    """Whether the per-period summary below already says this."""
+    return any(marker in gap for marker in REDUNDANT_GAP_MARKERS)
 
 
 @dataclass
@@ -270,7 +287,7 @@ def build(
 
     # The per-period summary below restates these, so they are dropped rather
     # than counted twice.
-    collected = [g for g in (gaps or []) if UNRESOLVED_CONCEPT_MARKER not in g]
+    collected = [g for g in (gaps or []) if not is_redundant(g)]
     periods, sources, period_gaps = build_periods(
         facts, cik=cik, retrieved_at=retrieved_at
     )

@@ -233,11 +233,46 @@ def test_peer_multiples_are_left_for_calc(parsed, ticker):
 # what is deliberately empty
 # --------------------------------------------------------------------------
 @pytest.mark.parametrize("ticker", TICKERS)
-def test_sections_and_news_are_empty_rather_than_invented(parsed, ticker):
-    """The section parser and the news client are not built. An empty list is
-    honest; a fabricated entry would not be."""
-    assert parsed[ticker].filing_sections == []
-    assert parsed[ticker].news == []
+def test_the_extracted_sections_are_on_the_factsheet(parsed, ticker):
+    """Item 1 and Item 1A, with offsets that index into the filing they came
+    from. Empty was honest while the parser did not exist; it would not be now.
+    """
+    sections = parsed[ticker].filing_sections
+    assert {s.item.value for s in sections} == {"business", "risk_factors"}
+    for section in sections:
+        assert section.char_count > 10_000
+        assert section.filed_at <= AS_OF
+
+
+@pytest.mark.parametrize("ticker", TICKERS)
+def test_news_is_present_and_bounded_by_as_of(parsed, ticker):
+    assert parsed[ticker].news
+    assert all(item.date <= AS_OF for item in parsed[ticker].news)
+
+
+@pytest.mark.parametrize("ticker", TICKERS)
+def test_the_trailing_twelve_month_block_is_populated(recorded, ticker):
+    """calc/ reads the factsheet, not the fact store, and needs this to publish
+    a trailing multiple beside the full-year one."""
+    ttm = recorded[ticker]["ttm"]
+    assert ttm, f"{ticker} has no ttm block"
+    for metric, value in ttm.items():
+        assert value["status"] == "ok", metric
+        assert value["derived_from"], f"{metric} has no lineage"
+
+
+def test_a_metric_a_filer_does_not_report_has_no_trailing_figure(recorded):
+    """JPM has no gross profit, operating income or capex at all."""
+    ttm = recorded["JPM"]["ttm"]
+    for metric in ("gross_profit", "operating_income", "capex"):
+        assert metric not in ttm
+
+
+@pytest.mark.parametrize("ticker", TICKERS)
+def test_peers_carry_the_raw_figures_calc_needs(recorded, ticker):
+    """Without revenue and net income calc/ skips peer_median entirely."""
+    peers = recorded[ticker]["peers"]
+    assert any(p["revenue"]["status"] == "ok" for p in peers), ticker
 
 
 # --------------------------------------------------------------------------

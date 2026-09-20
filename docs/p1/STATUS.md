@@ -34,7 +34,7 @@ PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
 | `check_scope` | **real** | three levels: supported / partial / unsupported. Mock path unchanged |
 | `build_factsheet` | **real** | assembled from the same facts and the same market observation the tools answer from |
 | `get_factsheet` | **served** | new tool (SCHEMA_VERSION 2.1.0); P3 can drop the injected factsheet |
-| `fixtures/real/<T>/factsheet.json` | **real** | AAPL, JPM, NVDA, KO, MSFT recorded; `data.record.factsheet` |
+| `fixtures/real/<T>/factsheet.json` | **real** | AAPL, JPM, NVDA, KO, MSFT; now carry TTM, sections, news and peer figures |
 | XBRL concept mapping | **real** | per-PERIOD chains, us-gaap; `ifrs-full` slot present and empty |
 | Annual normalization | **real** | 5 fiscal years of 10-K values -> `FinancialFact` |
 | Fiscal year labelling | **real** | from the filer's own numbering; Jan/Jun/Aug/Sep year ends tested |
@@ -56,7 +56,7 @@ PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
 | Section parsing | **real** | 10-K Item 1 + 1A from the primary document; TOC, letter-spacing and cross-references handled |
 | Postgres store | not started | live repositories compute on demand instead; migration file lists the tables |
 | Live repositories | **real** | `data/repositories/live.py` implements the three Protocols |
-| Live e2e over stdio | **real** | `BM_LIVE_TESTS=1 pytest mcp_server/tests/test_live_e2e.py`; 22 checks, all ten tools |
+| Live e2e over stdio | **real** | `BM_LIVE_TESTS=1 pytest mcp_server/tests/test_live_e2e.py`; 25 checks, all eleven tools |
 | `fixtures/real/` demo tickers | not started | Step 6; coordinate the choice via `docs/requests/` |
 
 **Last updated:** 2026-09-20 (`calculate_valuation`, TTM facts, peer figures)

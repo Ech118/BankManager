@@ -2,7 +2,7 @@
 
 This is the only test in the repo that touches the network. It spawns
 `python -m mcp_server.server` exactly as the orchestrator will in MODE=live,
-speaks MCP over pipes, and calls all ten served tools for AAPL.
+speaks MCP over pipes, and calls all eleven served tools for AAPL.
 
 RUN IT WITH:
     BM_LIVE_TESTS=1 python -m pytest mcp_server/tests/test_live_e2e.py -q
@@ -100,6 +100,8 @@ def live_results():
             },
             "search_news": {"ticker": TICKER, "as_of": AS_OF, "limit": 5},
             "get_factsheet": {"ticker": TICKER, "as_of": AS_OF},
+            # The compute tool takes no as_of: the factsheet carries it.
+            "calculate_valuation": {"ticker": TICKER, "methods": ["all"]},
         }
         for name, args in arguments.items():
             result = await client.call_tool(name, args)
@@ -172,6 +174,7 @@ def test_every_tool_answered_without_an_error(live_results):
         "search_news",
         "resolve_fact",
         "get_filing_section",
+        "calculate_valuation",
     ],
 )
 def test_each_response_validates_against_its_contract(live_results, tool):
@@ -291,7 +294,35 @@ def test_an_out_of_scope_ticker_fails_readably_over_stdio():
 
 
 @skip_unless_live
-def test_calculate_valuation_is_not_advertised_while_calc_is_missing(live_results):
-    """Better absent than raising: an agent that plans around a tool which
-    errors is worse off than one that knows the tool does not exist."""
-    assert "calculate_valuation" not in live_results["__tools__"]
+def test_calculate_valuation_computes_over_a_real_factsheet(live_results):
+    """The one sanctioned cross-partition import, end to end: the wrapper
+    resolves the ticker to a factsheet and calc/ does every sum."""
+    payload = live_results["calculate_valuation"]["content"]
+    TOOL_RESPONSES["calculate_valuation"].model_validate(payload)
+
+    valuation = payload["metrics"]["valuation"]
+    assert valuation["pe"]["value"] > 0
+    # Never a single point value (error D).
+    assert payload["reverse_dcf"]["sensitivity_grid"]
+
+
+@skip_unless_live
+def test_every_skipped_method_says_why(live_results):
+    """An agent that sees a reason will not ask again or invent a number."""
+    skipped = live_results["calculate_valuation"]["content"]["metrics"]["valuation"][
+        "methods_skipped"
+    ]
+    for method, reason in skipped.items():
+        assert reason, f"{method} was skipped with no reason"
+
+
+@skip_unless_live
+def test_the_trailing_and_full_year_figures_are_both_available(live_results):
+    """calc/ asked for a TTM figure so a report can show both: a multiple over
+    a partly elapsed year reads higher than the one on a reader's screen."""
+    factsheet = Factsheet.model_validate(
+        live_results["get_factsheet"]["content"]["factsheet"]
+    )
+    trailing = factsheet.model_dump().get("ttm") or {}
+    assert trailing.get("eps_diluted", {}).get("value")
+    assert factsheet.period("FY2025") or factsheet.latest_annual_period
