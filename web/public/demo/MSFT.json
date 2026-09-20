@@ -1,0 +1,1139 @@
+{
+  "schema_version": "2.1.0",
+  "ticker": "MSFT",
+  "as_of": "2026-09-20",
+  "generated_at": "2026-09-20T13:56:02Z",
+  "mode": "live",
+  "disclaimer": "This is AI-generated research for educational purposes only. It is not investment advice or a recommendation to buy or sell any security.",
+  "card": {
+    "company": "MICROSOFT CORP",
+    "ticker": "MSFT",
+    "price": {
+      "value": 493.78,
+      "unit": "usd_per_share",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:market:MSFT:20260918T200000Z",
+      "derived_from": []
+    },
+    "market_cap": {
+      "value": 3666585852545.98,
+      "unit": "usd",
+      "type": "fact",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "market.price",
+        "market.shares_outstanding"
+      ]
+    },
+    "thesis": "Microsoft remains a dominant, broadly growing enterprise software and cloud franchise with cash generation that has historically outpaced reported earnings, but the market already prices that growth generously across every multiple examined, and a recent, sharp escalation in capital spending is squeezing the free cash flow the current price depends on continuing to compound for many years. Because no filing narrative was available this run to confirm the qualitative underpinnings of that growth story, the case for paying today's price rests more on faith in continuation than on verified disclosure.",
+    "scores": {
+      "short_term": 5,
+      "medium_term": 5,
+      "long_term": 5
+    },
+    "p_beat_sp500_5y": 0.34,
+    "expected_5y_return": {
+      "value": 0.071337273,
+      "unit": "fraction",
+      "type": "estimate",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "scenario_result.scenarios.*.annualized_return",
+        "scenario_result.weights"
+      ]
+    },
+    "expected_return_vs_sp500": {
+      "short_term": {
+        "value": 0.001337273,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      },
+      "medium_term": {
+        "value": 0.001337273,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      },
+      "long_term": {
+        "value": 0.001337273,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      }
+    },
+    "primary_catalyst": "Continued enterprise and cloud-infrastructure demand converting into revenue and margin growth strong enough to outrun the market's already elevated expectations embedded in the current multiple.",
+    "biggest_risk": "The capital-expenditure surge structurally compressing free cash flow in a way that undermines the extended, high-growth cash-flow path the current valuation requires.",
+    "valuation": "expensive",
+    "business_quality": "good",
+    "financial_strength": "strong",
+    "verdict": "hold",
+    "ten_thousand_dollar_answer": {
+      "choice": "sp500",
+      "reason": "With the odds of beating the market running below even across every horizon and the probability-weighted edge over the index reduced to a sliver once the rich valuation and capex-driven cash-flow uncertainty are taken into account, a diversified index allocation is the more defensible use of new capital until the qualitative picture can be verified against actual filing disclosure."
+    }
+  },
+  "sections": [
+    {
+      "id": "company",
+      "title": "Company",
+      "body_markdown": "## Company\n\n_No claims recorded for this section._",
+      "agent": "business",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "financials",
+      "title": "Financial quality",
+      "body_markdown": "## Financial quality\n\n_No claims recorded for this section._",
+      "agent": "financial",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "balance_sheet",
+      "title": "Balance sheet strength",
+      "body_markdown": "## Balance sheet strength\n\n_No claims recorded for this section._",
+      "agent": "financial",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "cash_flow",
+      "title": "Free cash flow",
+      "body_markdown": "## Free cash flow\n\n_No claims recorded for this section._",
+      "agent": "financial",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "earnings_quality",
+      "title": "Earnings quality",
+      "body_markdown": "## Earnings quality\n\n_No claims recorded for this section._",
+      "agent": "financial",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "management",
+      "title": "Management and guidance",
+      "body_markdown": "## Management and guidance\n\n_No claims recorded for this section._",
+      "agent": "business",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "competitive_position",
+      "title": "Competitive position",
+      "body_markdown": "## Competitive position\n\n_No claims recorded for this section._",
+      "agent": "business",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "valuation",
+      "title": "Valuation",
+      "body_markdown": "## Valuation\n\n_No claims recorded for this section._",
+      "agent": "valuation",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "expectations",
+      "title": "Expectations vs reality",
+      "body_markdown": "## Expectations vs reality\n\n_No claims recorded for this section._",
+      "agent": "valuation",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "catalysts",
+      "title": "Catalysts",
+      "body_markdown": "## Catalysts\n\n_No claims recorded for this section._",
+      "agent": "business",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "risks",
+      "title": "Risks",
+      "body_markdown": "## Risks\n\n_No claims recorded for this section._",
+      "agent": "red_team",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "scenarios",
+      "title": "Bull / base / bear",
+      "body_markdown": "## Bull / base / bear\n\n- The scenario weights proposed by the agent were within the permitted band and were used as proposed.\n- The bear case price target is the value shown. ($358.82 \u00b7 estimate) _[fact:MSFT:eps_diluted:FY2026]_\n- The base case price target is the value shown. ($752.28 \u00b7 estimate) _[fact:MSFT:eps_diluted:FY2026]_\n- The bull case price target is the value shown. ($1,245.81 \u00b7 estimate) _[fact:MSFT:eps_diluted:FY2026]_",
+      "agent": "scenario",
+      "evidence": [],
+      "verification_status": "verified",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "sp500_comparison",
+      "title": "S&P 500 comparison",
+      "body_markdown": "## S&P 500 comparison\n\n- The probability-weighted expected return exceeds the assumed index return. (0.1% \u00b7 estimate) _[fact:MSFT:eps_diluted:FY2026]_",
+      "agent": "scenario",
+      "evidence": [],
+      "verification_status": "verified",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "decision",
+      "title": "Investment committee decision",
+      "body_markdown": "## Investment committee decision\n\n_No claims recorded for this section._",
+      "agent": "synthesizer",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    }
+  ],
+  "red_team": {
+    "summary": "The bull case rests on capex being a temporary drag on an otherwise clean growth story, but the trajectory of that capex \u2014 nearly doubling year over year and now consuming a much larger share of operating cash flow \u2014 is exactly the kind of structural shift that breaks a reverse-DCF requiring a decade of mid-to-high-teens free cash flow growth. With zero filing text (MD&A, risk factors, debt footnotes) supplied for this run, none of the standard levers bulls point to (customer concentration, cloud capacity commitments, regulatory exposure, receivables policy) can actually be checked, so the 'durable growth' narrative is being taken on faith rather than verified against the company's own disclosures.",
+    "responses_by_synthesizer": "On the sole red-team point \u2014 that the bull case treats the capex surge as a temporary drag when its trajectory looks structural, and that this breaks the reverse-DCF's requirement for a decade of mid-to-high-teens free cash flow growth while none of the usual supporting levers (customer concentration, cloud capacity commitments, regulatory exposure, receivables policy) can be checked without filing text: this is accepted in full. The capex trend is real and unverified qualitatively, the valuation genuinely depends on an extended high-growth cash-flow path, and absent MD&A, risk-factor or debt-footnote evidence, the durable-growth narrative cannot be distinguished from wishful extrapolation. This acceptance is the direct reason the verdict lands on hold rather than a bullish call: the financial trend data alone is favorable, but it is not sufficient, on its own, to underwrite the growth assumption the current price requires.",
+    "drawdown_path": "First break: quarterly capex growth continues to outpace operating cash flow growth (as it already has from FY2025 to FY2026), narrowing free cash flow even as headline revenue and EPS keep rising \u2014 the market initially shrugs this off as 'growth investment.' Second: Azure/cloud or AI-product revenue growth decelerates even slightly, or management guides capex higher again without a matching acceleration in monetization metrics, making the capex spend look like a structural cost rather than a growth investment. Third: analysts start reworking the reverse-DCF implied growth rate downward once FCF misses consensus for one or two quarters, triggering multiple compression on a stock priced for a decade of mid-to-high-teens FCF growth. Fourth: buyback pace slows or debt issuance rises to fund continued capex, which the market reads as confirmation that the capex cycle is not self-funding. Early tells a reader would see before the drawdown is obvious: capex/operating-cash-flow ratio keeps climbing quarter over quarter, receivables/DSO keeps outgrowing revenue, and management commentary shifts from 'demand-constrained' to language about 'optimizing' or 'pacing' data center investment.",
+    "requested_prior_shift": -0.08
+  },
+  "agent_outputs": {
+    "financial": {
+      "schema_version": "2.1.0",
+      "agent": "financial",
+      "ticker": "MSFT",
+      "as_of": "2026-09-20",
+      "model": "claude-sonnet-5",
+      "summary": "MSFT's reported financials show durable, broad-based growth: revenue, operating income, net income and EPS all rose steadily from FY2022 through FY2026, with operating cash flow consistently exceeding net income (a sign of good earnings quality) and leverage staying low relative to a rapidly growing equity base. The dominant swing factor is a sharp, multi-year acceleration in capital expenditure that has begun to compress the gap between operating cash flow and free cash flow and pushed capex well above depreciation, which will raise future D&A and warrants monitoring. No filing text (MD&A, debt footnotes, risk factors) was available in this run, so qualitative context behind several of these numeric trends \u2014 e.g., the cause of receivables growth or covenant status \u2014 could not be verified and is flagged as low confidence.",
+      "findings": [],
+      "tokens_in": 7394,
+      "tokens_out": 6619
+    },
+    "business": {
+      "schema_version": "2.1.0",
+      "agent": "business",
+      "ticker": "MSFT",
+      "as_of": "2026-09-20",
+      "model": "claude-sonnet-5",
+      "summary": "No filing sections, news, or other qualitative documents were provided for MSFT in this run, so no verifiable claims about moat, competition, management credibility, or catalysts can be made. The FACTS table contains only financial figures, which fall outside this agent's scope (company narrative, management, competitive position, catalysts) and require qualitative filing evidence that was not supplied.",
+      "findings": [],
+      "tokens_in": 7290,
+      "tokens_out": 992
+    },
+    "valuation": {
+      "schema_version": "2.1.0",
+      "agent": "valuation",
+      "ticker": "MSFT",
+      "as_of": "2026-09-20",
+      "model": "claude-sonnet-5",
+      "summary": "MSFT screens as expensive across every earnings- and cash-flow-based multiple relative to a small, imperfect peer set, and the reverse DCF implies mid-to-high-teens FCF growth for a decade \u2014 a bar that recent revenue trends make plausible but that the concurrent capex surge (crimping current FCF) makes harder to verify with the data on hand. No filing text (MD&A, guidance, competitive discussion) was supplied in this run, so the qualitative side of the expectations check \u2014 whether management or the market backs that growth path \u2014 could not be confirmed and is flagged low confidence.",
+      "findings": [],
+      "tokens_in": 11593,
+      "tokens_out": 6010,
+      "valuation_plan": {
+        "methods": {
+          "pe": "Financial Agent found operating cash flow consistently exceeding net income across FY2022-FY2026, indicating earnings are of good quality and not obviously distorted, so a P/E multiple is usable as a primary read.",
+          "ev_ebitda": "MSFT's leverage is low relative to a rapidly growing equity base per the Financial Agent, so an EV-based multiple that neutralizes capital-structure differences across peers is appropriate; note must be made that our EBITDA is unadjusted while management may report an adjusted figure.",
+          "p_fcf": "The Financial Agent flagged a sharp, multi-year capex acceleration compressing the gap between operating cash flow and free cash flow; P/FCF and FCF yield will show whether the market is already pricing in this margin/cash compression, and FCF is the hardest metric to dress up.",
+          "peer_median": "With only a handful of usable SIC 7372 peers, most of them far apart in scale from MSFT, comparing against the peer median (and reporting how many peers actually produced a usable multiple) is necessary to avoid over-weighting any single comparable.",
+          "historical": "MSFT shows a multi-year run of steady revenue, operating income, net income and EPS growth (FY2022-FY2026 per the Financial Agent), so comparing current multiples to MSFT's own historical range is a useful cross-check given the weak external peer set.",
+          "reverse_dcf": "Required for the expectations section: solving for the FCF growth implied by the current price lets us test it against MSFT's realized growth trend and any guidance, especially given the flagged capex/FCF compression risk."
+        },
+        "peers": {
+          "XYZ": "Closest revenue-distance match in SIC 7372 (13.7x apart per selection note); kept as the best-available comparable despite the large gap, though the ticker itself is unusual and unverified so its multiples should be weighted cautiously.",
+          "ADBE": "SIC 7372 software peer with the next-closest revenue distance (14.0x); a large, mature, profitable enterprise software company, making it one of the more relevant comparables available even though still far smaller than MSFT.",
+          "ADSK": "Kept despite the size cutoff being relaxed (46.1x apart) because it is a mature, profitable enterprise software vendor with a business model (recurring subscription software) closer to MSFT's software segments than infrastructure-heavy alternatives.",
+          "CDNS": "Kept despite a large size gap (62.6x apart) as another mature, high-margin enterprise software company; useful as a margin/multiple reference point even though scale comparability is weak."
+        },
+        "notes": "Dropped TEAM and CRWV from the default candidate list. TEAM (63.6x apart on revenue) is a niche project-management software company at a scale and market position too distant from MSFT to add reliable signal beyond what ADBE/ADSK/CDNS already provide. CRWV (64.7x apart, the largest gap in the set) appears to be a GPU/AI cloud infrastructure business rather than a diversified software company; its economics (capital-intensive infrastructure buildout, early-stage margin profile) differ structurally from MSFT's mix of software, cloud services and hardware, so including it would distort multiple comparisons rather than sharpen them. All four retained peers are still materially smaller than MSFT (13.7x-62.6x revenue distance), so the peer median should be read as a directional check only, and the number of peers with a usable multiple must be reported alongside any median comparison.",
+        "calc_notes": [
+          "historical: skipped - no price history source"
+        ]
+      }
+    },
+    "scenario": {
+      "schema_version": "2.1.0",
+      "agent": "scenario",
+      "ticker": "MSFT",
+      "as_of": "2026-09-20",
+      "model": "claude-sonnet-5",
+      "summary": "With no filing narrative available for this run, the scenario set rests on the trailing five years of reported financials: revenue, operating income and net income have all grown steadily, margins have expanded, and operating cash flow has consistently exceeded net income, but capital expenditure has surged sharply relative to depreciation, which is the key swing factor for the cases built below.",
+      "findings": [],
+      "tokens_in": 9888,
+      "tokens_out": 3627,
+      "scenarios_proposal": {
+        "schema_version": "2.0.0",
+        "ticker": "MSFT",
+        "as_of": "2026-09-20",
+        "scenarios": {
+          "bear": {
+            "probability": 0.28,
+            "probability_rationale": "The sharp rise in capex relative to depreciation (fact:MSFT:capex:FY2026 vs fact:MSFT:depreciation_amortization:FY2026, compared with the FY2022 pair) signals a heavy, ongoing infrastructure investment cycle whose payoff cannot be verified without MD&A text; if returns on this spending disappoint, margins compress and multiples de-rate, so this case is weighted somewhat above the default band given the unverified capex risk.",
+            "horizon_years": 5,
+            "revenue_cagr": {
+              "value": 0.06,
+              "unit": "fraction",
+              "type": "assumption",
+              "status": "ok",
+              "source_id": "src:llm:scenario",
+              "derived_from": []
+            },
+            "terminal_margin": {
+              "value": 0.3,
+              "unit": "fraction",
+              "type": "assumption",
+              "status": "ok",
+              "source_id": "src:llm:scenario",
+              "derived_from": []
+            },
+            "eps_at_horizon": {
+              "value": null,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "unavailable",
+              "source_id": null,
+              "derived_from": [
+                "scenarios.bear.revenue_cagr",
+                "scenarios.bear.terminal_margin",
+                "market.shares_outstanding"
+              ]
+            },
+            "exit_multiple": {
+              "value": 20.0,
+              "unit": "multiple",
+              "type": "assumption",
+              "status": "ok",
+              "source_id": "src:llm:scenario",
+              "derived_from": []
+            },
+            "rationale": "Heavy capital expenditure (well above depreciation) fails to generate proportional revenue, competitive or regulatory pressure compresses margins from current levels, and the market re-rates the stock to a lower multiple as growth decelerates toward high-single digits.",
+            "evidence": []
+          },
+          "base": {
+            "probability": 0.5,
+            "probability_rationale": "The base case simply extends the steady, multi-year pattern already visible in the reported financials \u2014 continued revenue growth, margins near current levels, and cash generation consistent with the FY2022-FY2026 trend \u2014 without assuming either a capex-driven breakdown or an unusual acceleration.",
+            "horizon_years": 5,
+            "revenue_cagr": {
+              "value": 0.11,
+              "unit": "fraction",
+              "type": "assumption",
+              "status": "ok",
+              "source_id": "src:llm:scenario",
+              "derived_from": []
+            },
+            "terminal_margin": {
+              "value": 0.37,
+              "unit": "fraction",
+              "type": "assumption",
+              "status": "ok",
+              "source_id": "src:llm:scenario",
+              "derived_from": []
+            },
+            "eps_at_horizon": {
+              "value": null,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "unavailable",
+              "source_id": null,
+              "derived_from": [
+                "scenarios.base.revenue_cagr",
+                "scenarios.base.terminal_margin",
+                "market.shares_outstanding"
+              ]
+            },
+            "exit_multiple": {
+              "value": 27.0,
+              "unit": "multiple",
+              "type": "assumption",
+              "status": "ok",
+              "source_id": "src:llm:scenario",
+              "derived_from": []
+            },
+            "rationale": "Revenue growth and margin trends observed from fact:MSFT:revenue:FY2022 through fact:MSFT:revenue:FY2026 and fact:MSFT:net_income:FY2022 through fact:MSFT:net_income:FY2026 continue at a moderated pace, with capex normalizing gradually relative to depreciation.",
+            "evidence": []
+          },
+          "bull": {
+            "probability": 0.22,
+            "probability_rationale": "Weighted at the lower end of the default band because there is no filing evidence (management commentary, guidance, competitive discussion) confirming that the current capex surge translates into an acceleration of returns; the bull case therefore requires an unconfirmed, specific outcome rather than a simple extrapolation.",
+            "horizon_years": 5,
+            "revenue_cagr": {
+              "value": 0.15,
+              "unit": "fraction",
+              "type": "assumption",
+              "status": "ok",
+              "source_id": "src:llm:scenario",
+              "derived_from": []
+            },
+            "terminal_margin": {
+              "value": 0.42,
+              "unit": "fraction",
+              "type": "assumption",
+              "status": "ok",
+              "source_id": "src:llm:scenario",
+              "derived_from": []
+            },
+            "eps_at_horizon": {
+              "value": null,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "unavailable",
+              "source_id": null,
+              "derived_from": [
+                "scenarios.bull.revenue_cagr",
+                "scenarios.bull.terminal_margin",
+                "market.shares_outstanding"
+              ]
+            },
+            "exit_multiple": {
+              "value": 33.0,
+              "unit": "multiple",
+              "type": "assumption",
+              "status": "ok",
+              "source_id": "src:llm:scenario",
+              "derived_from": []
+            },
+            "rationale": "The elevated capital expenditure evident in fact:MSFT:capex:FY2026 relative to fact:MSFT:depreciation_amortization:FY2026 pays off faster than expected, driving margin expansion beyond the current trend and a market re-rating to a premium multiple.",
+            "evidence": []
+          }
+        },
+        "prior_shift": {
+          "value": 0.0,
+          "reason": "No qualitative filing evidence was available in this run to justify a company-specific deviation from the historical base rate, so no shift is requested.",
+          "source": "scenario"
+        }
+      }
+    },
+    "red_team": {
+      "schema_version": "2.1.0",
+      "agent": "red_team",
+      "ticker": "MSFT",
+      "as_of": "2026-09-20",
+      "model": "claude-sonnet-5",
+      "summary": "The bull case rests on capex being a temporary drag on an otherwise clean growth story, but the trajectory of that capex \u2014 nearly doubling year over year and now consuming a much larger share of operating cash flow \u2014 is exactly the kind of structural shift that breaks a reverse-DCF requiring a decade of mid-to-high-teens free cash flow growth. With zero filing text (MD&A, risk factors, debt footnotes) supplied for this run, none of the standard levers bulls point to (customer concentration, cloud capacity commitments, regulatory exposure, receivables policy) can actually be checked, so the 'durable growth' narrative is being taken on faith rather than verified against the company's own disclosures.",
+      "findings": [],
+      "tokens_in": 9491,
+      "tokens_out": 5898,
+      "drawdown_path": "First break: quarterly capex growth continues to outpace operating cash flow growth (as it already has from FY2025 to FY2026), narrowing free cash flow even as headline revenue and EPS keep rising \u2014 the market initially shrugs this off as 'growth investment.' Second: Azure/cloud or AI-product revenue growth decelerates even slightly, or management guides capex higher again without a matching acceleration in monetization metrics, making the capex spend look like a structural cost rather than a growth investment. Third: analysts start reworking the reverse-DCF implied growth rate downward once FCF misses consensus for one or two quarters, triggering multiple compression on a stock priced for a decade of mid-to-high-teens FCF growth. Fourth: buyback pace slows or debt issuance rises to fund continued capex, which the market reads as confirmation that the capex cycle is not self-funding. Early tells a reader would see before the drawdown is obvious: capex/operating-cash-flow ratio keeps climbing quarter over quarter, receivables/DSO keeps outgrowing revenue, and management commentary shifts from 'demand-constrained' to language about 'optimizing' or 'pacing' data center investment.",
+      "requested_prior_shift": -0.08,
+      "prior_shift_reason": "The capex trajectory (nearly doubling in FY2026 alone, now consuming the large majority of the growth in operating cash flow) directly threatens the FCF growth assumption the valuation case depends on, and the complete absence of any filing narrative in this run means none of the usual mitigating disclosures (capex guidance, customer concentration, covenant status) could be checked to offset that risk."
+    },
+    "synthesizer": {
+      "schema_version": "2.1.0",
+      "agent": "synthesizer",
+      "ticker": "MSFT",
+      "as_of": "2026-09-20",
+      "model": "claude-sonnet-5",
+      "summary": "With no verified filing quotes available for this run, the decision rests on the financial and valuation trends reported upstream: durable revenue, margin and cash-flow growth set against an expensive valuation and a sharply rising capital-expenditure trajectory that the sole red-team point identifies as the key threat to the reverse-DCF growth path already priced in.",
+      "findings": [],
+      "tokens_in": 5710,
+      "tokens_out": 3676,
+      "synthesis_fields": {
+        "thesis": "Microsoft remains a dominant, broadly growing enterprise software and cloud franchise with cash generation that has historically outpaced reported earnings, but the market already prices that growth generously across every multiple examined, and a recent, sharp escalation in capital spending is squeezing the free cash flow the current price depends on continuing to compound for many years. Because no filing narrative was available this run to confirm the qualitative underpinnings of that growth story, the case for paying today's price rests more on faith in continuation than on verified disclosure.",
+        "primary_catalyst": "Continued enterprise and cloud-infrastructure demand converting into revenue and margin growth strong enough to outrun the market's already elevated expectations embedded in the current multiple.",
+        "biggest_risk": "The capital-expenditure surge structurally compressing free cash flow in a way that undermines the extended, high-growth cash-flow path the current valuation requires.",
+        "valuation": "expensive",
+        "business_quality": "good",
+        "financial_strength": "strong",
+        "verdict": "hold",
+        "ten_thousand_dollar_answer": {
+          "choice": "sp500",
+          "reason": "With the odds of beating the market running below even across every horizon and the probability-weighted edge over the index reduced to a sliver once the rich valuation and capex-driven cash-flow uncertainty are taken into account, a diversified index allocation is the more defensible use of new capital until the qualitative picture can be verified against actual filing disclosure."
+        },
+        "red_team_responses": "On the sole red-team point \u2014 that the bull case treats the capex surge as a temporary drag when its trajectory looks structural, and that this breaks the reverse-DCF's requirement for a decade of mid-to-high-teens free cash flow growth while none of the usual supporting levers (customer concentration, cloud capacity commitments, regulatory exposure, receivables policy) can be checked without filing text: this is accepted in full. The capex trend is real and unverified qualitatively, the valuation genuinely depends on an extended high-growth cash-flow path, and absent MD&A, risk-factor or debt-footnote evidence, the durable-growth narrative cannot be distinguished from wishful extrapolation. This acceptance is the direct reason the verdict lands on hold rather than a bullish call: the financial trend data alone is favorable, but it is not sufficient, on its own, to underwrite the growth assumption the current price requires."
+      }
+    }
+  },
+  "scenario_result": {
+    "schema_version": "2.0.0",
+    "ticker": "MSFT",
+    "as_of": "2026-09-20",
+    "scenarios": {
+      "bear": {
+        "probability": 0.28,
+        "price_target": {
+          "value": 358.8224768,
+          "unit": "usd_per_share",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenarios.bear.eps_at_horizon",
+            "scenarios.bear.exit_multiple"
+          ]
+        },
+        "annualized_return": {
+          "value": -0.0618565972,
+          "unit": "fraction",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenario_result.scenarios.bear.price_target",
+            "market.price"
+          ]
+        },
+        "eps_at_horizon": {
+          "value": 17.94112384,
+          "unit": "usd_per_share",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenarios.bear.revenue_cagr",
+            "scenarios.bear.terminal_margin",
+            "market.shares_outstanding",
+            "financials.FY2026.revenue"
+          ],
+          "formula": "revenue[FY2026] * (1 + revenue_cagr) ** 5 * terminal_margin / market.shares_outstanding"
+        },
+        "horizon_years": 5,
+        "by_horizon": {
+          "short_term": {
+            "value_per_share": {
+              "value": 463.2364494147,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bear.annualized_return",
+                "market.price"
+              ]
+            },
+            "cumulative_return": {
+              "value": -0.0618565972,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bear.annualized_return"
+              ]
+            },
+            "annualized_return": {
+              "value": -0.0618565972,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bear.annualized_return"
+              ]
+            },
+            "years": 1.0
+          },
+          "medium_term": {
+            "value_per_share": {
+              "value": 407.7004416517,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bear.annualized_return",
+                "market.price"
+              ]
+            },
+            "cumulative_return": {
+              "value": -0.174327754,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bear.annualized_return"
+              ]
+            },
+            "annualized_return": {
+              "value": -0.0618565972,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bear.annualized_return"
+              ]
+            },
+            "years": 3.0
+          },
+          "long_term": {
+            "value_per_share": {
+              "value": 358.8224768,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bear.annualized_return",
+                "market.price"
+              ]
+            },
+            "cumulative_return": {
+              "value": -0.2733150861,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bear.annualized_return"
+              ]
+            },
+            "annualized_return": {
+              "value": -0.0618565972,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bear.annualized_return"
+              ]
+            },
+            "years": 5.0
+          }
+        }
+      },
+      "base": {
+        "probability": 0.5,
+        "price_target": {
+          "value": 752.2798773438,
+          "unit": "usd_per_share",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenarios.base.eps_at_horizon",
+            "scenarios.base.exit_multiple"
+          ]
+        },
+        "annualized_return": {
+          "value": 0.0878504355,
+          "unit": "fraction",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenario_result.scenarios.base.price_target",
+            "market.price"
+          ]
+        },
+        "eps_at_horizon": {
+          "value": 27.8622176794,
+          "unit": "usd_per_share",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenarios.base.revenue_cagr",
+            "scenarios.base.terminal_margin",
+            "market.shares_outstanding",
+            "financials.FY2026.revenue"
+          ],
+          "formula": "revenue[FY2026] * (1 + revenue_cagr) ** 5 * terminal_margin / market.shares_outstanding"
+        },
+        "horizon_years": 5,
+        "by_horizon": {
+          "short_term": {
+            "value_per_share": {
+              "value": 537.1587880519,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.base.annualized_return",
+                "market.price"
+              ]
+            },
+            "cumulative_return": {
+              "value": 0.0878504355,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.base.annualized_return"
+              ]
+            },
+            "annualized_return": {
+              "value": 0.0878504355,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.base.annualized_return"
+              ]
+            },
+            "years": 1.0
+          },
+          "medium_term": {
+            "value_per_share": {
+              "value": 635.6836848542,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.base.annualized_return",
+                "market.price"
+              ]
+            },
+            "cumulative_return": {
+              "value": 0.2873824068,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.base.annualized_return"
+              ]
+            },
+            "annualized_return": {
+              "value": 0.0878504355,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.base.annualized_return"
+              ]
+            },
+            "years": 3.0
+          },
+          "long_term": {
+            "value_per_share": {
+              "value": 752.2798773438,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.base.annualized_return",
+                "market.price"
+              ]
+            },
+            "cumulative_return": {
+              "value": 0.523512247,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.base.annualized_return"
+              ]
+            },
+            "annualized_return": {
+              "value": 0.0878504355,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.base.annualized_return"
+              ]
+            },
+            "years": 5.0
+          }
+        }
+      },
+      "bull": {
+        "probability": 0.22,
+        "price_target": {
+          "value": 1245.809088843,
+          "unit": "usd_per_share",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenarios.bull.eps_at_horizon",
+            "scenarios.bull.exit_multiple"
+          ]
+        },
+        "annualized_return": {
+          "value": 0.2033268296,
+          "unit": "fraction",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenario_result.scenarios.bull.price_target",
+            "market.price"
+          ]
+        },
+        "eps_at_horizon": {
+          "value": 37.751790571,
+          "unit": "usd_per_share",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenarios.bull.revenue_cagr",
+            "scenarios.bull.terminal_margin",
+            "market.shares_outstanding",
+            "financials.FY2026.revenue"
+          ],
+          "formula": "revenue[FY2026] * (1 + revenue_cagr) ** 5 * terminal_margin / market.shares_outstanding"
+        },
+        "horizon_years": 5,
+        "by_horizon": {
+          "short_term": {
+            "value_per_share": {
+              "value": 594.1787219235,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bull.annualized_return",
+                "market.price"
+              ]
+            },
+            "cumulative_return": {
+              "value": 0.2033268296,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bull.annualized_return"
+              ]
+            },
+            "annualized_return": {
+              "value": 0.2033268296,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bull.annualized_return"
+              ]
+            },
+            "years": 1.0
+          },
+          "medium_term": {
+            "value_per_share": {
+              "value": 860.368091092,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bull.annualized_return",
+                "market.price"
+              ]
+            },
+            "cumulative_return": {
+              "value": 0.7424117848,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bull.annualized_return"
+              ]
+            },
+            "annualized_return": {
+              "value": 0.2033268296,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bull.annualized_return"
+              ]
+            },
+            "years": 3.0
+          },
+          "long_term": {
+            "value_per_share": {
+              "value": 1245.809088843,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bull.annualized_return",
+                "market.price"
+              ]
+            },
+            "cumulative_return": {
+              "value": 1.5230043518,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bull.annualized_return"
+              ]
+            },
+            "annualized_return": {
+              "value": 0.2033268296,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bull.annualized_return"
+              ]
+            },
+            "years": 5.0
+          }
+        }
+      }
+    },
+    "weights": {
+      "bear": 0.28,
+      "base": 0.5,
+      "bull": 0.22,
+      "clamps": [
+        {
+          "scenario": "bear",
+          "requested": 0.28,
+          "clamped_to": 0.28,
+          "applied": 0.28,
+          "default_weight": 0.3,
+          "band": 0.15,
+          "was_clamped": false,
+          "was_renormalized": false,
+          "reason": "The sharp rise in capex relative to depreciation (fact:MSFT:capex:FY2026 vs fact:MSFT:depreciation_amortization:FY2026, compared with the FY2022 pair) signals a heavy, ongoing infrastructure investment cycle whose payoff cannot be verified without MD&A text; if returns on this spending disappoint, margins compress and multiples de-rate, so this case is weighted somewhat above the default band given the unverified capex risk."
+        },
+        {
+          "scenario": "base",
+          "requested": 0.5,
+          "clamped_to": 0.5,
+          "applied": 0.5,
+          "default_weight": 0.5,
+          "band": 0.15,
+          "was_clamped": false,
+          "was_renormalized": false,
+          "reason": "The base case simply extends the steady, multi-year pattern already visible in the reported financials \u2014 continued revenue growth, margins near current levels, and cash generation consistent with the FY2022-FY2026 trend \u2014 without assuming either a capex-driven breakdown or an unusual acceleration."
+        },
+        {
+          "scenario": "bull",
+          "requested": 0.22,
+          "clamped_to": 0.22,
+          "applied": 0.22,
+          "default_weight": 0.2,
+          "band": 0.15,
+          "was_clamped": false,
+          "was_renormalized": false,
+          "reason": "Weighted at the lower end of the default band because there is no filing evidence (management commentary, guidance, competitive discussion) confirming that the current capex surge translates into an acceleration of returns; the bull case therefore requires an unconfirmed, specific outcome rather than a simple extrapolation."
+        }
+      ],
+      "any_clamped": false,
+      "renormalized": false
+    },
+    "expected_annualized_return": {
+      "value": 0.071337273,
+      "unit": "fraction",
+      "type": "estimate",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "scenario_result.scenarios.*.annualized_return",
+        "scenario_result.weights"
+      ]
+    },
+    "sp500_expected_return": {
+      "value": 0.07,
+      "unit": "fraction",
+      "type": "assumption",
+      "status": "ok",
+      "source_id": "src:config:calc_assumptions",
+      "derived_from": [],
+      "basis": "config",
+      "baseline": {
+        "forward_pe": {
+          "value": 22.0,
+          "unit": "multiple",
+          "type": "assumption",
+          "status": "ok",
+          "source_id": "src:config:sp500_baseline:2026.09",
+          "derived_from": []
+        },
+        "earnings_yield": {
+          "value": 0.0455,
+          "unit": "fraction",
+          "type": "assumption",
+          "status": "ok",
+          "source_id": "src:config:sp500_baseline:2026.09",
+          "derived_from": []
+        },
+        "risk_free_rate": {
+          "value": 0.0425,
+          "unit": "fraction",
+          "type": "assumption",
+          "status": "ok",
+          "source_id": "src:config:sp500_baseline:2026.09",
+          "derived_from": []
+        },
+        "as_of": "2026-09-20"
+      }
+    },
+    "expected_return_vs_sp500": {
+      "short_term": {
+        "value": 0.001337273,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      },
+      "medium_term": {
+        "value": 0.001337273,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      },
+      "long_term": {
+        "value": 0.001337273,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      }
+    },
+    "excess_vs_sp500": {
+      "short_term": {
+        "value": 0.001337273,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      },
+      "medium_term": {
+        "value": 0.001337273,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      },
+      "long_term": {
+        "value": 0.001337273,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      }
+    },
+    "p_beat_sp500": {
+      "short_term": 0.39,
+      "medium_term": 0.36,
+      "long_term": 0.34
+    },
+    "prior": {
+      "base_rate": {
+        "short_term": 0.47,
+        "medium_term": 0.44,
+        "long_term": 0.42
+      },
+      "requested_shift": -0.08,
+      "applied_shift": -0.08,
+      "cap": 0.15,
+      "shift_reasons": [
+        "scenario: no qualitative filing evidence was available in this run to justify a company-specific deviation from the historical base rate, so no shift is requested.",
+        "red_team: the capex trajectory (nearly doubling in FY2026 alone, now consuming the large majority of the growth in operating cash flow) directly threatens the FCF growth assumption the valuation case depends on, and the complete absence of any filing narrative in this run means none of the usual mitigating disclosures (capex guidance, customer concentration, covenant status) could be checked to offset that risk."
+      ]
+    },
+    "scores": {
+      "short_term": 5,
+      "medium_term": 5,
+      "long_term": 5
+    },
+    "consistency": {
+      "ok": true,
+      "issues": []
+    },
+    "sensitivity": {
+      "flips_at_bear_probability": 0.2872288356,
+      "current_bear_probability": 0.28,
+      "allowed_band": [
+        0.15,
+        0.45
+      ],
+      "reachable": true,
+      "inside_allowed_band": true,
+      "target": 0.07,
+      "bear_return": -0.06185659724025527,
+      "base_bull_blend": 0.1231348893,
+      "reason": "the verdict flips at a bear weight of 29%, against the 28% applied"
+    }
+  },
+  "audit": {
+    "schema_version": "2.1.0",
+    "passed": true,
+    "issues": [],
+    "claims_checked": 5,
+    "claims_verified": 0,
+    "claims_unverified": 5,
+    "llm_checks_run": 0,
+    "retries_issued": [],
+    "notes": [
+      "MINIMAL GATE: only unresolved_fact ran. Every claim is reported unverified because the other checks in docs/verification.md are not built yet - an unchecked claim must not read as a verified one."
+    ]
+  },
+  "data_quality": {
+    "overall": "partial",
+    "gaps": [
+      "No business section found in the filings available as of 2026-09-20",
+      "No debt_note section found in the filings available as of 2026-09-20",
+      "No mdna section found in the filings available as of 2026-09-20",
+      "No risk_factors section found in the filings available as of 2026-09-20",
+      "No sbc_note section found in the filings available as of 2026-09-20"
+    ]
+  },
+  "metrics_ref": null,
+  "state_version": "1.0.0"
+}

@@ -1,9 +1,11 @@
 {
   "tickers": [
     "ACME",
-    "AAPL"
+    "AAPL",
+    "NVDA",
+    "MSFT"
   ],
-  "generated_at": "2026-09-20T14:00:14Z",
+  "generated_at": "2026-09-20T14:15:00Z",
   "runs": [
     {
       "ticker": "ACME",
@@ -27,6 +29,30 @@
         "short_term": 3,
         "medium_term": 3,
         "long_term": 3
+      }
+    },
+    {
+      "ticker": "NVDA",
+      "ok": true,
+      "mode": "live",
+      "company": "NVIDIA CORP",
+      "verdict": "avoid",
+      "scores": {
+        "short_term": 4,
+        "medium_term": 4,
+        "long_term": 5
+      }
+    },
+    {
+      "ticker": "MSFT",
+      "ok": true,
+      "mode": "live",
+      "company": "MICROSOFT CORP",
+      "verdict": "hold",
+      "scores": {
+        "short_term": 5,
+        "medium_term": 5,
+        "long_term": 5
       }
     }
   ]

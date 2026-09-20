@@ -1,0 +1,1142 @@
+{
+  "schema_version": "2.1.0",
+  "ticker": "NVDA",
+  "as_of": "2026-09-20",
+  "generated_at": "2026-09-20T13:50:19Z",
+  "mode": "live",
+  "disclaimer": "This is AI-generated research for educational purposes only. It is not investment advice or a recommendation to buy or sell any security.",
+  "card": {
+    "company": "NVIDIA CORP",
+    "ticker": "NVDA",
+    "price": {
+      "value": 222.27,
+      "unit": "usd_per_share",
+      "type": "fact",
+      "status": "ok",
+      "source_id": "src:market:NVDA:20260918T200000Z",
+      "derived_from": []
+    },
+    "market_cap": {
+      "value": 5356707000000.0,
+      "unit": "usd",
+      "type": "fact",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "market.price",
+        "market.shares_outstanding"
+      ]
+    },
+    "thesis": "NVDA is a dominant, financially strong compounder whose own most recent results already show the early signs of a cycle inflection \u2014 margin compression and inventory building at peak reported revenue \u2014 while the market's price embeds a forward free-cash-flow growth assumption that no filing narrative in this dataset can corroborate. The company's swing to a net-cash balance sheet is a genuine structural strength, but it does not offset the risk that a multiple built for perpetual hyperscale demand collapses if that demand merely decelerates rather than falls. The quantitative work shows the probability-weighted return lagging the index across every horizon, which is the deciding fact here.",
+    "scores": {
+      "short_term": 4,
+      "medium_term": 4,
+      "long_term": 5
+    },
+    "p_beat_sp500_5y": 0.32,
+    "expected_5y_return": {
+      "value": 0.0416268622,
+      "unit": "fraction",
+      "type": "estimate",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "scenario_result.scenarios.*.annualized_return",
+        "scenario_result.weights"
+      ]
+    },
+    "expected_return_vs_sp500": {
+      "short_term": {
+        "value": -0.0283731378,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      },
+      "medium_term": {
+        "value": -0.0283731378,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      },
+      "long_term": {
+        "value": -0.0283731378,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      }
+    },
+    "primary_catalyst": "Sustained or reaccelerating hyperscaler and enterprise AI infrastructure spending, which is the assumption underlying the base and bull scenario paths.",
+    "biggest_risk": "A de-rating of the current premium multiple toward historical semiconductor-cycle norms, triggered by any pause in hyperscaler capital expenditure, against a balance sheet with no debt buffer or conglomerate discount to cushion the decline.",
+    "valuation": "extremely_expensive",
+    "business_quality": "excellent",
+    "financial_strength": "fortress",
+    "verdict": "avoid",
+    "ten_thousand_dollar_answer": {
+      "choice": "sp500",
+      "reason": "The probability-weighted outcome across every time horizon falls short of what a broad index is expected to deliver, so the extra concentration and cyclical risk in owning this single name is not being compensated."
+    }
+  },
+  "sections": [
+    {
+      "id": "company",
+      "title": "Company",
+      "body_markdown": "## Company\n\n_No claims recorded for this section._",
+      "agent": "business",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "financials",
+      "title": "Financial quality",
+      "body_markdown": "## Financial quality\n\n_No claims recorded for this section._",
+      "agent": "financial",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "balance_sheet",
+      "title": "Balance sheet strength",
+      "body_markdown": "## Balance sheet strength\n\n_No claims recorded for this section._",
+      "agent": "financial",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "cash_flow",
+      "title": "Free cash flow",
+      "body_markdown": "## Free cash flow\n\n_No claims recorded for this section._",
+      "agent": "financial",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "earnings_quality",
+      "title": "Earnings quality",
+      "body_markdown": "## Earnings quality\n\n_No claims recorded for this section._",
+      "agent": "financial",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "management",
+      "title": "Management and guidance",
+      "body_markdown": "## Management and guidance\n\n_No claims recorded for this section._",
+      "agent": "business",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "competitive_position",
+      "title": "Competitive position",
+      "body_markdown": "## Competitive position\n\n_No claims recorded for this section._",
+      "agent": "business",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "valuation",
+      "title": "Valuation",
+      "body_markdown": "## Valuation\n\n_No claims recorded for this section._",
+      "agent": "valuation",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "expectations",
+      "title": "Expectations vs reality",
+      "body_markdown": "## Expectations vs reality\n\n_No claims recorded for this section._",
+      "agent": "valuation",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "catalysts",
+      "title": "Catalysts",
+      "body_markdown": "## Catalysts\n\n_No claims recorded for this section._",
+      "agent": "business",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "risks",
+      "title": "Risks",
+      "body_markdown": "## Risks\n\n_No claims recorded for this section._",
+      "agent": "red_team",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "scenarios",
+      "title": "Bull / base / bear",
+      "body_markdown": "## Bull / base / bear\n\n- The scenario weights proposed by the agent were within the permitted band and were used as proposed.\n- The bear case price target is the value shown. ($75.76 \u00b7 estimate) _[fact:NVDA:eps_diluted:FY2026]_\n- The base case price target is the value shown. ($307.62 \u00b7 estimate) _[fact:NVDA:eps_diluted:FY2026]_\n- The bull case price target is the value shown. ($927.65 \u00b7 estimate) _[fact:NVDA:eps_diluted:FY2026]_",
+      "agent": "scenario",
+      "evidence": [],
+      "verification_status": "verified",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "sp500_comparison",
+      "title": "S&P 500 comparison",
+      "body_markdown": "## S&P 500 comparison\n\n- The probability-weighted expected return trails the assumed index return. (-2.8% \u00b7 estimate) _[fact:NVDA:eps_diluted:FY2026]_",
+      "agent": "scenario",
+      "evidence": [],
+      "verification_status": "verified",
+      "unverified_claim_ids": []
+    },
+    {
+      "id": "decision",
+      "title": "Investment committee decision",
+      "body_markdown": "## Investment committee decision\n\n_No claims recorded for this section._",
+      "agent": "synthesizer",
+      "evidence": [],
+      "verification_status": "pending",
+      "unverified_claim_ids": []
+    }
+  ],
+  "red_team": {
+    "summary": "NVDA's own FY2026 numbers already show the tell-tale signs of a cycle rolling over \u2014 margin compression and inventory building at the very moment revenue is largest \u2014 while the market is paying an EV of over $5.3 trillion that is almost entirely equity risk (net cash, trivial debt) for a reverse-DCF-implied 18-24% perpetual FCF growth rate that no filing text in this dataset corroborates. A short seller does not need NVDA's earnings to fall; a re-rating of the ~40x EV/EBITDA multiple toward historical semiconductor-cycle norms, triggered by any hyperscaler capex pause, is sufficient on its own to erase 30%+ of the equity value because there is no debt buffer or discount to a conglomerate structure to cushion the fall.",
+    "responses_by_synthesizer": "Accepted: the coincidence of gross-margin compression and inventory build at the point of largest reported revenue is a legitimate early signal of a cycle inflection, and it is not offset by anything in the available quantitative facts. Accepted: the reverse-DCF-implied forward free-cash-flow growth rate is demanding and, absent any supplied filing narrative or management guidance to corroborate it, must be treated as unverified market optimism rather than a grounded expectation. Accepted: the balance sheet's net-cash position, while a genuine strength, is a cushion against insolvency, not against a multiple re-rating, so the red team is correct that there is no structural buffer against a valuation-driven drawdown if hyperscaler capital spending merely slows rather than falls. Because all three points are accepted and because the probability-weighted expected return already trails the index across every horizon in the calculation results, the verdict is bearish rather than neutral; a hold would understate how much of the bear case has been accepted here.",
+    "drawdown_path": "First crack: a hyperscaler (the concentrated buyer base implied by NVDA's revenue scale) signals a capex digestion pause or pushes out orders in a quarterly call, which shows up first as a soft next-quarter revenue guide rather than a miss on the reported quarter. Second: gross margin, already down roughly 4 points year-over-year per the leading view, guides down further as pricing competition from AMD and hyperscaler in-house silicon intensifies and NVDA works through the inventory it built up faster than cost of revenue \u2014 investors would see this as a specific line in the next earnings release rather than a filing risk factor. Third: elevated inventory (already outpacing cost-of-revenue growth) forces a write-down or reserve build, which compresses reported EPS below consensus even if unit volumes hold up. Fourth, and most important given the balance sheet: because EV of roughly $5.35 trillion is almost pure equity value with a near-zero net-debt cushion, the market re-rates the EV/EBITDA multiple from the low-40s toward a more typical semiconductor-cycle multiple (high teens to low-20s) even without a change in trailing earnings \u2014 this multiple compression alone is sufficient to produce a 30-50% equity drawdown, and it would be visible early as a sharp reset in forward P/E and EV/EBITDA relative to trailing figures well before full-year earnings confirm any slowdown.",
+    "requested_prior_shift": -0.1
+  },
+  "agent_outputs": {
+    "financial": {
+      "schema_version": "2.1.0",
+      "agent": "financial",
+      "ticker": "NVDA",
+      "as_of": "2026-09-20",
+      "model": "claude-sonnet-5",
+      "summary": "NVDA's FY2026 10-K facts show extraordinary revenue and profit growth continuing from FY2022-FY2025, funded almost entirely by operating performance rather than buybacks, and the balance sheet has flipped from a net-debt to a net-cash position. However, gross margin compressed roughly 4 points year-over-year, the effective tax rate has been volatile (including a tax benefit year), inventory grew faster than cost of revenue, and free cash flow conversion versus net income has softened slightly \u2014 all points that would normally be checked against MD&A commentary, but no filing text was supplied for this run so qualitative corroboration is unavailable.",
+      "findings": [],
+      "tokens_in": 7368,
+      "tokens_out": 6898
+    },
+    "business": {
+      "schema_version": "2.1.0",
+      "agent": "business",
+      "ticker": "NVDA",
+      "as_of": "2026-09-20",
+      "model": "claude-sonnet-5",
+      "summary": "No filing sections, news, or qualitative documents were provided for NVDA in this run, so no business, management, competitive-position, or catalyst claims can be sourced with verbatim quotes as required. Only quantitative facts were supplied, which fall outside the scope of this agent's sections.",
+      "findings": [],
+      "tokens_in": 7264,
+      "tokens_out": 626
+    },
+    "valuation": {
+      "schema_version": "2.1.0",
+      "agent": "valuation",
+      "ticker": "NVDA",
+      "as_of": "2026-09-20",
+      "model": "claude-sonnet-5",
+      "summary": "NVDA's absolute multiples (P/E ~28x, EV/EBITDA ~40x, P/FCF ~42x, EV/Revenue ~18x, P/B ~34x) sit well above general market norms but the P/E is actually below the semiconductor peer-group median, largely because the peer median is skewed by one peer's deeply negative earnings; EV/EBITDA, P/FCF, EV/Revenue and all historical (own-history) multiple comparisons could not be computed because peer and historical multiple data were unavailable. The reverse DCF implies the market is pricing in roughly 18-24% forward FCF growth (13-22% across the sensitivity grid) under 9% discount/3% terminal growth assumptions, a bar that cannot be corroborated against management guidance or MD&A commentary because no filing text was supplied for this run.",
+      "findings": [],
+      "tokens_in": 11501,
+      "tokens_out": 6678,
+      "valuation_plan": {
+        "methods": {
+          "pe": "Earnings are large and reported, but the financial agent flagged a volatile effective tax rate including a tax-benefit year, so any P/E must be read with that distortion in mind rather than treated as a clean multiple.",
+          "ev_ebitda": "EV/EBITDA controls for capital structure and tax-rate noise, which matters here given the flagged effective-tax-rate volatility, and lets comparison across peers with different leverage (e.g., INTC, MU) on a more operating-level basis.",
+          "p_fcf": "Free cash flow is the hardest metric to dress up; useful here because the financial agent noted FCF conversion versus net income has softened slightly, so P/FCF/FCF yield will show whether cash generation still supports the multiple even if net income is aided by tax items.",
+          "ev_revenue": "Given the extraordinary revenue growth trajectory described upstream, EV/Revenue is included to frame how much of the current multiple prices in continued rapid growth versus a mature margin structure, though it is secondary to EBITDA/FCF-based multiples.",
+          "peer_median": "Comparing NVDA's multiples to the median of SIC 3674 semiconductor peers gives a market-based cross-check independent of any single peer's idiosyncrasies; will report how many peers have usable multiples given the wide size gaps noted in the candidate list.",
+          "historical": "NVDA's own multi-year revenue and profit growth (per the financial agent's findings) makes its own historical multiple trend a relevant anchor for whether the current valuation is in line with, or a step-change from, its recent trading history.",
+          "reverse_dcf": "Required to back out the FCF growth rate the current price implies, which is the basis for the expectations section comparing implied growth against realized growth and any guidance found in filings."
+        },
+        "peers": {
+          "AVGO": "Same SIC 3674 code and closest in size (3.4x apart on CY2025 revenue) among candidates, making it the most comparable large-cap semiconductor peer; kept from default list.",
+          "INTC": "Same SIC 3674 code; kept as a comparable diversified semiconductor company despite differing margin/leverage profile, useful for EV/EBITDA cross-check per default list.",
+          "MU": "Same SIC 3674 code; kept from default list as a memory/semiconductor peer, though 5.8x size gap noted for context when weighing its multiple.",
+          "AMD": "Same SIC 3674 code and closest direct competitor in GPU/accelerator markets; kept from default list despite 6.2x size gap.",
+          "AMAT": "Same SIC 3674 code; kept from default list as a semiconductor-equipment comparable, though its business model (equipment vs. chips) differs, so its multiple should be weighted with that caveat.",
+          "NXPI": "Same SIC 3674 code; kept from default list, though the 17.6x revenue-size gap is the largest among candidates, so its multiple carries the least weight in the peer median."
+        },
+        "notes": "Kept the full default SIC 3674 candidate list unchanged (AVGO, INTC, MU, AMD, AMAT, NXPI); no additions or removals since all are same-SIC comparables and no business-agent qualitative evidence was available to justify swapping in non-standard peers. Peer median results should be reported alongside the count of peers with usable multiples given the wide revenue-size dispersion (3.4x to 17.6x) across this set.",
+        "calc_notes": [
+          "historical: skipped - no price history source"
+        ]
+      }
+    },
+    "scenario": {
+      "schema_version": "2.1.0",
+      "agent": "scenario",
+      "ticker": "NVDA",
+      "as_of": "2026-09-20",
+      "model": "claude-sonnet-5",
+      "summary": "With no filing text supplied this run, scenario construction rests entirely on the quantitative facts and the upstream synthesis notes: continued triple-digit historical growth and a swing to net cash support the base/bull cases, while gross-margin compression and inventory building relative to cost of revenue are the seeds of the bear case. The market's implied forward FCF growth (per the upstream valuation note) is already demanding, which caps how much upside the bull case can additionally assume.",
+      "findings": [],
+      "tokens_in": 9871,
+      "tokens_out": 5540,
+      "scenarios_proposal": {
+        "schema_version": "2.0.0",
+        "ticker": "NVDA",
+        "as_of": "2026-09-20",
+        "scenarios": {
+          "bear": {
+            "probability": 0.3,
+            "probability_rationale": "Standard default weight retained: the bear case is a plausible but not base-case outcome, anchored in the observed gross-margin compression and inventory build noted in the upstream synthesis, both of which are early signals of a demand or pricing air pocket rather than confirmed deterioration.",
+            "horizon_years": 5,
+            "revenue_cagr": {
+              "value": 0.1,
+              "unit": "fraction",
+              "type": "assumption",
+              "status": "ok",
+              "source_id": "src:llm:scenario",
+              "derived_from": []
+            },
+            "terminal_margin": {
+              "value": 0.35,
+              "unit": "fraction",
+              "type": "assumption",
+              "status": "ok",
+              "source_id": "src:llm:scenario",
+              "derived_from": []
+            },
+            "eps_at_horizon": {
+              "value": null,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "unavailable",
+              "source_id": null,
+              "derived_from": [
+                "scenarios.bear.revenue_cagr",
+                "scenarios.bear.terminal_margin",
+                "market.shares_outstanding"
+              ]
+            },
+            "exit_multiple": {
+              "value": 15.0,
+              "unit": "multiple",
+              "type": "assumption",
+              "status": "ok",
+              "source_id": "src:llm:scenario",
+              "derived_from": []
+            },
+            "rationale": "Gross-margin compression and inventory growing faster than cost of revenue are consistent with a scenario where demand normalizes, competitive or customer-concentration pressure compresses pricing, and growth decelerates sharply from the historical run rate while margins settle well below recent peaks and the market re-rates the multiple down toward a mature-hardware level.",
+            "evidence": []
+          },
+          "base": {
+            "probability": 0.5,
+            "probability_rationale": "Given the multi-year run of extraordinary, operating-cash-funded growth and the improved (net-cash) balance sheet documented in the upstream synthesis, the modal outcome is that growth decelerates from its recent extreme rate but remains strong and profitable, warranting the default 50% weight without additional tilt.",
+            "horizon_years": 5,
+            "revenue_cagr": {
+              "value": 0.25,
+              "unit": "fraction",
+              "type": "assumption",
+              "status": "ok",
+              "source_id": "src:llm:scenario",
+              "derived_from": []
+            },
+            "terminal_margin": {
+              "value": 0.45,
+              "unit": "fraction",
+              "type": "assumption",
+              "status": "ok",
+              "source_id": "src:llm:scenario",
+              "derived_from": []
+            },
+            "eps_at_horizon": {
+              "value": null,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "unavailable",
+              "source_id": null,
+              "derived_from": [
+                "scenarios.base.revenue_cagr",
+                "scenarios.base.terminal_margin",
+                "market.shares_outstanding"
+              ]
+            },
+            "exit_multiple": {
+              "value": 25.0,
+              "unit": "multiple",
+              "type": "assumption",
+              "status": "ok",
+              "source_id": "src:llm:scenario",
+              "derived_from": []
+            },
+            "rationale": "Growth moderates from the recent extraordinary pace but remains well above typical large-cap rates, funded internally as in recent years, with margins settling below the FY2025/FY2026 peak (reflecting the noted gross-margin compression) but still historically high, and the market continuing to pay a growth premium multiple.",
+            "evidence": []
+          },
+          "bull": {
+            "probability": 0.2,
+            "probability_rationale": "Weighted at the default 20%: the upstream valuation note indicates the market already prices in an 18-24% forward FCF growth bar, so a bull case that merely matches this is not exceptional; only a scenario where growth and margins hold near the FY2026 extremes for longer than the market currently assumes would deliver bull-case upside, which is a high bar rather than the most likely path.",
+            "horizon_years": 5,
+            "revenue_cagr": {
+              "value": 0.4,
+              "unit": "fraction",
+              "type": "assumption",
+              "status": "ok",
+              "source_id": "src:llm:scenario",
+              "derived_from": []
+            },
+            "terminal_margin": {
+              "value": 0.55,
+              "unit": "fraction",
+              "type": "assumption",
+              "status": "ok",
+              "source_id": "src:llm:scenario",
+              "derived_from": []
+            },
+            "eps_at_horizon": {
+              "value": null,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "unavailable",
+              "source_id": null,
+              "derived_from": [
+                "scenarios.bull.revenue_cagr",
+                "scenarios.bull.terminal_margin",
+                "market.shares_outstanding"
+              ]
+            },
+            "exit_multiple": {
+              "value": 35.0,
+              "unit": "multiple",
+              "type": "assumption",
+              "status": "ok",
+              "source_id": "src:llm:scenario",
+              "derived_from": []
+            },
+            "rationale": "For the bull case to play out, growth and net margin must hold near the extraordinary levels achieved in FY2025-FY2026 for an extended period, exceeding even the aggressive forward FCF growth already implied by the market's current pricing, with the market continuing to award a premium multiple on continued dominance.",
+            "evidence": []
+          }
+        },
+        "prior_shift": {
+          "value": 0.0,
+          "reason": "No filing text was available this run to corroborate management guidance, competitive positioning, or catalysts, and the only qualitative signals available (gross-margin compression, rising inventory, an already-demanding market-implied growth bar) cut in both directions rather than pointing clearly toward outperformance or underperformance versus the index, so no tilt to the base rate is requested.",
+          "source": "scenario"
+        }
+      }
+    },
+    "red_team": {
+      "schema_version": "2.1.0",
+      "agent": "red_team",
+      "ticker": "NVDA",
+      "as_of": "2026-09-20",
+      "model": "claude-sonnet-5",
+      "summary": "NVDA's own FY2026 numbers already show the tell-tale signs of a cycle rolling over \u2014 margin compression and inventory building at the very moment revenue is largest \u2014 while the market is paying an EV of over $5.3 trillion that is almost entirely equity risk (net cash, trivial debt) for a reverse-DCF-implied 18-24% perpetual FCF growth rate that no filing text in this dataset corroborates. A short seller does not need NVDA's earnings to fall; a re-rating of the ~40x EV/EBITDA multiple toward historical semiconductor-cycle norms, triggered by any hyperscaler capex pause, is sufficient on its own to erase 30%+ of the equity value because there is no debt buffer or discount to a conglomerate structure to cushion the fall.",
+      "findings": [],
+      "tokens_in": 9515,
+      "tokens_out": 8251,
+      "drawdown_path": "First crack: a hyperscaler (the concentrated buyer base implied by NVDA's revenue scale) signals a capex digestion pause or pushes out orders in a quarterly call, which shows up first as a soft next-quarter revenue guide rather than a miss on the reported quarter. Second: gross margin, already down roughly 4 points year-over-year per the leading view, guides down further as pricing competition from AMD and hyperscaler in-house silicon intensifies and NVDA works through the inventory it built up faster than cost of revenue \u2014 investors would see this as a specific line in the next earnings release rather than a filing risk factor. Third: elevated inventory (already outpacing cost-of-revenue growth) forces a write-down or reserve build, which compresses reported EPS below consensus even if unit volumes hold up. Fourth, and most important given the balance sheet: because EV of roughly $5.35 trillion is almost pure equity value with a near-zero net-debt cushion, the market re-rates the EV/EBITDA multiple from the low-40s toward a more typical semiconductor-cycle multiple (high teens to low-20s) even without a change in trailing earnings \u2014 this multiple compression alone is sufficient to produce a 30-50% equity drawdown, and it would be visible early as a sharp reset in forward P/E and EV/EBITDA relative to trailing figures well before full-year earnings confirm any slowdown.",
+      "requested_prior_shift": -0.1,
+      "prior_shift_reason": "The valuation embeds a near-perpetual 18-24% FCF growth assumption that cannot be corroborated against any filing text in this dataset, while the company's own FY2026 facts already show margin compression and inventory buildup at the peak of the cycle \u2014 and because EV is almost entirely equity with negligible debt, any multiple normalization has no buffer and passes straight through to shareholders."
+    },
+    "synthesizer": {
+      "schema_version": "2.1.0",
+      "agent": "synthesizer",
+      "ticker": "NVDA",
+      "as_of": "2026-09-20",
+      "model": "claude-sonnet-5",
+      "summary": "With no verified filing quotes supplied for this run, every decision-stage claim below rests on the upstream quantitative and red-team synthesis rather than sourced filing text; the probability-weighted return calculations show NVDA trailing the assumed index return across every horizon, reinforcing the red team's structural concerns about margin compression, inventory build, and a valuation that prices in growth no filing text in this dataset corroborates.",
+      "findings": [],
+      "tokens_in": 5787,
+      "tokens_out": 3869,
+      "synthesis_fields": {
+        "thesis": "NVDA is a dominant, financially strong compounder whose own most recent results already show the early signs of a cycle inflection \u2014 margin compression and inventory building at peak reported revenue \u2014 while the market's price embeds a forward free-cash-flow growth assumption that no filing narrative in this dataset can corroborate. The company's swing to a net-cash balance sheet is a genuine structural strength, but it does not offset the risk that a multiple built for perpetual hyperscale demand collapses if that demand merely decelerates rather than falls. The quantitative work shows the probability-weighted return lagging the index across every horizon, which is the deciding fact here.",
+        "primary_catalyst": "Sustained or reaccelerating hyperscaler and enterprise AI infrastructure spending, which is the assumption underlying the base and bull scenario paths.",
+        "biggest_risk": "A de-rating of the current premium multiple toward historical semiconductor-cycle norms, triggered by any pause in hyperscaler capital expenditure, against a balance sheet with no debt buffer or conglomerate discount to cushion the decline.",
+        "valuation": "extremely_expensive",
+        "business_quality": "excellent",
+        "financial_strength": "fortress",
+        "verdict": "avoid",
+        "ten_thousand_dollar_answer": {
+          "choice": "sp500",
+          "reason": "The probability-weighted outcome across every time horizon falls short of what a broad index is expected to deliver, so the extra concentration and cyclical risk in owning this single name is not being compensated."
+        },
+        "red_team_responses": "Accepted: the coincidence of gross-margin compression and inventory build at the point of largest reported revenue is a legitimate early signal of a cycle inflection, and it is not offset by anything in the available quantitative facts. Accepted: the reverse-DCF-implied forward free-cash-flow growth rate is demanding and, absent any supplied filing narrative or management guidance to corroborate it, must be treated as unverified market optimism rather than a grounded expectation. Accepted: the balance sheet's net-cash position, while a genuine strength, is a cushion against insolvency, not against a multiple re-rating, so the red team is correct that there is no structural buffer against a valuation-driven drawdown if hyperscaler capital spending merely slows rather than falls. Because all three points are accepted and because the probability-weighted expected return already trails the index across every horizon in the calculation results, the verdict is bearish rather than neutral; a hold would understate how much of the bear case has been accepted here."
+      }
+    }
+  },
+  "scenario_result": {
+    "schema_version": "2.0.0",
+    "ticker": "NVDA",
+    "as_of": "2026-09-20",
+    "scenarios": {
+      "bear": {
+        "probability": 0.3,
+        "price_target": {
+          "value": 75.7590920745,
+          "unit": "usd_per_share",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenarios.bear.eps_at_horizon",
+            "scenarios.bear.exit_multiple"
+          ]
+        },
+        "annualized_return": {
+          "value": -0.19367378,
+          "unit": "fraction",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenario_result.scenarios.bear.price_target",
+            "market.price"
+          ]
+        },
+        "eps_at_horizon": {
+          "value": 5.0506061383,
+          "unit": "usd_per_share",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenarios.bear.revenue_cagr",
+            "scenarios.bear.terminal_margin",
+            "market.shares_outstanding",
+            "financials.FY2026.revenue"
+          ],
+          "formula": "revenue[FY2026] * (1 + revenue_cagr) ** 5 * terminal_margin / market.shares_outstanding"
+        },
+        "horizon_years": 5,
+        "by_horizon": {
+          "short_term": {
+            "value_per_share": {
+              "value": 179.2221289197,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bear.annualized_return",
+                "market.price"
+              ]
+            },
+            "cumulative_return": {
+              "value": -0.19367378,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bear.annualized_return"
+              ]
+            },
+            "annualized_return": {
+              "value": -0.19367378,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bear.annualized_return"
+              ]
+            },
+            "years": 1.0
+          },
+          "medium_term": {
+            "value_per_share": {
+              "value": 116.5234129547,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bear.annualized_return",
+                "market.price"
+              ]
+            },
+            "cumulative_return": {
+              "value": -0.4757573539,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bear.annualized_return"
+              ]
+            },
+            "annualized_return": {
+              "value": -0.19367378,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bear.annualized_return"
+              ]
+            },
+            "years": 3.0
+          },
+          "long_term": {
+            "value_per_share": {
+              "value": 75.7590920745,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bear.annualized_return",
+                "market.price"
+              ]
+            },
+            "cumulative_return": {
+              "value": -0.6591573668,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bear.annualized_return"
+              ]
+            },
+            "annualized_return": {
+              "value": -0.19367378,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bear.annualized_return"
+              ]
+            },
+            "years": 5.0
+          }
+        }
+      },
+      "base": {
+        "probability": 0.5,
+        "price_target": {
+          "value": 307.6200366525,
+          "unit": "usd_per_share",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenarios.base.eps_at_horizon",
+            "scenarios.base.exit_multiple"
+          ]
+        },
+        "annualized_return": {
+          "value": 0.0671531582,
+          "unit": "fraction",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenario_result.scenarios.base.price_target",
+            "market.price"
+          ]
+        },
+        "eps_at_horizon": {
+          "value": 12.3048014661,
+          "unit": "usd_per_share",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenarios.base.revenue_cagr",
+            "scenarios.base.terminal_margin",
+            "market.shares_outstanding",
+            "financials.FY2026.revenue"
+          ],
+          "formula": "revenue[FY2026] * (1 + revenue_cagr) ** 5 * terminal_margin / market.shares_outstanding"
+        },
+        "horizon_years": 5,
+        "by_horizon": {
+          "short_term": {
+            "value_per_share": {
+              "value": 237.1961324827,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.base.annualized_return",
+                "market.price"
+              ]
+            },
+            "cumulative_return": {
+              "value": 0.0671531582,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.base.annualized_return"
+              ]
+            },
+            "annualized_return": {
+              "value": 0.0671531582,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.base.annualized_return"
+              ]
+            },
+            "years": 1.0
+          },
+          "medium_term": {
+            "value_per_share": {
+              "value": 270.1227183488,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.base.annualized_return",
+                "market.price"
+              ]
+            },
+            "cumulative_return": {
+              "value": 0.215290945,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.base.annualized_return"
+              ]
+            },
+            "annualized_return": {
+              "value": 0.0671531582,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.base.annualized_return"
+              ]
+            },
+            "years": 3.0
+          },
+          "long_term": {
+            "value_per_share": {
+              "value": 307.6200366525,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.base.annualized_return",
+                "market.price"
+              ]
+            },
+            "cumulative_return": {
+              "value": 0.3839926065,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.base.annualized_return"
+              ]
+            },
+            "annualized_return": {
+              "value": 0.0671531582,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.base.annualized_return"
+              ]
+            },
+            "years": 5.0
+          }
+        }
+      },
+      "bull": {
+        "probability": 0.2,
+        "price_target": {
+          "value": 927.647426993,
+          "unit": "usd_per_share",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenarios.bull.eps_at_horizon",
+            "scenarios.bull.exit_multiple"
+          ]
+        },
+        "annualized_return": {
+          "value": 0.3307620855,
+          "unit": "fraction",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenario_result.scenarios.bull.price_target",
+            "market.price"
+          ]
+        },
+        "eps_at_horizon": {
+          "value": 26.5042121998,
+          "unit": "usd_per_share",
+          "type": "estimate",
+          "status": "ok",
+          "source_id": null,
+          "derived_from": [
+            "scenarios.bull.revenue_cagr",
+            "scenarios.bull.terminal_margin",
+            "market.shares_outstanding",
+            "financials.FY2026.revenue"
+          ],
+          "formula": "revenue[FY2026] * (1 + revenue_cagr) ** 5 * terminal_margin / market.shares_outstanding"
+        },
+        "horizon_years": 5,
+        "by_horizon": {
+          "short_term": {
+            "value_per_share": {
+              "value": 295.7884887404,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bull.annualized_return",
+                "market.price"
+              ]
+            },
+            "cumulative_return": {
+              "value": 0.3307620855,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bull.annualized_return"
+              ]
+            },
+            "annualized_return": {
+              "value": 0.3307620855,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bull.annualized_return"
+              ]
+            },
+            "years": 1.0
+          },
+          "medium_term": {
+            "value_per_share": {
+              "value": 523.820036381,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bull.annualized_return",
+                "market.price"
+              ]
+            },
+            "cumulative_return": {
+              "value": 1.3566834768,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bull.annualized_return"
+              ]
+            },
+            "annualized_return": {
+              "value": 0.3307620855,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bull.annualized_return"
+              ]
+            },
+            "years": 3.0
+          },
+          "long_term": {
+            "value_per_share": {
+              "value": 927.647426993,
+              "unit": "usd_per_share",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bull.annualized_return",
+                "market.price"
+              ]
+            },
+            "cumulative_return": {
+              "value": 3.1735161155,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bull.annualized_return"
+              ]
+            },
+            "annualized_return": {
+              "value": 0.3307620855,
+              "unit": "fraction",
+              "type": "estimate",
+              "status": "ok",
+              "source_id": null,
+              "derived_from": [
+                "scenario_result.scenarios.bull.annualized_return"
+              ]
+            },
+            "years": 5.0
+          }
+        }
+      }
+    },
+    "weights": {
+      "bear": 0.3,
+      "base": 0.5,
+      "bull": 0.2,
+      "clamps": [
+        {
+          "scenario": "bear",
+          "requested": 0.3,
+          "clamped_to": 0.3,
+          "applied": 0.3,
+          "default_weight": 0.3,
+          "band": 0.15,
+          "was_clamped": false,
+          "was_renormalized": false,
+          "reason": "Standard default weight retained: the bear case is a plausible but not base-case outcome, anchored in the observed gross-margin compression and inventory build noted in the upstream synthesis, both of which are early signals of a demand or pricing air pocket rather than confirmed deterioration."
+        },
+        {
+          "scenario": "base",
+          "requested": 0.5,
+          "clamped_to": 0.5,
+          "applied": 0.5,
+          "default_weight": 0.5,
+          "band": 0.15,
+          "was_clamped": false,
+          "was_renormalized": false,
+          "reason": "Given the multi-year run of extraordinary, operating-cash-funded growth and the improved (net-cash) balance sheet documented in the upstream synthesis, the modal outcome is that growth decelerates from its recent extreme rate but remains strong and profitable, warranting the default 50% weight without additional tilt."
+        },
+        {
+          "scenario": "bull",
+          "requested": 0.2,
+          "clamped_to": 0.2,
+          "applied": 0.2,
+          "default_weight": 0.2,
+          "band": 0.15,
+          "was_clamped": false,
+          "was_renormalized": false,
+          "reason": "Weighted at the default 20%: the upstream valuation note indicates the market already prices in an 18-24% forward FCF growth bar, so a bull case that merely matches this is not exceptional; only a scenario where growth and margins hold near the FY2026 extremes for longer than the market currently assumes would deliver bull-case upside, which is a high bar rather than the most likely path."
+        }
+      ],
+      "any_clamped": false,
+      "renormalized": false
+    },
+    "expected_annualized_return": {
+      "value": 0.0416268622,
+      "unit": "fraction",
+      "type": "estimate",
+      "status": "ok",
+      "source_id": null,
+      "derived_from": [
+        "scenario_result.scenarios.*.annualized_return",
+        "scenario_result.weights"
+      ]
+    },
+    "sp500_expected_return": {
+      "value": 0.07,
+      "unit": "fraction",
+      "type": "assumption",
+      "status": "ok",
+      "source_id": "src:config:calc_assumptions",
+      "derived_from": [],
+      "basis": "config",
+      "baseline": {
+        "forward_pe": {
+          "value": 22.0,
+          "unit": "multiple",
+          "type": "assumption",
+          "status": "ok",
+          "source_id": "src:config:sp500_baseline:2026.09",
+          "derived_from": []
+        },
+        "earnings_yield": {
+          "value": 0.0455,
+          "unit": "fraction",
+          "type": "assumption",
+          "status": "ok",
+          "source_id": "src:config:sp500_baseline:2026.09",
+          "derived_from": []
+        },
+        "risk_free_rate": {
+          "value": 0.0425,
+          "unit": "fraction",
+          "type": "assumption",
+          "status": "ok",
+          "source_id": "src:config:sp500_baseline:2026.09",
+          "derived_from": []
+        },
+        "as_of": "2026-09-20"
+      }
+    },
+    "expected_return_vs_sp500": {
+      "short_term": {
+        "value": -0.0283731378,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      },
+      "medium_term": {
+        "value": -0.0283731378,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      },
+      "long_term": {
+        "value": -0.0283731378,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      }
+    },
+    "excess_vs_sp500": {
+      "short_term": {
+        "value": -0.0283731378,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      },
+      "medium_term": {
+        "value": -0.0283731378,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      },
+      "long_term": {
+        "value": -0.0283731378,
+        "unit": "fraction",
+        "type": "estimate",
+        "status": "ok",
+        "source_id": null,
+        "derived_from": [
+          "scenario_result.expected_annualized_return",
+          "scenario_result.sp500_expected_return"
+        ]
+      }
+    },
+    "p_beat_sp500": {
+      "short_term": 0.37,
+      "medium_term": 0.34,
+      "long_term": 0.32
+    },
+    "prior": {
+      "base_rate": {
+        "short_term": 0.47,
+        "medium_term": 0.44,
+        "long_term": 0.42
+      },
+      "requested_shift": -0.1,
+      "applied_shift": -0.1,
+      "cap": 0.15,
+      "shift_reasons": [
+        "scenario: no filing text was available this run to corroborate management guidance, competitive positioning, or catalysts, and the only qualitative signals available (gross-margin compression, rising inventory, an already-demanding market-implied growth bar) cut in both directions rather than pointing clearly toward outperformance or underperformance versus the index, so no tilt to the base rate is requested.",
+        "red_team: the valuation embeds a near-perpetual 18-24% FCF growth assumption that cannot be corroborated against any filing text in this dataset, while the company's own FY2026 facts already show margin compression and inventory buildup at the peak of the cycle \u2014 and because EV is almost entirely equity with negligible debt, any multiple normalization has no buffer and passes straight through to shareholders."
+      ]
+    },
+    "scores": {
+      "short_term": 4,
+      "medium_term": 4,
+      "long_term": 5
+    },
+    "consistency": {
+      "ok": true,
+      "issues": []
+    },
+    "sensitivity": {
+      "flips_at_bear_probability": 0.2155922557,
+      "current_bear_probability": 0.3,
+      "allowed_band": [
+        0.15,
+        0.45
+      ],
+      "reachable": true,
+      "inside_allowed_band": true,
+      "target": 0.07,
+      "bear_return": -0.19367377999872626,
+      "base_bull_blend": 0.1424699946,
+      "reason": "the verdict flips at a bear weight of 22%, against the 30% applied"
+    }
+  },
+  "audit": {
+    "schema_version": "2.1.0",
+    "passed": true,
+    "issues": [],
+    "claims_checked": 5,
+    "claims_verified": 0,
+    "claims_unverified": 5,
+    "llm_checks_run": 0,
+    "retries_issued": [],
+    "notes": [
+      "MINIMAL GATE: only unresolved_fact ran. Every claim is reported unverified because the other checks in docs/verification.md are not built yet - an unchecked claim must not read as a verified one."
+    ]
+  },
+  "data_quality": {
+    "overall": "partial",
+    "gaps": [
+      "No business section found in the filings available as of 2026-09-20",
+      "No debt_note section found in the filings available as of 2026-09-20",
+      "No mdna section found in the filings available as of 2026-09-20",
+      "No risk_factors section found in the filings available as of 2026-09-20",
+      "No sbc_note section found in the filings available as of 2026-09-20"
+    ]
+  },
+  "metrics_ref": null,
+  "state_version": "1.0.0"
+}
