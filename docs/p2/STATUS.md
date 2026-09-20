@@ -3,8 +3,7 @@
 Update whenever a capability moves from mock to real, or when blocked.
 A PR that changes behaviour must update this file.
 
-**Step:** metrics and valuation complete. **Next:** scenarios and scores, then
-`audit/`.
+**Step:** metrics, valuation, scenarios and scores complete. **Next:** `audit/`.
 **Branch:** `p2-port`, based on P1's `p1-step2` (P1's PRs are not merged yet), so
 `scripts/check_ownership.sh p2` must be run as `BASE=HEAD scripts/check_ownership.sh p2`
 with the P2 paths staged. Against `origin/main` it reports P1's files.
@@ -24,18 +23,18 @@ with the P2 paths staged. Against `origin/main` it reports P1's files.
 | forward DCF | **real** | growth input is the trailing FCF CAGR, capped at 20% and floored to terminal growth when negative; both recorded |
 | historical multiples | **unavailable** | reason `"no price history source"`; the functions are complete and take a series |
 | peer multiples | **degraded** | real recordings carry peer market caps only, so the peer median is `unavailable` with a reason |
-| `evaluate_scenarios` | partial | **really** rejects weights not summing to 1; rest is fixture |
-| weight clamping | not started | algorithm specified in `docs/pipeline.md`; demonstrated by `fixtures/mock/scenario_weights_clamped.json` |
-| prior cap | mock | fixture respects it; `test_prior_shift_respects_cap` passes |
-| `derive_scores` | mock | rubric table drafted in `calc/config.py` |
-| `validate_consistency` | mock | returns ok; thresholds drafted in `scenarios/consistency.py` |
+| `evaluate_scenarios` | **real** | reproduces the pinned ACME result (-1.945%/yr against 7%); derives `eps_at_horizon`, per-horizon values, and the bear-weight flip point |
+| weight clamping | **real** | matches the worked example in `docs/pipeline.md` and `fixtures/mock/scenario_weights_clamped.json`; every clamp recorded |
+| prior cap | **real** | shifts summed before the cap; an unreasoned shift is dropped, not capped |
+| `derive_scores` | **real** | rubric published in [rubric.md](rubric.md); reproduces the pinned 3/3/4 |
+| `validate_consistency` | **real** | six checks, including both of P3's own rules |
 | `run_audit` | mock | returns the ACME audit fixture |
 | deterministic checks | not started | seven of them |
 | LLM claim check | not started | prompt drafted in `prompts/verifier.md` |
 | retry routing | not started | table in `docs/verification.md` |
 | `backtest/` | not started | |
 | `predictions/` | not started | |
-| `docs/p2/rubric.md` | not written | must exist before `derive_scores` goes real |
+| `docs/p2/rubric.md` | **written** | bands, horizon divisors, the penalty, and a constants changelog |
 
 ## Known gaps in Step 1
 
@@ -70,4 +69,17 @@ metric that does not describe the filer at all carries `not_applicable: true`.
   any.
 - **Historical multiples are unavailable by design**: no price history source.
 
-**Last updated:** 2026-09-20 (Step 2: valuation)
+## Known gaps in Step 3
+
+- **`eps_at_horizon` is derived by calc/**, answering P3's blocking question
+  (`docs/requests/2026-09-20-p3-to-p2-step5-calc-contract-response.md`). An
+  agent-supplied value is recomputed and the disagreement recorded.
+- **The per-horizon annualized return is horizon-invariant by construction**: one
+  scenario CAGR implies one annual rate. `by_horizon.cumulative_return` is the
+  figure that differs across 0-12m / 1-3y / 3-5y.
+- **`sp500_expected_return` is `config.SP500_EXPECTED_RETURN`** (0.07): no
+  factsheet publishes an expected index return. The factsheet's forward P/E,
+  earnings yield and risk-free rate are echoed beside it, and calc/ prefers
+  `sp500_baseline.expected_return` the day P1 publishes one.
+
+**Last updated:** 2026-09-20 (Step 3: scenarios, scores, consistency)

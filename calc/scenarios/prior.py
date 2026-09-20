@@ -16,30 +16,72 @@ should be able to argue the verdict down.
 
 Requested and applied are recorded separately, so an overruled agent stays
 visible in the output.
-
-TODO(roadmap Step 2, P2).
 """
 
 from __future__ import annotations
 
-from schema.contracts.scenario_result import Prior
-from schema.contracts.scenarios import PriorShift
+from calc import config
+
+UNJUSTIFIED = "a prior shift without a written reason is not applied"
+"""An unreasoned shift is dropped, not capped. The reason is the whole argument."""
 
 
 def base_rate() -> dict[str, float]:
     """Historical P(beat S&P) per horizon, from config.BASE_RATE_P_BEAT_SP500."""
-    raise NotImplementedError("TODO(roadmap Step 2, P2)")
+    return dict(config.BASE_RATE_P_BEAT_SP500)
 
 
-def apply_shifts(shifts: list[PriorShift]) -> Prior:
+def apply_shifts(shifts: list[dict] | None) -> dict:
     """Sum the requested shifts, cap the total, record requested vs applied.
 
     The cap is symmetric and absolute: |applied| <= cap, and |applied| may never
     exceed |requested| (code may shrink a request, never enlarge it).
+
+    A shift with no reason is DROPPED before the sum. It is not counted and then
+    overruled - it never joins the argument, and `dropped_shifts` says so.
     """
-    raise NotImplementedError("TODO(roadmap Step 2, P2)")
+    cap = config.PRIOR_SHIFT_CAP
+    kept: list[dict] = []
+    dropped: list[str] = []
+    for shift in shifts or []:
+        if not isinstance(shift, dict) or shift.get("value") is None:
+            continue
+        reason = (shift.get("reason") or "").strip()
+        source = shift.get("source") or "scenario"
+        if not reason:
+            dropped.append(f"{source}: {UNJUSTIFIED}")
+            continue
+        kept.append({"value": float(shift["value"]), "reason": reason, "source": source})
+
+    requested = sum(shift["value"] for shift in kept)
+    applied = max(-cap, min(cap, requested))
+    prior = {
+        "base_rate": base_rate(),
+        "requested_shift": round(requested, 10),
+        "applied_shift": round(applied, 10),
+        "cap": cap,
+        "shift_reasons": [f"{shift['source']}: {_lower_first(shift['reason'])}" for shift in kept],
+    }
+    if dropped:
+        prior["dropped_shifts"] = dropped
+    if applied != requested:
+        prior["cap_applied"] = True
+        prior["cap_note"] = (
+            f"the agents together asked for {requested:+.2f} against a hard cap of "
+            f"{cap:.2f}, so {applied:+.2f} was applied"
+        )
+    return prior
 
 
-def p_beat_sp500(prior: Prior) -> dict[str, float]:
+def p_beat_sp500(prior: dict) -> dict[str, float]:
     """Base rate plus the applied shift, clipped to [0, 1], per horizon."""
-    raise NotImplementedError("TODO(roadmap Step 2, P2)")
+    shift = prior["applied_shift"]
+    return {
+        horizon: round(max(0.0, min(1.0, rate + shift)), 10)
+        for horizon, rate in prior["base_rate"].items()
+    }
+
+
+def _lower_first(text: str) -> str:
+    """Match the fixture's "scenario: stock trades at..." style."""
+    return text[0].lower() + text[1:] if text else text

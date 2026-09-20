@@ -24,6 +24,9 @@ from pathlib import Path
 from typing import Any
 
 from calc.metrics.compute import compute_metrics as metrics_compute
+from calc.scenarios.consistency import validate_consistency as scenarios_validate
+from calc.scenarios.evaluate import evaluate_scenarios as scenarios_evaluate
+from calc.scenarios.rubric import derive_scores as scenarios_derive_scores
 from calc.valuation.compute import calculate_valuation as valuation_compute
 
 _MOCK = Path(__file__).resolve().parents[1] / "fixtures" / "mock"
@@ -100,15 +103,17 @@ def evaluate_scenarios(
          recording requested vs applied (error C).
 
     `prior_shifts` is a list of PriorShift dicts. None means use only
-    `scenarios["prior_shift"]`.
+    `scenarios["prior_shift"]`; a non-empty list is authoritative, because P3's
+    list already contains the Scenario Agent's own shift and counting the embedded
+    one as well would apply it twice.
+
+    `eps_at_horizon` is DERIVED here from revenue, the scenario's growth and
+    margin, and the current share count - it is arithmetic, and no agent does
+    arithmetic (ADR 0001; the answer to P3's 2026-09-20 request).
 
     Takes no `as_of`: the factsheet carries it.
     """
-    total = sum(s["probability"] for s in scenarios["scenarios"].values())
-    if abs(total - 1.0) > 1e-6:
-        raise ValueError(f"Scenario probabilities must sum to 1.0, got {total}")
-    _require_mock("evaluate_scenarios")
-    return _load("scenario_result.json")
+    return scenarios_evaluate(scenarios, factsheet, metrics, prior_shifts)
 
 
 def derive_scores(scenario_result: dict) -> dict:
@@ -117,8 +122,7 @@ def derive_scores(scenario_result: dict) -> dict:
     A fixed rubric mapping excess return to a score. Documented in
     docs/p2/rubric.md. Never inflated, and never produced by an LLM.
     """
-    _require_mock("derive_scores")
-    return _load("scenario_result.json")["scores"]
+    return scenarios_derive_scores(scenario_result)
 
 
 def validate_consistency(scenario_result: dict, verdict_card: dict) -> dict:
@@ -128,5 +132,4 @@ def validate_consistency(scenario_result: dict, verdict_card: dict) -> dict:
     "strong_buy" whose expected return trails the index is an error, not a
     matter of taste.
     """
-    _require_mock("validate_consistency")
-    return {"ok": True, "issues": []}
+    return scenarios_validate(scenario_result, verdict_card)
