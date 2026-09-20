@@ -199,6 +199,45 @@ def build_periods(
     return periods, sources, gaps
 
 
+def ttm_block(facts: list[FinancialFact]) -> dict[str, ValueObject]:
+    """`{metric: ValueObject}` for the trailing twelve months.
+
+    An extra field on the Factsheet, not a contract change: every artifact model
+    is `extra="allow"` and consumers tolerate unknown fields (CLAUDE.md).
+
+    It exists because calc/ reads the factsheet, not the fact store, and asked
+    for exactly this: without it every published multiple divides the latest
+    FULL year, so a partly elapsed year makes our P/E read higher than the one
+    on a reader's screen
+    (docs/requests/2026-09-20-p2-to-p1-calculate-valuation-wrapper.md).
+
+    Each value cites the TTM fact plus the facts that fact was derived from, so
+    a reader who doubts the trailing figure can reach the annual and
+    year-to-date numbers behind it without leaving the factsheet.
+    """
+    from data.normalize import ttm as ttm_rules
+
+    out: dict[str, ValueObject] = {}
+    for fact in facts:
+        if not fact.metric.endswith(ttm_rules.TTM_SUFFIX) or not fact.is_current:
+            continue
+        base = fact.metric[: -len(ttm_rules.TTM_SUFFIX)]
+        lineage = [fact.fact_id]
+        if fact.derivation:
+            lineage.extend(fact.derivation.input_fact_ids)
+        out[base] = ValueObject(
+            value=float(fact.value) if fact.value is not None else None,
+            unit=unit_for(base),
+            type=ValueType.FACT,
+            status=(
+                ValueStatus.OK if fact.value is not None else ValueStatus.UNAVAILABLE
+            ),
+            source_id=source_id_for(fact.accession_number),
+            derived_from=lineage,
+        )
+    return out
+
+
 def overall_quality(gaps: list[str], periods: list[FinancialPeriod]) -> str:
     """ok | partial | degraded, as the report's banner reads it."""
     if not periods:
@@ -277,6 +316,9 @@ def build(
         peers=list(peers or []),
         sp500_baseline=baseline.baseline,
         consensus=None,
+        # Extra, additive fields. `ttm` is what lets calc/ publish a trailing
+        # multiple beside the full-year one; `period` names what it covers.
+        ttm=ttm_block(facts),
         filing_sections=list(getattr(sections, "sections", []) or []),
         news=list(getattr(news, "news", []) or []),
         sources=sources,

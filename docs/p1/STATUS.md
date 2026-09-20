@@ -5,8 +5,7 @@ A PR that changes behaviour must update this file.
 
 **Step:** 4 complete. **All eleven tools are served and live; XBRL normalization
 is real and runs against twelve recorded filers.**
-**Next:** TTM flow facts (calc/ needs them for a trailing multiple), then peer
-revenue and net income from the frames already fetched.
+**Next:** peer revenue and net income from the frames already fetched.
 **Blockers:** `calc/` is on `p2-port` and not yet merged to `main`, so the
 wrapper is tested against that branch's `calc/` locally. Real 10-K section extraction is deferred and is
 what `search_filing` needs to work in live mode.
@@ -48,7 +47,8 @@ PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
 | Shares outstanding | **real** | 5-candidate chain behind a public-float floor check (GOOGL, BRK-B) |
 | Market snapshot | **real** | one timestamp for the bundle; EV bridge cites the facts |
 | Point-in-time reads | **real** | facts filed after `as_of` are never read |
-| YTD differencing / Q4 derivation | not started | annual only for now; both raise rather than guess |
+| TTM flow facts | **real** | `<metric>_ttm` + the `_ytd` facts they cite; `ttm` block on the factsheet |
+| Q4 derivation | not started | TTM covers the trailing year; a single Q4 still raises rather than guesses |
 | ticker -> CIK overrides | **real** | `data/ingest/ticker_overrides.py`; XOM is the only one in the top 100 |
 | `fixtures/real/` recorded filers | **real** | 12 companies, trimmed companyfacts + submissions |
 | Section parsing | **real** | 10-K Item 1 + 1A from the primary document; TOC, letter-spacing and cross-references handled |
@@ -57,7 +57,7 @@ PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
 | Live e2e over stdio | **real** | `BM_LIVE_TESTS=1 pytest mcp_server/tests/test_live_e2e.py`; 22 checks, all ten tools |
 | `fixtures/real/` demo tickers | not started | Step 6; coordinate the choice via `docs/requests/` |
 
-**Last updated:** 2026-09-20 (all eleven tools served; `calculate_valuation` wired to calc/)
+**Last updated:** 2026-09-20 (`calculate_valuation` wired to calc/; TTM flow facts)
 
 ---
 
@@ -197,6 +197,21 @@ produced a confident wrong number rather than an error.
     section to a tenth of itself while looking entirely successful. It ends at
     Item 1B, 1C, 2 or 3, none of which is a phrase a risk factor uses in
     passing.
+
+16. **A 10-K filed after the last 10-Q makes the obvious TTM formula
+    double-count.** `FY + current YTD - prior-year YTD` assumes the fiscal year
+    ENDS BEFORE the quarter. Microsoft's FY2026 10-K (year ended 2026-06-30) was
+    filed 2026-07-29, after its Q3 10-Q (quarter ended 2026-03-31), so the year
+    already contains that quarter: adding its year-to-date counted nine months
+    twice and produced capex of $148.6B against a full year of $115.9B. The test
+    is whether the fiscal year ends after the quarter, not which document
+    arrived last, and it holds for four months of every year - not an edge case.
+
+17. **The `fy` trap bites quarters too.** Both year-to-date rows in a 10-Q - the
+    current one and the prior-year comparative - carry the FILING's fiscal year,
+    so labelling the comparative from its own `fy` gives two facts the same
+    `Q3-2026` id and one silently overwrites the other. The comparative's label
+    is derived by subtracting a year from the current one.
 
 ### Two earlier findings, still true
 

@@ -8,6 +8,13 @@ WHY THE PAYLOAD IS TRIMMED
     chain in data/normalize/concept_map.py can ask for, which is ~40 of the
     hundreds a large filer reports, and drops every non-annual entry.
 
+WHY 10-Q ROWS ARE KEPT FOR SOME CONCEPTS
+    A trailing-twelve-month figure needs a year-to-date value and the prior-year
+    comparative printed beside it in the SAME filing. Annual rows alone cannot
+    produce one, so the flow concepts in data/normalize/ttm.py keep their
+    quarterly rows too - bounded to the most recent few filings, because Apple
+    alone carries 174 quarterly EPS rows going back to 2009.
+
 WHAT IS DELIBERATELY NOT TRIMMED
     Every FILED VERSION of every annual period is kept, with its `accn` and
     `filed`. Those duplicates are what the point-in-time and restatement tests
@@ -26,7 +33,7 @@ from pathlib import Path
 
 from data.ingest import companyfacts as companyfacts_api
 from data.ingest import edgar_client
-from data.normalize import concept_map, periods
+from data.normalize import concept_map, periods, ttm
 
 FIXTURES_ROOT = Path(__file__).resolve().parents[2] / "fixtures" / "real"
 
@@ -82,6 +89,17 @@ def trim_companyfacts(payload: dict, *, keep_all_taxonomies: bool = True) -> dic
                     kept = list(entries)
                 else:
                     kept = [e for e in entries if _is_annual(e)]
+                    if concept in TTM_CONCEPTS:
+                        wanted_accessions = recent_quarterly_accessions(
+                            node, KEEP_QUARTERLY_FILINGS
+                        )
+                        kept += [
+                            e
+                            for e in entries
+                            if e.get("form") in ttm.QUARTERLY_FORMS
+                            and e.get("accn") in wanted_accessions
+                            and e.get("start")
+                        ]
                 if kept:
                     units[unit] = kept
             if units:
@@ -113,6 +131,34 @@ its 2024 10-for-1 as a MONTH-LONG DURATION (start 2024-05-01, end 2024-05-31).
 An annual-only filter drops the second, which silently removes the very split
 the discontinuity detector exists to explain.
 """
+
+
+TTM_CONCEPTS: frozenset[str] = frozenset(
+    concept
+    for metric in ttm.TTM_METRICS
+    for concept in concept_map.candidates(metric, concept_map.US_GAAP)
+)
+"""Concepts the TTM builder reads. Their 10-Q rows are kept as well."""
+
+KEEP_QUARTERLY_FILINGS = 6
+"""How many recent 10-Q accessions to keep rows from.
+
+A trailing-twelve-month figure needs two: the latest 10-Q's year-to-date and the
+comparative printed beside it, both from the SAME filing. Six leaves room for a
+point-in-time test to step back a year and still find a filing, without keeping
+Apple's 174 quarterly EPS rows going back to 2009."""
+
+
+def recent_quarterly_accessions(node: dict, keep: int) -> set[str]:
+    """The `keep` newest 10-Q accessions appearing anywhere in one concept."""
+    seen: dict[str, str] = {}
+    for entries in (node.get("units") or {}).values():
+        for entry in entries:
+            if entry.get("form") in ttm.QUARTERLY_FORMS and entry.get("accn"):
+                filed = entry.get("filed") or ""
+                seen[entry["accn"]] = max(seen.get(entry["accn"], ""), filed)
+    newest = sorted(seen.items(), key=lambda kv: (kv[1], kv[0]), reverse=True)
+    return {accession for accession, _ in newest[:keep]}
 
 
 def _is_annual(entry: dict) -> bool:

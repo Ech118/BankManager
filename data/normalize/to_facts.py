@@ -33,7 +33,15 @@ from __future__ import annotations
 import datetime as dt
 from dataclasses import dataclass, field
 
-from data.normalize import concept_map, derived, dimensions, periods, restatements, splits
+from data.normalize import (
+    concept_map,
+    derived,
+    dimensions,
+    periods,
+    restatements,
+    splits,
+    ttm,
+)
 from data.normalize.concept_map import US_GAAP
 from schema.contracts.common import ISODate, ISOTimestamp, Ticker
 from schema.contracts.enums import FilingType, PeriodType, SourceKind, Unit
@@ -425,6 +433,20 @@ def normalize_companyfacts(
     result.facts.extend(adjusted)
     result.gaps.extend(notes)
     result.split_events = events
+
+    # Trailing twelve months, from the latest 10-Q. Last, because it reads the
+    # annual facts this function just built.
+    trailing = ttm.build(
+        ticker,
+        companyfacts,
+        result.facts,
+        as_of=as_of,
+        taxonomy=taxonomy,
+        cik=cik,
+        retrieved_at=retrieved_at,
+    )
+    result.facts.extend(trailing.facts)
+    result.gaps.extend(trailing.gaps)
     return result
 
 
