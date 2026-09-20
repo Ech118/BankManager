@@ -3,22 +3,23 @@
 Update whenever a capability moves from mock to real, or when blocked.
 A PR that changes behaviour must update this file.
 
-**Step:** 2 complete. **The MCP server is live in mock mode and P3 is unblocked.**
-**Next:** [roadmap](../roadmap.md) Step 3 — the XBRL concept map and normalization,
-then `search_filings` / `get_filing_section`, which is what P3 is waiting on.
+**Step:** 3 in progress. **Seven of ten tools are served; P3 is unblocked on the
+filing tools it was waiting for.**
+**Next:** the XBRL concept map and normalization, then `search_filing` (Postgres
+full-text search) and `search_news`.
 **Blockers:** none.
 
 | Capability | State | Notes |
 |---|---|---|
-| **MCP server** | **mock, live over MCP** | 5 of 10 tools served over the in-memory transport |
+| **MCP server** | **mock, live over MCP** | 7 of 10 tools served over the in-memory transport |
 | `get_financial_facts` | **served** | as_of + restatement filtering, `periods`, `include_superseded` |
 | `get_market_snapshot` | **served** | null before the snapshot was observed |
 | `get_company_profile` | **served** | |
 | `get_peer_companies` | **served** | `limit` + `truncated` |
 | `resolve_fact` | **served** | flags `is_superseded` / `is_future` separately |
-| `search_filings` | not served | **Step 3 — P3's top ask**; needs `FixtureFilingRepository` |
-| `get_filing_section` | not served | **Step 3 — P3's top ask** |
-| `search_filing` | not served | Step 3 |
+| `search_filings` | **served** | newest first, `forms` filter, `limit` + `truncated` |
+| `get_filing_section` | **served** | verbatim; errors on unknown id AND on one filed after `as_of` |
+| `search_filing` | not served | Step 3; needs Postgres full-text search |
 | `search_news` | not served | Step 4 |
 | `calculate_valuation` | not served | Step 4; waits on P2's `calc.api` |
 | **EDGAR client** | **real** | submissions, filings, documents; responses replayed in tests |
@@ -31,11 +32,11 @@ then `search_filings` / `get_filing_section`, which is what P3 is waiting on.
 | XBRL concept mapping | not started | Step 3; map drafted in `normalize/concept_map.py` |
 | YTD differencing / Q4 derivation | not started | Step 3 |
 | Restatement linking | not started | Step 3; one restatement exists in the fixtures |
-| Section parsing | not started | Step 3 |
+| Section parsing | mock | serves `fixtures/mock/sections/*.txt`; real 10-K parsing is Step 7 |
 | Postgres store | not started | migration file lists the tables |
 | `fixtures/real/` demo tickers | not started | Step 6; coordinate the choice via `docs/requests/` |
 
-**Last updated:** 2026-09-19 (Step 2: EDGAR client, rate limiting, cache, ticker→CIK)
+**Last updated:** 2026-09-19 (Step 3: `search_filings` and `get_filing_section` served)
 
 ---
 
@@ -77,7 +78,7 @@ anyio.run(main)
 ```
 
 `mcp_server.server.IMPLEMENTED_TOOLS` is the authoritative list of what is
-served today. The other five are in the contracts but deliberately not
+served today. The other three are in the contracts but deliberately not
 advertised — an agent planning around a tool that raises `NotImplementedError`
 is worse off than one that knows the tool is absent.
 
@@ -97,6 +98,12 @@ Tickers in mock mode: `ACME` (in scope) and `BANKX` (exercises the rejection pat
   post-dates the run (`is_future`).
 - **The advertised input schema is generated from the contract model** that
   validates the call, so the two cannot drift apart.
+- **A missing section is an error, not an empty result.** `get_filing_section`
+  errors for an unknown `section_id` and, separately, for one filed after
+  `as_of` — returning nothing would look like the filing did not exist.
+- **Truncation keeps the offsets honest.** `max_chars` moves `text`, `char_end`
+  and `char_count` together, so `char_end - char_start == char_count ==
+  len(text)` still holds, and the truncated text is a verbatim prefix.
 - **Read-only.** No tool writes.
 
 ## Design notes
@@ -126,7 +133,7 @@ The MCP SDK needs **Python ≥ 3.10**; this machine's `/usr/bin/python3` is 3.9.
                                  -r data/requirements.txt \
                                  -r tests/contracts/requirements.txt ruff
 make lint test-contracts PY=.venv/bin/python
-.venv/bin/python -m pytest mcp_server/tests -q      # 42 passed
+.venv/bin/python -m pytest mcp_server/tests -q      # 73 passed
 ```
 
 `.venv/` is gitignored. The Makefile's `PY ?= python` already allows this, so no
@@ -134,8 +141,10 @@ repo change is needed.
 
 ## Known issues
 
-1. **`make test` fails to collect on a clean main** — five identically-named
-   `test_placeholders.py` modules collide. Filed as
+1. **`make test` fails to collect on a clean main** — six identically-named
+   `test_placeholders.py` modules collide (`agents/`, `audit/`, `calc/`, `data/`,
+   `orchestrator/`, `tests/e2e/`). `data/tests/__init__.py` fixes P1's; the rest
+   are other partitions' files. Filed as
    `docs/requests/2026-09-19-p1-to-coordinator-make-test-collection.md`;
    `make test-contracts` is unaffected.
 2. **`resolve_fact`'s stub docstring said "KeyError for an unknown fact_id"**,

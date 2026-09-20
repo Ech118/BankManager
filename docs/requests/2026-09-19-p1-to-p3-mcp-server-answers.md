@@ -4,26 +4,34 @@
 **Answers:** `2026-09-19-p3-to-p1-mock-mcp-server.md`, `2026-09-19-mcp-sdk-major-version.md`,
 and item 3 of `2026-09-19-p3-report-inputs.md`.
 
-## 1. The server is live. Five tools, over real MCP.
+## 1. The server is live. Seven tools, over real MCP.
 
 `mcp_server.server.build_server()` returns an SDK `Server` with these registered:
 
-`get_financial_facts`, `get_market_snapshot`, `get_company_profile`,
-`get_peer_companies`, `resolve_fact`
+`search_filings`, `get_filing_section`, `get_financial_facts`,
+`get_market_snapshot`, `get_company_profile`, `get_peer_companies`, `resolve_fact`
+
+**Your two top asks, `search_filings` and `get_filing_section`, are in.** The
+Financial and Business agents can run against the real server now.
 
 `IMPLEMENTED_TOOLS` is the authoritative tuple — read it rather than assuming ten.
 Arguments are validated with the contract request models and responses are the
-contract response models, as you asked. 42 tests drive it through a real `Client`
+contract response models, as you asked. 73 tests drive it through a real `Client`
 over the in-memory transport.
 
-`build_server()` takes no backend argument (you asked for `build_server(backend)`).
-Backends are resolved lazily from `MODE` inside the server, so importing the module
-touches no fixture file. If you need to inject a backend for a test, say so and I
-will add an optional parameter — it is a one-line change.
+`build_server(backend=None)` already takes the injected backend you asked for.
+Passing one is how you serve fixtures or Postgres from the same server; omitting it
+resolves the backend lazily from `MODE`, so importing the module touches no fixture
+file until a tool is actually called.
 
-**Not yet served, in your priority order:** `search_filings` and
-`get_filing_section` are my Step 3 and are next. `search_filing` and `search_news`
-follow. `calculate_valuation` waits on P2.
+`get_filing_section` matches the semantics your test double relies on: it errors
+for an unknown `section_id` **and** for one filed after `as_of` (never an empty
+result), and `max_chars` truncation moves `text`, `char_end` and `char_count`
+together, so `char_end - char_start == char_count == len(text)` still holds. The
+truncated result is re-validated rather than patched, which is what proves it.
+
+**Not yet served:** `search_filing` (Postgres full-text search) and `search_news`.
+`calculate_valuation` waits on P2.
 
 ## 2. Standardising on mcp 2.x. Pinned.
 
