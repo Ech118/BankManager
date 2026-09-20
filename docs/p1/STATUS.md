@@ -3,8 +3,9 @@
 Update whenever a capability moves from mock to real, or when blocked.
 A PR that changes behaviour must update this file.
 
-**Step:** 1 in progress — **the MCP server is live in mock mode and P3 is unblocked.**
-**Next:** [roadmap](../roadmap.md) Step 1 continued — EDGAR client, ticker→CIK, real `check_scope`.
+**Step:** 2 complete. **The MCP server is live in mock mode and P3 is unblocked.**
+**Next:** [roadmap](../roadmap.md) Step 3 — the XBRL concept map and normalization,
+then `search_filings` / `get_filing_section`, which is what P3 is waiting on.
 **Blockers:** none.
 
 | Capability | State | Notes |
@@ -15,22 +16,45 @@ A PR that changes behaviour must update this file.
 | `get_company_profile` | **served** | |
 | `get_peer_companies` | **served** | `limit` + `truncated` |
 | `resolve_fact` | **served** | flags `is_superseded` / `is_future` separately |
-| `search_filings` | not served | Step 3; needs `FixtureFilingRepository` |
-| `get_filing_section` | not served | Step 3 |
+| `search_filings` | not served | **Step 3 — P3's top ask**; needs `FixtureFilingRepository` |
+| `get_filing_section` | not served | **Step 3 — P3's top ask** |
 | `search_filing` | not served | Step 3 |
 | `search_news` | not served | Step 4 |
 | `calculate_valuation` | not served | Step 4; waits on P2's `calc.api` |
-| `check_scope` | mock | ACME in scope, BANKX rejected; real SIC checks are Step 1 |
-| `build_factsheet` | mock | returns the ACME fixture |
-| EDGAR client | not started | Step 1 |
-| XBRL concept mapping | not started | Step 1; map drafted in `normalize/concept_map.py` |
-| YTD differencing / Q4 derivation | not started | Step 2 |
-| Restatement linking | not started | Step 2; one restatement exists in the fixtures |
+| **EDGAR client** | **real** | submissions, filings, documents; responses replayed in tests |
+| **ticker → CIK** | **real** | `BRK.B` / `BRK-B` / `brk-b` all normalise |
+| **rate limiting** | **real** | token bucket at 8 req/s; escalating 429/503 backoff |
+| **on-disk cache** | **real** | by accession for filings; `get_fresh()` for the ticker map |
+| **`SEC_USER_AGENT` loading** | **real** | `data/ingest/env.py`; refuses a UA with no contact details |
+| `check_scope` | mock | ACME in scope, BANKX rejected; real SIC classification is Step 3 |
+| `build_factsheet` | mock | returns the ACME fixture; **P3's auditor needs a real one** |
+| XBRL concept mapping | not started | Step 3; map drafted in `normalize/concept_map.py` |
+| YTD differencing / Q4 derivation | not started | Step 3 |
+| Restatement linking | not started | Step 3; one restatement exists in the fixtures |
 | Section parsing | not started | Step 3 |
-| Postgres store | not started | Step 1; migration file lists the tables |
-| `fixtures/real/` demo tickers | not started | Step 5; coordinate the choice via `docs/requests/` |
+| Postgres store | not started | migration file lists the tables |
+| `fixtures/real/` demo tickers | not started | Step 6; coordinate the choice via `docs/requests/` |
 
-**Last updated:** 2026-09-19 (Step 1: MCP server serving the five fixture-backed tools)
+**Last updated:** 2026-09-19 (Step 2: EDGAR client, rate limiting, cache, ticker→CIK)
+
+---
+
+## Two findings from real SEC data that change Step 3's design
+
+Fetched for AAPL, JPM, TSM, RDDT, O, CRCL and FIG before writing any
+classification. Both of these would have produced a confident wrong answer.
+
+1. **`filings.recent` is a window, not a history.** JPM's holds 26,190 filings
+   but spans **one year** and contains a single 10-K, with 70 overflow pages
+   behind it. Counting annual reports there would classify JPM as "not enough
+   history". Counting distinct fiscal years in `companyfacts` gives 17. The
+   scope check must use `companyfacts`; `list_filings` documents the limit.
+
+2. **TSM has no `us-gaap` taxonomy at all — only `ifrs-full`.** A 20-F filer
+   reports under IFRS, so a us-gaap concept map returns *nothing* for it. The
+   planned "partial: foreign issuer" label understates this: without an
+   `ifrs-full` map the factsheet would be empty rather than reduced. Step 3
+   needs to decide whether to map IFRS or to refuse 20-F filers outright.
 
 ---
 
