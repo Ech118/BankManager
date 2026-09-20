@@ -21,7 +21,7 @@ from dataclasses import dataclass, field
 from functools import lru_cache
 
 from data.ingest import companyfacts as companyfacts_api
-from data.ingest import edgar_client, market_client
+from data.ingest import edgar_client, market_client, news_client
 from data.normalize import baseline as baseline_rules
 from data.normalize import factsheet as factsheet_rules
 from data.normalize import peers as peer_rules
@@ -88,6 +88,15 @@ def check_scope(ticker: Ticker, as_of: ISODate | None = None) -> dict:
     return scope_rules.check_scope(ticker, as_of).model_dump(mode="json")
 
 
+def search_news(
+    ticker: Ticker, as_of: ISODate | None = None, lookback_days: int = 60, limit: int = 20
+) -> list[dict]:
+    """Headlines in [as_of - lookback_days, as_of], newest first."""
+    effective = as_of or to_facts.utc_now()[:10]
+    result = news_client.search(ticker, effective, lookback_days, limit)
+    return [item.model_dump(mode="json") for item in result.news]
+
+
 def build_factsheet(ticker: Ticker, as_of: ISODate | None = None) -> dict:
     """The whole reported picture of one company at one date.
 
@@ -124,6 +133,9 @@ def build_factsheet(ticker: Ticker, as_of: ISODate | None = None) -> dict:
     )
     gaps.extend(baseline.gaps)
 
+    news = news_client.search(ticker, effective_as_of)
+    gaps.extend(news.gaps)
+
     peer_result = peer_rules.select(
         ticker,
         as_of=as_of,
@@ -146,6 +158,7 @@ def build_factsheet(ticker: Ticker, as_of: ISODate | None = None) -> dict:
         baseline=baseline,
         retrieved_at=retrieved_at,
         gaps=gaps,
+        news=news,
         mode=Mode.BACKTEST if as_of and as_of < retrieved_at[:10] else Mode.LIVE,
     )
     return result.factsheet.model_dump(mode="json")

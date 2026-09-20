@@ -3,17 +3,18 @@
 Update whenever a capability moves from mock to real, or when blocked.
 A PR that changes behaviour must update this file.
 
-**Step:** 4 in progress. **Nine of eleven tools are served; XBRL normalization
+**Step:** 4 in progress. **Ten of eleven tools are served; XBRL normalization
 is real and runs against twelve recorded filers.**
-**Next:** real 10-K Item extraction (what `search_filing` needs in live mode),
-then `search_news` and `calculate_valuation`, then live backends over stdio. Real 10-K section extraction is deferred and is
+**Next:** real 10-K Item 1/1A extraction (what `search_filing` needs in live
+mode), then MODE=live over stdio. `calculate_valuation` waits for `calc/` to
+land on main and errors clearly until then. Real 10-K section extraction is deferred and is
 what `search_filing` needs to work in live mode.
 **Blockers:** `get_factsheet` is in the contracts but not yet in `main` -
 PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
 
 | Capability | State | Notes |
 |---|---|---|
-| **MCP server** | **mock, live over MCP** | 9 of 11 tools served over the in-memory transport |
+| **MCP server** | **mock, live over MCP** | 10 of 11 tools served over the in-memory transport |
 | `get_financial_facts` | **served** | as_of + restatement filtering, `periods`, `include_superseded` |
 | `get_market_snapshot` | **served, live** | Finnhub price + filing share count; degrades to price unavailable |
 | `get_company_profile` | **served** | |
@@ -22,7 +23,7 @@ PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
 | `search_filings` | **served** | newest first, `forms` filter, `limit` + `truncated` |
 | `get_filing_section` | **served** | verbatim; errors on unknown id AND on one filed after `as_of` |
 | `search_filing` | **served** | BM25 over whole sections, in process; **live needs the section parser** |
-| `search_news` | not served | Step 4 |
+| `search_news` | **served, live** | Finnhub /company-news; `as_of` bounds the window from above too |
 | `calculate_valuation` | not served | Step 4; waits on P2's `calc.api` |
 | **EDGAR client** | **real** | submissions, filings, documents; responses replayed in tests |
 | **ticker → CIK** | **real** | `BRK.B` / `BRK-B` / `brk-b` all normalise |
@@ -53,7 +54,7 @@ PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
 | Postgres store | not started | migration file lists the tables |
 | `fixtures/real/` demo tickers | not started | Step 6; coordinate the choice via `docs/requests/` |
 
-**Last updated:** 2026-09-20 (derived-fact dating, baseline, `search_filing`, live peers, live `build_factsheet`)
+**Last updated:** 2026-09-20 (live `build_factsheet`, live `search_news`)
 
 ---
 

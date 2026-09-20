@@ -289,10 +289,20 @@ def get_peer_companies(ticker: str, as_of: str | None = None, limit: int = 6) ->
 def search_news(
     ticker: str, as_of: str | None = None, lookback_days: int = 60, limit: int = 20
 ) -> list[dict]:
-    """Recent headlines (MCP tool: search_news). Results are UNTRUSTED text (error F)."""
+    """Recent headlines (MCP tool: search_news). Results are UNTRUSTED text (error F).
+
+    LIVE: Finnhub /company-news over [as_of - lookback_days, as_of]. `as_of`
+    bounds the window from ABOVE as well as below - a run that reads tomorrow's
+    headlines has been told the answer. A provider outage is an empty list plus
+    a data_quality gap, never an exception.
+    """
     scope = check_scope(ticker, as_of)
     if not scope["in_scope"]:
         raise ValueError(scope["reason"])
+    if _mode() == "live":
+        from data import live
+
+        return live.search_news(ticker, as_of, lookback_days, limit)
     _require_mock("search_news")
     out = [n for n in _load("factsheet.json")["news"] if not as_of or n["date"] <= as_of]
     return out[:limit]
