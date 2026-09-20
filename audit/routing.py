@@ -15,14 +15,17 @@ worst-case latency. After the cap the report SHIPS with those claims marked
 unverified - visible and labelled, rather than blocked or quietly dropped
 (ADR 0005).
 
-TODO(roadmap Step 2, P2).
 """
 
 from __future__ import annotations
 
+import re
+
 from schema.contracts.enums import AgentName, IssueType
 from schema.contracts.state import ResearchState
-from schema.contracts.verification import RetryDirective, VerificationIssue
+from schema.contracts.verification import MAX_RETRIES, RetryDirective, VerificationIssue
+
+_SECTION_KEY_RE = re.compile(r"^sections\.([A-Za-z0-9_]+)")
 
 RETRYABLE: frozenset[IssueType] = frozenset(
     {
@@ -47,9 +50,18 @@ have. Both are escalated to a human rather than re-prompted.
 """
 
 
+def section_key_of(issue: VerificationIssue) -> str | None:
+    m = _SECTION_KEY_RE.match(issue.path)
+    return m.group(1) if m else None
+
+
 def owning_agent(state: ResearchState, issue: VerificationIssue) -> AgentName | None:
     """The agent responsible for the section this issue came from."""
-    raise NotImplementedError("TODO(roadmap Step 2, P2)")
+    key = section_key_of(issue)
+    if key is None:
+        return None
+    section = getattr(state.sections, key, None)
+    return section.owner if section else None
 
 
 def build_directives(
@@ -58,6 +70,30 @@ def build_directives(
     """Group retryable issues by section into one directive per section.
 
     One directive per section, not per issue: an agent redoing a section should
-    see every problem with it at once.
+    see every problem with it at once. Skips any section that has already
+    reached MAX_RETRIES - the section's own retry_count is the source of truth
+    for the cap, `attempt` is only stamped onto the directive for logging/the
+    retry prompt (docs/requests/2026-09-19-p3-to-p2-verifier-and-retry-contract.md).
     """
-    raise NotImplementedError("TODO(roadmap Step 2, P2)")
+    by_section: dict[str, list[VerificationIssue]] = {}
+    for issue in issues:
+        if issue.issue_type not in RETRYABLE:
+            continue
+        key = section_key_of(issue)
+        if key is None:
+            continue
+        by_section.setdefault(key, []).append(issue)
+
+    directives = []
+    for key, section_issues in by_section.items():
+        section = getattr(state.sections, key, None)
+        if section is None or section.retry_count >= MAX_RETRIES:
+            continue
+        directives.append(RetryDirective(
+            target_agent=section.owner,
+            section_key=key,
+            issues=section_issues,
+            attempt=attempt,
+            max_attempts=MAX_RETRIES,
+        ))
+    return directives

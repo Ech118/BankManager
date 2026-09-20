@@ -1,8 +1,5 @@
 """P2 (Calc, Audit & Eval) owns this file. Public interface of the verifier.
 
-Step 0 STUB: returns the ACME audit fixture. The owner replaces the internals
-but MUST NOT change the signature (CONTRACT-CHANGE PR, CONTRIBUTING.md).
-
 BOUNDARY (docs/adr/0007): audit/ reads a ResearchState and a Factsheet, and
 nothing else. Both of its external needs are INJECTED as callables:
   - `get_text`     data.api.get_section_text, so audit never imports data/,
@@ -10,16 +7,21 @@ nothing else. Both of its external needs are INJECTED as callables:
 
 The gate is mostly deterministic (ADR 0005). Only UNSUPPORTED_CLAIM needs an
 LLM; keeping that list short is what keeps the gate cheap and reproducible.
+
+Signature MUST NOT change (CONTRACT-CHANGE PR, CONTRIBUTING.md).
 """
 
 from __future__ import annotations
 
-import json
-import os
 from collections.abc import Callable
-from pathlib import Path
 
-_MOCK = Path(__file__).resolve().parents[1] / "fixtures" / "mock"
+from audit import deterministic
+from audit.llm_checks import check_unsupported_claims
+from audit.routing import MAX_RETRIES, NOT_RETRYABLE, build_directives, section_key_of
+from schema.contracts.enums import Severity
+from schema.contracts.factsheet import Factsheet
+from schema.contracts.state import ResearchState
+from schema.contracts.verification import VerificationResult
 
 
 def run_audit(
@@ -30,28 +32,53 @@ def run_audit(
 ) -> dict:
     """Return a VerificationResult (schema/audit.json).
 
-    The REAL implementation runs, in order:
-      DETERMINISTIC (docs/verification.md)
-        unresolved_fact            every cited fact_id resolves
-        recompute_mismatch         every derived number recomputes from its inputs
-        prose_number_mismatch      numerals in claim text match their ValueObject
-        superseded_fact            no claim cites a restated fact
-        future_fact                no claim cites a fact filed after state.as_of
-        adjusted_as_gaap           no non-GAAP figure presented as GAAP
-        cross_agent_contradiction  no two sections assert incompatible things
-      LLM (only this one)
-        unsupported_claim          each qualitative claim's quote really appears
-                                   in get_text(source_id); verify_claim judges
-                                   paraphrase only when the string match fails
-
-    Every issue carries the section it came from, so the orchestrator can route a
-    targeted RetryDirective to that section's owning agent.
+    Runs the seven deterministic checks (docs/verification.md), then the one
+    LLM check (verbatim match first, `verify_claim` only on failure). Builds
+    one RetryDirective per section that still has a retryable issue AND has
+    not yet reached MAX_RETRIES; claims with a non-retryable issue, or whose
+    section is already at the cap, are counted as claims_unverified rather
+    than retried (ADR 0005: the report ships with those marked, not blocked).
 
     Takes no `as_of`: `state["as_of"]` and `factsheet["as_of"]` are authoritative.
     """
-    if os.environ.get("MODE", os.environ.get("BM_MODE", "mock")).lower() == "live":
-        raise NotImplementedError(
-            "audit.api.run_audit: live mode is not implemented yet (P2, roadmap Step 2). "
-            "Use MODE=mock."
-        )
-    return json.loads((_MOCK / "audit.json").read_text(encoding="utf-8"))
+    st = ResearchState.model_validate(state)
+    fs = Factsheet.model_validate(factsheet)
+
+    issues = deterministic.run_all(st, fs)
+    llm_issues, llm_calls = check_unsupported_claims(st, get_text, verify_claim)
+    issues += llm_issues
+
+    error_claim_ids = {i.claim_id for i in issues if i.severity is Severity.ERROR and i.claim_id}
+    terminal_unverified: set[str] = set()
+    for issue in issues:
+        if issue.severity is not Severity.ERROR or not issue.claim_id:
+            continue
+        if issue.issue_type in NOT_RETRYABLE:
+            terminal_unverified.add(issue.claim_id)
+            continue
+        key = section_key_of(issue)
+        section = getattr(st.sections, key, None) if key else None
+        if section is not None and section.retry_count >= MAX_RETRIES:
+            terminal_unverified.add(issue.claim_id)
+
+    # attempt = the round about to be requested; every section not yet at cap
+    # is on its own next attempt (section.retry_count + 1), but a single
+    # RetryDirective batch shares one attempt number for the round.
+    attempt = max((s.retry_count for s in st.sections.as_list()), default=0) + 1
+    retries_issued = build_directives(st, issues, attempt)
+
+    claims_checked = len(st.all_claims)
+    claims_unverified = len(terminal_unverified)
+    claims_verified = claims_checked - len(error_claim_ids)
+
+    result = VerificationResult(
+        schema_version=fs.schema_version,
+        passed=not any(i.severity is Severity.ERROR for i in issues),
+        issues=issues,
+        claims_checked=claims_checked,
+        claims_verified=claims_verified,
+        claims_unverified=claims_unverified,
+        llm_checks_run=llm_calls,
+        retries_issued=retries_issued,
+    )
+    return result.model_dump(mode="json")
