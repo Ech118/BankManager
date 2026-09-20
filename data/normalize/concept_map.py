@@ -113,6 +113,10 @@ METRIC_CHAINS: dict[str, dict[str, Chain]] = {
         ),
         "inventory": ("InventoryNet", "InventoryGross"),
         "shares_outstanding": ("CommonStockSharesOutstanding",),
+        "stock_split_ratio": (
+            "StockholdersEquityNoteStockSplitConversionRatio1",
+            "StockholdersEquityNoteStockSplitConversionRatio",
+        ),
     },
     IFRS_FULL: {},
     # Deliberately empty. A 20-F/40-F filer has no us-gaap node at all (TSM's
@@ -120,6 +124,14 @@ METRIC_CHAINS: dict[str, dict[str, Chain]] = {
     # `partial` by normalize.scope rather than silently returning nothing.
 }
 """taxonomy -> metric -> ordered candidates. The winner lands on the fact."""
+
+NON_ANNUAL_METRICS: frozenset[str] = frozenset({"shares_outstanding", "stock_split_ratio"})
+"""Metrics not resolved from the annual 10-K loop.
+
+`shares_outstanding` is a cover-page fact the market snapshot reads
+(data/ingest/market_client.py). `stock_split_ratio` is an event, tagged in
+whichever filing followed the split - NVDA reported its 10-for-1 ratio in a
+10-Q and never in a 10-K - so data/normalize/splits.py reads every form."""
 
 INSTANT_METRICS: frozenset[str] = frozenset(
     {

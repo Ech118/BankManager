@@ -34,6 +34,7 @@ real and runs against twelve recorded filers.**
 | Fiscal year labelling | **real** | from the filer's own numbering; Jan/Jun/Aug/Sep year ends tested |
 | Total debt | **real** | derived fact; components emitted and linked by `Derivation` |
 | Restatement linking | **real** | `superseded_by` + `as_known_on()`; real splits exercise it |
+| Stock splits | **real** | discontinuity detector + split-adjusted derived facts when a ratio is tagged |
 | Point-in-time reads | **real** | facts filed after `as_of` are never read |
 | YTD differencing / Q4 derivation | not started | annual only for now; both raise rather than guess |
 | ticker -> CIK overrides | **real** | `data/ingest/ticker_overrides.py`; XOM is the only one in the top 100 |
@@ -94,6 +95,20 @@ produced a confident wrong number rather than an error.
    diluted shares 2,494M -> 24,940M), AMZN's and GOOGL's 20-for-1. A run dated
    before the split must see the pre-split count, which is exactly what
    `restatements.as_known_on()` now reproduces.
+
+8. **A split leaves a five-year series inconsistent while every value in it is
+   correct.** A 10-K restates only the two comparative years it shows, so NVDA's
+   FY2022 - already out of that window when the 2024 split landed - was never
+   restated. Diluted EPS reads 3.85 -> 0.17 -> 1.19 across FY2022-FY2024, and a
+   five-year EPS CAGR from it is wrong by 10x. `data/normalize/splits.py` raises
+   a data_quality gap at the boundary, and where the filer tagged
+   `StockholdersEquityNoteStockSplitConversionRatio1` it also emits
+   `eps_diluted_split_adjusted` / `shares_diluted_split_adjusted` as DERIVED
+   facts citing the ratio fact and the as-filed fact. The as-filed facts are
+   never rewritten. Two traps inside that: the ratio is tagged as an instant by
+   one filer and a month-long DURATION by another (NVDA does both), and the same
+   split is tagged twice, at announcement and at effect - 164 days apart for
+   GOOGL - which would compound 20 into 400.
 
 ### Two earlier findings, still true
 

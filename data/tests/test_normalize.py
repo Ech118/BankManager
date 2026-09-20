@@ -25,7 +25,15 @@ from __future__ import annotations
 import pytest
 
 from data.ingest.ticker_overrides import override_for
-from data.normalize import concept_map, dimensions, periods, restatements, scope, to_facts
+from data.normalize import (
+    concept_map,
+    dimensions,
+    periods,
+    restatements,
+    scope,
+    splits,
+    to_facts,
+)
 from data.record.companyfacts import load
 from schema.contracts.facts import FinancialFact
 
@@ -503,3 +511,145 @@ def test_quarterly_paths_fail_loudly_rather_than_guessing():
         periods.ytd_to_quarterly([], "op_cash_flow")
     with pytest.raises(NotImplementedError):
         periods.derive_q4({}, {})
+
+
+# --------------------------------------------------------------------------
+# stock splits
+# --------------------------------------------------------------------------
+def test_detector_fires_at_the_nvda_split_boundary(recorded):
+    """FY2022's share count was never restated for the 2024 10-for-1 split,
+    because no filing after the split still showed FY2022."""
+    result = normalize(recorded, "NVDA")
+    boundary = [g for g in result.gaps if "share count" in g]
+    assert len(boundary) == 1
+    assert "FY2022" in boundary[0] and "FY2023" in boundary[0]
+    assert "9.9x" in boundary[0]
+    assert "totals such as revenue and net income are unaffected" in boundary[0]
+
+
+def test_detector_is_quiet_when_the_series_is_consistent(recorded):
+    for ticker in ("AAPL", "MSFT", "KO", "WDFC"):
+        result = normalize(recorded, ticker)
+        assert not [g for g in result.gaps if "share count" in g], ticker
+
+
+def test_reported_split_ratio_becomes_a_citable_fact(recorded):
+    result = normalize(recorded, "NVDA")
+    ratios = [f for f in result.facts if f.metric == splits.SPLIT_RATIO_METRIC]
+    assert len(ratios) == 1
+    ratio = ratios[0]
+    assert ratio.value == 10.0
+    assert ratio.xbrl_concept == "StockholdersEquityNoteStockSplitConversionRatio1"
+    assert ratio.source_kind.value == "xbrl_reported"
+    assert ratio.accession_number and ratio.filed_at and ratio.source_url
+
+
+def test_nvda_fy2022_is_split_adjusted_with_full_lineage(recorded):
+    """0.385, not 3.85. Arithmetic over two reported facts, both cited."""
+    result = normalize(recorded, "NVDA")
+    by_metric = {f.metric: f for f in result.facts if f.fiscal_period == "FY2022"}
+
+    eps = by_metric["eps_diluted_split_adjusted"]
+    assert eps.value == pytest.approx(0.385)
+    assert eps.source_kind.value == "derived"
+    assert eps.derivation.computed_by == to_facts.COMPUTED_BY
+
+    shares = by_metric["shares_diluted_split_adjusted"]
+    assert shares.value == pytest.approx(25_350_000_000)
+
+    by_id = {f.fact_id: f for f in result.facts}
+    inputs = [by_id[i] for i in eps.derivation.input_fact_ids]
+    assert {f.metric for f in inputs} == {"eps_diluted", splits.SPLIT_RATIO_METRIC}
+
+
+def test_the_as_filed_fact_is_left_untouched(recorded):
+    """No filing corrected it, so it is not superseded and not rewritten."""
+    result = normalize(recorded, "NVDA")
+    as_filed = value_of(result, "eps_diluted", "FY2022")
+    assert as_filed.value == pytest.approx(3.85)
+    assert as_filed.is_current
+    assert as_filed.source_kind.value == "xbrl_reported"
+
+
+def test_adjusted_series_is_continuous(recorded):
+    """The point of the exercise: FY2022 now sits next to FY2023."""
+    result = normalize(recorded, "NVDA")
+    shares = value_of(result, "shares_diluted_split_adjusted", "FY2022").value
+    next_year = value_of(result, "shares_diluted", "FY2023").value
+    assert 0.9 < shares / next_year < 1.1
+
+
+def test_only_periods_filed_before_the_split_are_adjusted(recorded):
+    """FY2023's current version was filed after the split and already reflects it."""
+    result = normalize(recorded, "NVDA")
+    adjusted = {f.fiscal_period for f in result.facts if f.metric.endswith(splits.ADJUSTED_SUFFIX)}
+    assert adjusted == {"FY2022"}
+
+
+def test_no_adjustment_without_a_reported_ratio(recorded):
+    """The detector's warning stands alone rather than a ratio being guessed."""
+    result = normalize(recorded, "AAPL")
+    assert not [f for f in result.facts if f.metric.endswith(splits.ADJUSTED_SUFFIX)]
+
+
+def test_a_run_before_the_split_sees_no_split_at_all(recorded):
+    """The ratio was filed 2024-08-28; a run in March 2024 cannot know it."""
+    result = normalize(recorded, "NVDA", as_of="2024-03-01")
+    assert [e.ratio for e in result.split_events] == [4.0]
+    assert not [f for f in result.facts if f.metric.endswith(splits.ADJUSTED_SUFFIX)]
+    assert value_of(result, "shares_diluted", "FY2024").value == pytest.approx(2_494_000_000)
+
+
+def test_one_split_tagged_at_two_dates_is_one_event(recorded):
+    """GOOGL tags its 20-for-1 at announcement (2022-02-01) and effect
+    (2022-07-15). Two events would multiply a pre-split value by 400."""
+    companyfacts, _ = recorded["GOOGL"]
+    events = splits.split_events(companyfacts, as_of=AS_OF)
+    ratios = [e.ratio for e in events]
+    assert ratios.count(20.0) == 1
+    twenty = next(e for e in events if e.ratio == 20.0)
+    assert twenty.effective_date == "2022-07-15", "the EFFECTIVE date, not the announcement"
+
+
+def test_nvda_4_for_1_is_not_compounded_to_16(recorded):
+    companyfacts, _ = recorded["NVDA"]
+    events = splits.split_events(companyfacts, as_of=AS_OF)
+    assert [e.ratio for e in events] == [4.0, 10.0]
+
+
+def test_split_ratio_is_read_from_a_duration_tag_too(recorded):
+    """NVDA tagged the 2021 ratio as an instant and the 2024 one as a
+    month-long duration. A shape filter loses the one that matters."""
+    companyfacts, _ = recorded["NVDA"]
+    node = companyfacts["facts"]["us-gaap"]["StockholdersEquityNoteStockSplitConversionRatio1"]
+    entries = [e for entries in node["units"].values() for e in entries]
+    assert any(e.get("start") for e in entries), "the duration-shaped tag survived recording"
+    assert any(e["val"] == 10 for e in entries)
+
+
+def test_cumulative_ratio_multiplies_later_splits():
+    events = [
+        splits.SplitEvent("2021-07-19", 4.0, "a", "2021-08-20", "10-Q", "X"),
+        splits.SplitEvent("2024-06-30", 10.0, "b", "2024-08-28", "10-Q", "X"),
+    ]
+    assert splits.cumulative_ratio(events, "2020-01-01") == pytest.approx(40.0)
+    assert splits.cumulative_ratio(events, "2022-01-01") == pytest.approx(10.0)
+    assert splits.cumulative_ratio(events, "2025-01-01") == pytest.approx(1.0)
+
+
+def test_a_ratio_below_the_floor_is_ignored():
+    """A "ratio" under 1.5 is a rounding or an inverted quote, not a split."""
+    payload = {
+        "facts": {
+            "us-gaap": {
+                "StockholdersEquityNoteStockSplitConversionRatio1": {
+                    "units": {
+                        "pure": [
+                            {"end": "2024-01-01", "val": 1.0, "filed": "2024-02-01", "form": "10-K"}
+                        ]
+                    }
+                }
+            }
+        }
+    }
+    assert splits.split_events(payload) == []

@@ -28017,6 +28017,67 @@
      ]
     }
    },
+   "StockholdersEquityNoteStockSplitConversionRatio": {
+    "description": "This item represents the conversion ratio used in the calculation of a stock split.",
+    "label": "Stockholders' Equity Note, Stock Split, Conversion Ratio (Deprecated 2013-01-31)",
+    "units": {
+     "shares": [
+      {
+       "accn": "0000021344-12-000023",
+       "end": "2012-03-30",
+       "filed": "2012-04-26",
+       "form": "10-Q",
+       "fp": "Q1",
+       "frame": "CY2012Q1",
+       "fy": 2012,
+       "start": "2012-01-01",
+       "val": 2
+      },
+      {
+       "accn": "0000021344-12-000037",
+       "end": "2012-06-29",
+       "filed": "2012-07-26",
+       "form": "10-Q",
+       "fp": "Q2",
+       "frame": "CY2012Q2",
+       "fy": 2012,
+       "start": "2012-03-31",
+       "val": 2
+      },
+      {
+       "accn": "0000021344-13-000052",
+       "end": "2012-09-28",
+       "filed": "2013-10-24",
+       "form": "8-K",
+       "fp": "FY",
+       "frame": "CY2012Q3",
+       "fy": 2012,
+       "start": "2012-06-30",
+       "val": 2
+      },
+      {
+       "accn": "0000021344-13-000007",
+       "end": "2012-09-28",
+       "filed": "2013-02-27",
+       "form": "10-K",
+       "fp": "FY",
+       "fy": 2012,
+       "start": "2012-06-30",
+       "val": 2
+      },
+      {
+       "accn": "0000021344-12-000051",
+       "end": "2012-09-28",
+       "filed": "2012-10-25",
+       "form": "10-Q",
+       "fp": "Q3",
+       "fy": 2012,
+       "start": "2012-06-30",
+       "val": 2
+      }
+     ]
+    }
+   },
    "WeightedAverageNumberOfDilutedSharesOutstanding": {
     "description": "The average number of shares or units issued and outstanding that are used in calculating diluted EPS or earnings per unit (EPU), determined based on the timing of issuance of shares or units in the period.",
     "label": "Weighted Average Number of Shares Outstanding, Diluted",

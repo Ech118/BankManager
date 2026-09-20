@@ -28294,6 +28294,69 @@
      ]
     }
    },
+   "StockholdersEquityNoteStockSplitConversionRatio1": {
+    "description": "Ratio applied to the conversion of stock split, for example but not limited to, one share converted to two or two shares converted to one.",
+    "label": "Stockholders' Equity Note, Stock Split, Conversion Ratio",
+    "units": {
+     "pure": [
+      {
+       "accn": "0001018724-22-000019",
+       "end": "2022-05-27",
+       "filed": "2022-07-29",
+       "form": "10-Q",
+       "fp": "Q2",
+       "fy": 2022,
+       "val": 20
+      },
+      {
+       "accn": "0001018724-22-000023",
+       "end": "2022-05-27",
+       "filed": "2022-10-28",
+       "form": "10-Q",
+       "fp": "Q3",
+       "fy": 2022,
+       "val": 20
+      },
+      {
+       "accn": "0001018724-23-000004",
+       "end": "2022-05-27",
+       "filed": "2023-02-03",
+       "form": "10-K",
+       "fp": "FY",
+       "fy": 2022,
+       "val": 20
+      },
+      {
+       "accn": "0001018724-23-000008",
+       "end": "2022-05-27",
+       "filed": "2023-04-28",
+       "form": "10-Q",
+       "fp": "Q1",
+       "fy": 2023,
+       "val": 20
+      },
+      {
+       "accn": "0001018724-24-000008",
+       "end": "2022-05-27",
+       "filed": "2024-02-02",
+       "form": "10-K",
+       "fp": "FY",
+       "fy": 2023,
+       "val": 20
+      },
+      {
+       "accn": "0001018724-25-000004",
+       "end": "2022-05-27",
+       "filed": "2025-02-07",
+       "form": "10-K",
+       "fp": "FY",
+       "frame": "CY2022Q2I",
+       "fy": 2024,
+       "val": 20
+      }
+     ]
+    }
+   },
    "WeightedAverageNumberOfDilutedSharesOutstanding": {
     "description": "The average number of shares or units issued and outstanding that are used in calculating diluted EPS or earnings per unit (EPU), determined based on the timing of issuance of shares or units in the period.",
     "label": "Weighted Average Number of Shares Outstanding, Diluted",

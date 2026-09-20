@@ -76,7 +76,12 @@ def trim_companyfacts(payload: dict, *, keep_all_taxonomies: bool = True) -> dic
         for concept, node in selected.items():
             units = {}
             for unit, entries in (node.get("units") or {}).items():
-                kept = entries[:5] if unfiltered else [e for e in entries if _is_annual(e)]
+                if unfiltered:
+                    kept = entries[:5]
+                elif concept in EVENT_CONCEPTS:
+                    kept = list(entries)
+                else:
+                    kept = [e for e in entries if _is_annual(e)]
                 if kept:
                     units[unit] = kept
             if units:
@@ -93,6 +98,21 @@ def trim_companyfacts(payload: dict, *, keep_all_taxonomies: bool = True) -> dic
         "entityName": payload.get("entityName"),
         "facts": facts_out,
     }
+
+
+EVENT_CONCEPTS: frozenset[str] = frozenset(
+    concept
+    for metric in concept_map.NON_ANNUAL_METRICS
+    for concept in concept_map.candidates(metric, concept_map.US_GAAP)
+)
+"""Concepts describing an EVENT rather than a reporting period, kept whole.
+
+A stock-split ratio is tagged in whichever filing followed the split, in
+whatever shape the filer chose. NVDA tagged its 2021 4-for-1 as an instant and
+its 2024 10-for-1 as a MONTH-LONG DURATION (start 2024-05-01, end 2024-05-31).
+An annual-only filter drops the second, which silently removes the very split
+the discontinuity detector exists to explain.
+"""
 
 
 def _is_annual(entry: dict) -> bool:

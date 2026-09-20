@@ -33,7 +33,7 @@ from __future__ import annotations
 import datetime as dt
 from dataclasses import dataclass, field
 
-from data.normalize import concept_map, dimensions, periods, restatements
+from data.normalize import concept_map, dimensions, periods, restatements, splits
 from data.normalize.concept_map import US_GAAP
 from schema.contracts.common import ISODate, ISOTimestamp, Ticker
 from schema.contracts.enums import FilingType, PeriodType, SourceKind, Unit
@@ -70,6 +70,7 @@ class NormalizedFacts:
     periods: list[periods.AnnualPeriod] = field(default_factory=list)
     gaps: list[str] = field(default_factory=list)
     taxonomy: str | None = None
+    split_events: list = field(default_factory=list)
 
     def for_period(self, label: str) -> list[FinancialFact]:
         return [f for f in self.facts if f.fiscal_period == label]
@@ -373,8 +374,8 @@ def normalize_companyfacts(
 
     for period in result.periods:
         for metric in concept_map.METRIC_CHAINS.get(taxonomy, {}):
-            if metric == "shares_outstanding":
-                continue  # market-side; see data/ingest/market_client.py
+            if metric in concept_map.NON_ANNUAL_METRICS:
+                continue
             versions = None
             winner = None
             for concept in concept_map.candidates(metric, taxonomy):
@@ -407,6 +408,17 @@ def normalize_companyfacts(
     # Link every earlier filed version to the one that replaced it. Nothing is
     # dropped: the superseded rows are what a point-in-time query reads.
     result.facts = restatements.link(result.facts)
+
+    # A split that was never applied back to an older period leaves a series
+    # that is wrong by the split ratio while every value in it is as filed.
+    result.gaps.extend(splits.detect_discontinuities(result.facts, result.periods))
+    events = splits.split_events(companyfacts, taxonomy, as_of)
+    adjusted, notes = splits.adjusted_facts(
+        ticker, result.facts, result.periods, events, cik=cik, retrieved_at=retrieved_at
+    )
+    result.facts.extend(adjusted)
+    result.gaps.extend(notes)
+    result.split_events = events
     return result
 
 

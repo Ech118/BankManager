@@ -23802,6 +23802,82 @@
      ]
     }
    },
+   "StockholdersEquityNoteStockSplitConversionRatio1": {
+    "description": "Ratio applied to the conversion of stock split, for example but not limited to, one share converted to two or two shares converted to one.",
+    "label": "Stockholders' Equity Note, Stock Split, Conversion Ratio",
+    "units": {
+     "pure": [
+      {
+       "accn": "0001045810-21-000131",
+       "end": "2021-06-03",
+       "filed": "2021-08-20",
+       "form": "10-Q",
+       "fp": "Q2",
+       "fy": 2022,
+       "val": 4
+      },
+      {
+       "accn": "0001045810-21-000163",
+       "end": "2021-06-03",
+       "filed": "2021-11-22",
+       "form": "10-Q",
+       "fp": "Q3",
+       "fy": 2022,
+       "val": 4
+      },
+      {
+       "accn": "0001045810-22-000036",
+       "end": "2021-07-19",
+       "filed": "2022-03-18",
+       "form": "10-K",
+       "fp": "FY",
+       "fy": 2022,
+       "val": 4
+      },
+      {
+       "accn": "0001045810-22-000079",
+       "end": "2021-07-19",
+       "filed": "2022-05-27",
+       "form": "10-Q",
+       "fp": "Q1",
+       "frame": "CY2021Q2I",
+       "fy": 2023,
+       "val": 4
+      },
+      {
+       "accn": "0001045810-24-000264",
+       "end": "2024-05-31",
+       "filed": "2024-08-28",
+       "form": "10-Q",
+       "fp": "Q2",
+       "fy": 2025,
+       "start": "2024-05-01",
+       "val": 10
+      },
+      {
+       "accn": "0001045810-24-000316",
+       "end": "2024-05-31",
+       "filed": "2024-11-20",
+       "form": "10-Q",
+       "fp": "Q3",
+       "fy": 2025,
+       "start": "2024-05-01",
+       "val": 10
+      },
+      {
+       "accn": "0001045810-25-000116",
+       "end": "2024-06-30",
+       "filed": "2025-05-28",
+       "form": "10-Q",
+       "fp": "Q1",
+       "frame": "CY2024Q2I",
+       "fy": 2026,
+       "start": "2024-06-01",
+       "val": 10
+      }
+     ]
+    }
+   },
    "WeightedAverageNumberOfDilutedSharesOutstanding": {
     "description": "The average number of shares or units issued and outstanding that are used in calculating diluted EPS or earnings per unit (EPU), determined based on the timing of issuance of shares or units in the period.",
     "label": "Weighted Average Number of Shares Outstanding, Diluted",
