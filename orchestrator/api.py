@@ -1,7 +1,8 @@
 """P3 (Agents, Orchestrator & Web) owns this file. Public interface of the pipeline.
 
-Step 0 STUB: returns the ACME verdict fixture. The owner replaces the internals
-but MUST NOT change the signature (CONTRACT-CHANGE PR, CONTRIBUTING.md).
+Runs the real pipeline. The three things P3 may not import - mcp_server/, calc/
+and audit/ - are wired in by `orchestrator/composition.py`, the one file in the
+process that imports them, and reach the Coordinator as injected ports.
 
 BOUNDARY (docs/adr/0007): P3 reaches data ONLY through MCP tools, never by
 importing data/ or calc/. orchestrator/mcp_client.py speaks the MCP SDK's
@@ -16,12 +17,8 @@ HTTP interface (orchestrator/server.py):
 
 from __future__ import annotations
 
-import json
 import os
 from collections.abc import Callable
-from pathlib import Path
-
-_MOCK = Path(__file__).resolve().parents[1] / "fixtures" / "mock"
 
 
 def run_analysis(
@@ -41,11 +38,32 @@ def run_analysis(
 
     Raises ValueError if data.api.check_scope says the ticker is out of scope.
     """
-    if os.environ.get("MODE", os.environ.get("BM_MODE", "mock")).lower() == "live":
-        raise NotImplementedError(
-            "orchestrator.api.run_analysis: live mode is not implemented yet "
-            "(P3, roadmap Step 1). Use MODE=mock."
+    from orchestrator.composition import CalcPort, factsheet_provider_for, mcp_factory
+    from orchestrator.coordinator import Coordinator
+
+    calc = CalcPort()
+    verify_claim = None
+    if os.environ.get("LLM_MODE", "mock").lower() == "live":
+        try:
+            from agents.verifier import make_verify_claim
+
+            verify_claim = make_verify_claim()
+        except Exception:  # the gate degrades to string matching rather than failing
+            verify_claim = None
+
+    from audit.api import run_audit
+
+    mcp = mcp_factory()
+    try:
+        coordinator = Coordinator(
+            mcp,
+            redact=redact,
+            calc=calc,
+            auditor=run_audit,
+            factsheet=factsheet_provider_for(calc, mcp),
+            verify_claim=verify_claim,
         )
-    if ticker != "ACME":
-        raise ValueError("Mock mode only knows the fictional ticker ACME.")
-    return json.loads((_MOCK / "verdict.json").read_text(encoding="utf-8"))
+        verdict = coordinator.run(ticker, as_of)
+    finally:
+        mcp.close()
+    return verdict.model_dump(mode="json")

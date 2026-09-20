@@ -1,0 +1,20 @@
+{
+  "tickers": [
+    "ACME"
+  ],
+  "generated_at": "2026-09-20T13:36:28Z",
+  "runs": [
+    {
+      "ticker": "ACME",
+      "ok": true,
+      "seconds": 2.7,
+      "verdict": "avoid",
+      "scores": {
+        "short_term": 3,
+        "medium_term": 3,
+        "long_term": 4
+      },
+      "company": "Acme Corporation (fictional mock)"
+    }
+  ]
+}

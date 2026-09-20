@@ -306,7 +306,7 @@ def complete(
     agent: AgentName,
     system: str,
     user: str,
-    max_tokens: int = 4096,
+    max_tokens: int = 16384,
     schema: dict | None = None,
     kind: str = "analysis",
 ) -> dict:

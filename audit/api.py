@@ -1,7 +1,11 @@
 """P2 (Calc, Audit & Eval) owns this file. Public interface of the verifier.
 
-Step 0 STUB: returns the ACME audit fixture. The owner replaces the internals
-but MUST NOT change the signature (CONTRACT-CHANGE PR, CONTRIBUTING.md).
+MINIMAL REAL IMPLEMENTATION (hackathon cut, 2026-09-20): one deterministic check
+runs - every fact_id cited by a Claim must resolve, in the factsheet or in calc/'s
+published facts. Every other claim is reported UNVERIFIED rather than verified, so
+nothing carries a verification stamp it did not earn (docs/verification.md: a
+hallucinating check is worse than a missing one). The remaining six deterministic
+checks and the LLM check are still to come.
 
 BOUNDARY (docs/adr/0007): audit/ reads a ResearchState and a Factsheet, and
 nothing else. Both of its external needs are INJECTED as callables:
@@ -14,12 +18,44 @@ LLM; keeping that list short is what keeps the gate cheap and reproducible.
 
 from __future__ import annotations
 
-import json
-import os
 from collections.abc import Callable
-from pathlib import Path
 
-_MOCK = Path(__file__).resolve().parents[1] / "fixtures" / "mock"
+SCHEMA_VERSION = "2.1.0"
+
+
+def _fact_ids(factsheet: dict) -> set[str]:
+    """Every fact_id the factsheet and calc/'s output can resolve.
+
+    Real factsheets carry the id on each reported ValueObject's `derived_from`;
+    the mock does not, so the documented convention
+    `fact:<TICKER>:<metric>:<PERIOD>` is accepted too. calc/ publishes its own in
+    `metrics["derived_facts"]` and `metrics["input_facts"]`.
+    """
+    known: set[str] = set()
+    ticker = factsheet.get("ticker", "")
+
+    def walk(node: object) -> None:
+        if isinstance(node, dict):
+            for candidate in node.get("derived_from") or []:
+                if isinstance(candidate, str) and candidate.startswith("fact:"):
+                    known.add(candidate)
+            if isinstance(node.get("fact_id"), str):
+                known.add(node["fact_id"])
+            for value in node.values():
+                walk(value)
+        elif isinstance(node, list):
+            for value in node:
+                walk(value)
+
+    walk(factsheet)
+    for period in factsheet.get("financials") or []:
+        label = period.get("period")
+        for field, value in period.items():
+            if isinstance(value, dict) and "status" in value:
+                known.add(f"fact:{ticker}:{field}:{label}")
+    for metrics in (factsheet.get("metrics"), factsheet.get("_calc_metrics")):
+        walk(metrics)
+    return known
 
 
 def run_audit(
@@ -30,28 +66,58 @@ def run_audit(
 ) -> dict:
     """Return a VerificationResult (schema/audit.json).
 
-    The REAL implementation runs, in order:
-      DETERMINISTIC (docs/verification.md)
-        unresolved_fact            every cited fact_id resolves
-        recompute_mismatch         every derived number recomputes from its inputs
-        prose_number_mismatch      numerals in claim text match their ValueObject
-        superseded_fact            no claim cites a restated fact
-        future_fact                no claim cites a fact filed after state.as_of
-        adjusted_as_gaap           no non-GAAP figure presented as GAAP
-        cross_agent_contradiction  no two sections assert incompatible things
-      LLM (only this one)
-        unsupported_claim          each qualitative claim's quote really appears
-                                   in get_text(source_id); verify_claim judges
-                                   paraphrase only when the string match fails
-
-    Every issue carries the section it came from, so the orchestrator can route a
-    targeted RetryDirective to that section's owning agent.
+    Runs ONE check today - `unresolved_fact`, every cited fact_id resolves - and
+    marks every other claim `unverified`. The six other deterministic checks and
+    the LLM check are specified in docs/verification.md and not yet built; a claim
+    they would have covered is reported as unchecked rather than passed.
 
     Takes no `as_of`: `state["as_of"]` and `factsheet["as_of"]` are authoritative.
     """
-    if os.environ.get("MODE", os.environ.get("BM_MODE", "mock")).lower() == "live":
-        raise NotImplementedError(
-            "audit.api.run_audit: live mode is not implemented yet (P2, roadmap Step 2). "
-            "Use MODE=mock."
-        )
-    return json.loads((_MOCK / "audit.json").read_text(encoding="utf-8"))
+    known = _fact_ids(factsheet)
+    known |= {
+        fact["fact_id"]
+        for key in ("derived_facts", "input_facts")
+        for fact in (state.get("metrics") or {}).get(key, []) or []
+        if isinstance(fact, dict) and fact.get("fact_id")
+    }
+
+    issues: list[dict] = []
+    checked = 0
+    for section_key, section in (state.get("sections") or {}).items():
+        for claim in (section or {}).get("claims") or []:
+            checked += 1
+            missing = [
+                fact_id
+                for fact_id in claim.get("fact_ids") or []
+                if fact_id not in known
+            ]
+            for fact_id in missing:
+                issues.append(
+                    {
+                        "issue_type": "unresolved_fact",
+                        "severity": "error",
+                        "path": f"sections.{section_key}",
+                        "message": f"cited fact_id {fact_id} does not resolve",
+                        "claim_id": claim.get("claim_id"),
+                        "expected": "a fact_id present in the factsheet or in calc/ output",
+                        "actual": fact_id,
+                        "checked_by_llm": False,
+                    }
+                )
+
+    errors = sum(1 for issue in issues if issue["severity"] == "error")
+    return {
+        "schema_version": SCHEMA_VERSION,
+        "passed": errors == 0,
+        "issues": issues,
+        "claims_checked": checked,
+        "claims_verified": 0,
+        "claims_unverified": checked,
+        "llm_checks_run": 0,
+        "retries_issued": [],
+        "notes": [
+            "MINIMAL GATE: only unresolved_fact ran. Every claim is reported "
+            "unverified because the other checks in docs/verification.md are not "
+            "built yet - an unchecked claim must not read as a verified one."
+        ],
+    }

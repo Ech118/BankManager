@@ -1,7 +1,17 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { API_BASE, RunFailed, fetchResult, startAnalysis, subscribeToEvents, type RunResult } from "@/lib/api";
+import {
+  API_BASE,
+  DEMO_MODE,
+  RunFailed,
+  fetchResult,
+  loadDemoTickers,
+  loadDemoVerdict,
+  startAnalysis,
+  subscribeToEvents,
+  type RunResult,
+} from "@/lib/api";
 import type { AgentEvent } from "@/lib/types";
 import { AgentLanes } from "./AgentLanes";
 import { PreliminaryReport } from "./PreliminaryReport";
@@ -24,7 +34,13 @@ export function Analyzer() {
   const [events, setEvents] = useState<AgentEvent[]>([]);
   const [result, setResult] = useState<RunResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [saved, setSaved] = useState<string[]>([]);
+  const [offline, setOffline] = useState(DEMO_MODE);
   const stop = useRef<() => void>(() => {});
+
+  useEffect(() => {
+    void loadDemoTickers().then(setSaved);
+  }, []);
 
   useEffect(() => () => stop.current(), []);
 
@@ -52,6 +68,20 @@ export function Analyzer() {
     setError(null);
     setResult(null);
     setEvents([]);
+
+    // No backend: serve the run that was saved at build time. Also the fallback
+    // when the API is unreachable, so a demo never dies on a dead socket.
+    if (DEMO_MODE || offline) {
+      try {
+        setResult({ kind: "verdict", verdict: await loadDemoVerdict(symbol) });
+        setPhase("done");
+      } catch (err) {
+        setError(err instanceof RunFailed ? err.message : "Could not load the saved run.");
+        setPhase("failed");
+      }
+      return;
+    }
+
     try {
       const { run_id } = await startAnalysis(symbol);
       stop.current = subscribeToEvents(
@@ -68,6 +98,21 @@ export function Analyzer() {
         },
       );
     } catch (err) {
+      if (err instanceof TypeError) {
+        // The API is not there. Fall back to the saved runs for the rest of the session.
+        setOffline(true);
+        try {
+          setResult({ kind: "verdict", verdict: await loadDemoVerdict(symbol) });
+          setPhase("done");
+          return;
+        } catch (fallback) {
+          setError(
+            fallback instanceof RunFailed ? fallback.message : describe(err),
+          );
+          setPhase("failed");
+          return;
+        }
+      }
       setError(describe(err));
       setPhase("failed");
     }
@@ -90,6 +135,24 @@ export function Analyzer() {
           {phase === "running" ? "Analyzing…" : "Analyze"}
         </button>
       </form>
+      {saved.length > 0 && (
+        <p className="lede">
+          {offline ? "Saved runs (no backend needed): " : "Saved runs: "}
+          {saved.map((symbol) => (
+            <button
+              key={symbol}
+              type="button"
+              className="ticker-chip"
+              onClick={() => {
+                setTicker(symbol);
+                void run(symbol);
+              }}
+            >
+              {symbol}
+            </button>
+          ))}
+        </p>
+      )}
       {phase === "failed" && error && (
         <div className="banner banner-degraded" role="alert">
           {error}

@@ -141,3 +141,19 @@ h2 { font-size: 1.2rem; }
 @keyframes pulse { 50% { opacity: 0.25; } }
 @media (prefers-reduced-motion: reduce) { .lane-running .lane-status::before { animation: none; } }
 @media (max-width: 40rem) { .card { padding: 16px; } .md { padding-left: 18px; } .horizons { font-size: 0.85rem; } }
+
+/* Saved-run chips: the demo path when there is no backend. */
+.ticker-chip {
+  margin: 0 0.35rem 0.35rem 0;
+  padding: 0.15rem 0.6rem;
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+}
+.ticker-chip:hover {
+  text-decoration: underline;
+}

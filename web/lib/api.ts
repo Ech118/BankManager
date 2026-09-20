@@ -14,6 +14,37 @@ export type { AgentEvent };
 
 export const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:8000";
 
+/** Static demo: saved runs in public/demo/, no backend at all. */
+export const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
+
+/** Which tickers have a saved run. Empty when there is no demo bundle. */
+export async function loadDemoTickers(): Promise<string[]> {
+  try {
+    const res = await fetch("/demo/index.json", { cache: "no-store" });
+    if (!res.ok) return [];
+    const body = (await res.json()) as { tickers?: string[] };
+    return body.tickers ?? [];
+  } catch {
+    return [];
+  }
+}
+
+/** A saved verdict. Throws RunFailed when this ticker was not part of the bundle. */
+export async function loadDemoVerdict(ticker: string): Promise<Verdict> {
+  const res = await fetch(`/demo/${encodeURIComponent(ticker.toUpperCase())}.json`, {
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    const available = await loadDemoTickers();
+    throw new RunFailed(
+      available.length
+        ? `No saved run for ${ticker}. This build has ${available.join(", ")}.`
+        : `No saved run for ${ticker}, and no demo bundle in this build.`,
+    );
+  }
+  return (await res.json()) as Verdict;
+}
+
 export class RunFailed extends Error {
   constructor(message: string) {
     super(message);
