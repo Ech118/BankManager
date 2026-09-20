@@ -1,5 +1,5 @@
 {
-  "schema_version": "2.0.0",
+  "schema_version": "2.1.0",
   "ticker": "ACME",
   "as_of": "2026-09-19",
   "generated_at": "2026-09-19T12:00:00Z",
@@ -262,7 +262,7 @@
   },
   "agent_outputs": {
     "financial": {
-      "schema_version": "2.0.0",
+      "schema_version": "2.1.0",
       "agent": "financial",
       "ticker": "ACME",
       "as_of": "2026-09-19",
@@ -368,7 +368,7 @@
       ]
     },
     "business": {
-      "schema_version": "2.0.0",
+      "schema_version": "2.1.0",
       "agent": "business",
       "ticker": "ACME",
       "as_of": "2026-09-19",
@@ -414,7 +414,7 @@
       ]
     },
     "valuation": {
-      "schema_version": "2.0.0",
+      "schema_version": "2.1.0",
       "agent": "valuation",
       "ticker": "ACME",
       "as_of": "2026-09-19",
@@ -448,7 +448,7 @@
       ]
     },
     "red_team": {
-      "schema_version": "2.0.0",
+      "schema_version": "2.1.0",
       "agent": "red_team",
       "ticker": "ACME",
       "as_of": "2026-09-19",
@@ -495,7 +495,7 @@
     }
   },
   "scenario_result": {
-    "schema_version": "2.0.0",
+    "schema_version": "2.1.0",
     "ticker": "ACME",
     "as_of": "2026-09-19",
     "scenarios": {
@@ -734,7 +734,7 @@
     }
   },
   "audit": {
-    "schema_version": "2.0.0",
+    "schema_version": "2.1.0",
     "passed": true,
     "issues": [
       {

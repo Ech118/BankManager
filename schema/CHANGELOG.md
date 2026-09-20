@@ -6,6 +6,45 @@ approval from all three partitions
 
 ---
 
+## 2.1.0 — 2026-09-20 — `get_factsheet` MCP tool
+
+**ADDITIVE.** No existing shape changed; old readers keep working.
+
+Proposed in `docs/requests/2026-09-20-p1-to-all-get-factsheet-tool.md`.
+
+### Added
+
+- **`GetFactsheetRequest` / `GetFactsheetResponse`** in
+  `schema/contracts/tools.py`, registered as `get_factsheet`. The tool count
+  goes from ten to eleven; ten data tools now wrap `data/`.
+
+  `GetFactsheetRequest` inherits `DataToolRequest`, so it carries a required
+  `as_of` like every other data tool. `GetFactsheetResponse.factsheet` is
+  `Factsheet | None`; `None` means the ticker is in scope but has no reportable
+  history, while an out-of-scope ticker raises.
+
+  It exists because `audit.run_audit(state, factsheet, ...)` requires a
+  `Factsheet` and the orchestrator may not import `data/` (ADR 0007), so there
+  was no contract-described path from the partition that produces a factsheet to
+  the one that consumes it. P3 was bridging it by injection.
+
+### Changed
+
+- `tests/contracts/test_models.py` — the tool-count assertion is 11.
+
+### Unchanged
+
+Every other model. `Factsheet` is imported into `tools.py`, not edited.
+`STATE_VERSION` did not move: the state shape is untouched. No `api.py`
+signature changed — `data.api.build_factsheet(ticker, as_of)` already existed
+and is what the tool wraps.
+
+### Mock fixtures
+
+`make gen-mock` was run. The only lines that changed are `schema_version`.
+
+---
+
 ## 2.0.0 — 2026-09-19 — Truth-layer restructure
 
 **BREAKING.** Approved by all three partitions as part of the Step 0

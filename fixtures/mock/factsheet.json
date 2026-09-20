@@ -1,5 +1,5 @@
 {
-  "schema_version": "2.0.0",
+  "schema_version": "2.1.0",
   "ticker": "ACME",
   "company_name": "Acme Corporation (fictional mock)",
   "as_of": "2026-09-19",

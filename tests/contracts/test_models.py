@@ -344,9 +344,9 @@ def test_compute_tools_do_not_take_as_of():
         assert "as_of" not in TOOL_REQUESTS[name].model_fields, name
 
 
-def test_the_ten_tools_are_exactly_paired():
+def test_the_eleven_tools_are_exactly_paired():
     assert set(TOOL_REQUESTS) == set(TOOL_RESPONSES)
-    assert len(TOOL_REQUESTS) == 10
+    assert len(TOOL_REQUESTS) == 11
 
 
 def test_tool_requests_reject_unknown_arguments():
