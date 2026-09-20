@@ -20,7 +20,9 @@ with the P2 paths staged. Against `origin/main` it reports P1's files.
 | quality flags | **real** | DSO, inventory days, buyback-flattered EPS, FCF conversion, SBC |
 | `reverse_dcf` | **real** | ported bisection solver plus the 9-cell sensitivity grid |
 | `calculate_valuation` | **real** | multiples, peers, forward and reverse DCF; a skipped method records why. P1's wrapper must pass `request["factsheet"]` (request filed) |
-| forward DCF | **real** | growth input is the trailing FCF CAGR, capped at 20% and floored to terminal growth when negative; both recorded |
+| forward DCF | **real** | 3-year average FCF base; growth = trailing REVENUE CAGR bounded to [3%, 15%], fading linearly to terminal growth over 10 years; every bound recorded |
+| TTM multiples | **ready** | P/E, P/S, P/FCF and EV/EBITDA use `<metric>_ttm` facts when the factsheet carries them, else the latest full year; `valuation.basis.by_multiple` labels each |
+| peer P/E and P/S medians | **ready** | computed from peer `revenue` / `net_income` when P1 sends them; today's recordings carry market cap only |
 | historical multiples | **unavailable** | reason `"no price history source"`; the functions are complete and take a series |
 | peer multiples | **degraded** | real recordings carry peer market caps only, so the peer median is `unavailable` with a reason |
 | `evaluate_scenarios` | **real** | reproduces the pinned ACME result (-1.945%/yr against 7%); derives `eps_at_horizon`, per-horizon values, and the bear-weight flip point |
@@ -61,12 +63,20 @@ metric that does not describe the filer at all carries `not_applicable: true`.
 
 ## Known gaps in Step 2
 
-- **Multiples divide the latest FULL YEAR**, per CLAUDE.md, while a data provider
-  quotes TTM. AAPL is 45.1x on FY2025 EPS against about 36x TTM. Recorded in
-  `valuation.basis`; a quarterly series from P1 would let us publish both.
+- **Multiples divide the latest FULL YEAR** while a data provider quotes TTM,
+  because no recording carries a TTM fact yet. The switch is implemented: with a
+  TTM EPS of $9.38 on AAPL's factsheet P/E reads 35.8x instead of 45.1x, matching
+  what a finance site shows. `valuation.basis` names the basis per multiple.
 - **Peer medians are unavailable** on every real recording (0 of 6 peers carry a
-  multiple). `peer_table` computes them from raw peer fields the moment P1 sends
-  any.
+  multiple). `peer_table` computes P/E, P/S, P/FCF, P/B and EV/EBITDA from raw peer
+  fields the moment P1 sends any; tested against a synthetic peer set.
+- **The 3-year FCF average cuts both ways.** It fixes KO (FY2025 sits 19.7% below
+  the average) and distorts NVDA, whose FCF went 27bn -> 61bn -> 97bn, so the
+  average is 37% below the current run-rate. `fcf_base.margin_based_alternative`
+  publishes the other option - the average FCF MARGIN applied to the latest year's
+  revenue - which agrees with the dollar average for KO (6.78bn against 6.59bn) and
+  keeps NVDA's scale (97.7bn against 61.5bn). Switching the default is a judgement
+  call, so both numbers ship.
 - **Historical multiples are unavailable by design**: no price history source.
 
 ## Known gaps in Step 3
@@ -82,4 +92,15 @@ metric that does not describe the filer at all carries `not_applicable: true`.
   earnings yield and risk-free rate are echoed beside it, and calc/ prefers
   `sp500_baseline.expected_return` the day P1 publishes one.
 
-**Last updated:** 2026-09-20 (Step 3: scenarios, scores, consistency)
+## The discount rate
+
+`DISCOUNT_RATE` 0.09 and `TERMINAL_GROWTH` 0.03, both NOMINAL: the cash flows are
+as-filed dollars and nothing adjusts for inflation. The reverse DCF implying
+17-23% growth for every company is **not** caused by the rate - a zero-growth
+perpetuity is worth 17.2x FCF at 9%/3%, and these companies trade at 48-87x their
+smoothed FCF base. A full point off the discount rate moves AAPL's implied growth
+by 2.7 points. Full table, and the recommendation to derive the rate from the
+factsheet's risk-free rate plus a configured ERP (4.25% + 4.5% = 8.75%), in
+[rubric.md](rubric.md).
+
+**Last updated:** 2026-09-20 (DCF: smoothed base, fading revenue-CAGR growth, TTM multiples, peer medians)

@@ -8,9 +8,10 @@ from __future__ import annotations
 
 import pytest
 
+from calc import config
 from calc.api import calculate_valuation, compute_metrics, reverse_dcf
 from calc.tests.support import load_real
-from calc.valuation.dcf import growth_input
+from calc.valuation.dcf import growth_input, growth_schedule, present_value_fading
 from calc.valuation.historical import NO_PRICE_HISTORY, historical_block, historical_median
 from calc.valuation.peers import peer_multiple
 from calc.valuation.reverse_dcf import present_value, solve_implied_growth
@@ -200,32 +201,99 @@ def test_assumption_overrides_reach_the_grid(acme):
 # --------------------------------------------------------------------------
 # Forward DCF
 # --------------------------------------------------------------------------
-def test_dcf_growth_is_bounded_and_the_bound_is_recorded(acme):
-    metrics = compute_metrics(acme)
-    metrics["cagr"]["fcf"]["value"] = 0.85
+def test_dcf_growth_is_the_revenue_cagr_bounded_both_ways(acme):
+    """Revenue, not FCF: the KO deposit makes its FCF CAGR -17% and revenue +5.5%."""
     from calc.facts import Ledger
 
+    metrics = compute_metrics(acme)
+    assert growth_input(Ledger(acme), metrics)["basis"] == "trailing_revenue_cagr"
+
+    metrics["cagr"]["revenue"]["value"] = 0.85
     clamped = growth_input(Ledger(acme), metrics)
-    assert clamped["value"] == 0.20 and clamped["was_clamped"] is True
+    assert clamped["value"] == 0.15 and clamped["was_clamped"] is True
     assert clamped["requested"] == 0.85 and "clamped" in clamped["note"]
 
-    metrics["cagr"]["fcf"]["value"] = -0.17
+    metrics["cagr"]["revenue"]["value"] = -0.17
     floored = growth_input(Ledger(acme), metrics)
     assert floored["value"] == 0.03 and floored["was_floored"] is True
     assert floored["requested"] == -0.17, "the trailing figure stays visible"
+    assert floored["floor"] == 0.03
 
 
-def test_nvda_growth_is_clamped_ko_is_floored():
+def test_growth_fades_to_the_terminal_rate(acme):
+    """Year 1 at the assumed rate, year 10 at 3%, interpolating."""
+    schedule = growth_schedule(0.15, 0.03, 10)
+    assert schedule[0] == pytest.approx(0.15)
+    assert schedule[-1] == pytest.approx(0.03)
+    assert schedule == sorted(schedule, reverse=True), "monotonically decelerating"
+    steps = [b - a for a, b in zip(schedule, schedule[1:], strict=False)]
+    assert all(step == pytest.approx(steps[0]) for step in steps), "linear"
+
+    out = calculate_valuation({"ticker": "ACME", "methods": ["dcf"], "factsheet": acme})
+    published = value_of(out, "dcf", "assumptions", "growth_schedule")
+    assert published[0] == pytest.approx(value_of(out, "dcf", "assumptions", "fcf_growth")["value"])
+    assert published[-1] == pytest.approx(0.03)
+
+
+def test_fading_is_worth_less_than_a_flat_decade():
+    """The fade is not cosmetic: it is the difference between two valuations."""
+    flat = present_value(600e6, 0.15, 0.09, 0.03, 10)
+    faded = present_value_fading(600e6, 0.15, 0.09, 0.03, 10)
+    assert faded < flat
+    assert faded == pytest.approx(present_value_fading(600e6, 0.15, 0.09, 0.03, 10))
+
+
+def test_fcf_base_is_a_three_year_average(acme):
+    """ACME's FY2023-25 FCF is 400M, 480M, 600M: the base is 493.3M, not 600M."""
+    out = calculate_valuation({"ticker": "ACME", "methods": ["dcf"], "factsheet": acme})
+    base = value_of(out, "dcf", "fcf_base")
+    assert base["value"] == pytest.approx((600e6 + 480e6 + 400e6) / 3)
+    assert base["years_used"] == ["FY2025", "FY2024", "FY2023"]
+    assert base["basis"] == "3-year average"
+    assert base["latest_year"] == 600e6
+    assert base["latest_vs_average"] == pytest.approx(600e6 / ((600 + 480 + 400) / 3 * 1e6) - 1)
+
+
+def test_ko_base_smooths_the_irs_deposit():
+    """The one-off cut FY2025 FCF 20% below the three-year average."""
+    out = calculate_valuation({"ticker": "KO", "methods": ["dcf"], "factsheet": load_real("KO")})
+    base = value_of(out, "dcf", "fcf_base")
+    assert base["value"] == pytest.approx((5296e6 + 4741e6 + 9747e6) / 3)
+    assert base["latest_vs_average"] < -0.15, "the latest year is well below the average"
+    # And the growth input is revenue-based, so the deposit no longer sets it either.
+    growth = value_of(out, "dcf", "assumptions", "fcf_growth")
+    assert growth["basis"] == "trailing_revenue_cagr"
+    assert growth["was_floored"] is False and growth["value"] > 0.03
+
+
+def test_the_reverse_dcf_publishes_the_smoothed_base_too():
+    """A depressed base overstates the growth the price implies; show both."""
+    metrics = compute_metrics(load_real("KO"))
+    headline = metrics["reverse_dcf"]["implied_fcf_cagr"]["value"]
+    smoothed = metrics["reverse_dcf"]["implied_fcf_cagr_smoothed_base"]["value"]
+    assert smoothed < headline, "a bigger base needs less growth to justify the price"
+    assert (
+        "instead of the latest year"
+        in (metrics["reverse_dcf"]["implied_fcf_cagr_smoothed_base"]["note"])
+    )
+
+
+def test_nvda_growth_is_clamped():
     nvda = calculate_valuation(
         {"ticker": "NVDA", "methods": ["dcf"], "factsheet": load_real("NVDA")}
     )
     growth = value_of(nvda, "dcf", "assumptions", "fcf_growth")
-    assert growth["was_clamped"] is True and growth["value"] == 0.20
-    assert growth["requested"] > 0.5, "NVDA's trailing FCF CAGR really is that high"
+    assert growth["was_clamped"] is True and growth["value"] == 0.15
+    assert growth["requested"] > 0.5, "NVDA's trailing revenue CAGR really is that high"
 
-    ko = calculate_valuation({"ticker": "KO", "methods": ["dcf"], "factsheet": load_real("KO")})
-    growth = value_of(ko, "dcf", "assumptions", "fcf_growth")
-    assert growth["was_floored"] is True and growth["requested"] < 0
+
+def test_rates_are_recorded_as_nominal(acme):
+    out = calculate_valuation({"ticker": "ACME", "methods": ["dcf"], "factsheet": acme})
+    assumptions = value_of(out, "dcf", "assumptions")
+    assert assumptions["rates_are_nominal"] is True
+    assert assumptions["discount_rate"]["value"] == config.DISCOUNT_RATE
+    assert assumptions["discount_rate"]["type"] == "assumption"
+    assert assumptions["terminal_growth"]["value"] == config.TERMINAL_GROWTH
 
 
 def test_dcf_value_is_equity_after_net_debt(acme):

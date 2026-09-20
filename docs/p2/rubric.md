@@ -116,6 +116,56 @@ and `verdict.json` move with them - those are coordinator-owned, so that needs a
 
 ---
 
+## The discount rate, and why the reverse DCF keeps asking for 17-23%
+
+`config.DISCOUNT_RATE` is **0.09** and `config.TERMINAL_GROWTH` is **0.03**, and
+both are **NOMINAL**: the cash flows are `op_cash_flow - capex` as filed, in the
+dollars of the year they were filed in, and nothing in `calc/` adjusts for
+inflation. At 2-2.5% inflation, 9% nominal is about 6.5% real.
+
+Every reverse DCF on the five real recordings implies 17-23% FCF growth for ten
+years, which looks like a broken model. It is not the discount rate. The
+arithmetic, measured on the smoothed FCF base:
+
+| | EV / FCF base | zero-growth value | implied g at r=8% | at r=9% | at r=10% | trailing revenue CAGR | r implied by that CAGR |
+|---|---|---|---|---|---|---|---|
+| AAPL | 48.5x | 17.2x | 13.9% | 16.6% | 19.1% | 3.3% | **5.2%** |
+| NVDA | 87.0x | 17.2x | 21.5% | 24.5% | 27.2% | 68.3% | **6.2%** |
+| MSFT | 52.0x | 17.2x | 14.8% | 17.5% | 20.1% | 13.7% | **7.7%** |
+| KO | 62.9x | 17.2x | 17.2% | 20.1% | 22.7% | 5.5% | **5.0%** |
+
+Three things follow:
+
+1. **A zero-growth perpetuity is worth 17.2x FCF at 9% and 3%.** These companies
+   trade at 48-87x. The implied growth is high because the starting multiple is
+   high, not because the rate is.
+2. **The rate barely moves it.** A full point off the discount rate takes AAPL's
+   implied growth from 16.6% to 13.9% - about 2.7 points for a change big enough
+   to need a sign-off. The multiple is doing the work.
+3. **The last column is the interesting one.** It is the discount rate at which the
+   required growth equals the company's own trailing revenue CAGR (capped at 15%):
+   5.0-7.7%. Against a 4.25% risk-free rate that is an equity risk premium of
+   0.8-3.5%, which is low by any historical standard. Read the other way: at a
+   normal cost of capital these prices require growth well above what the filings
+   show. That is a finding about the prices, and it is what the reverse DCF exists
+   to surface.
+
+Two caveats a reader should have: P/FCF is 50-72x for AAPL, MSFT and KO partly
+because FCF is currently depressed - by AI capex at MSFT, by a tax deposit at KO -
+so the multiple overstates how expensive they are on a normalised base. And a
+ten-year explicit period with a hard step to 3% is a crude shape; the fade
+(`DCF_GROWTH_FADE`) softens it in the forward DCF, but the reverse solver still
+solves for one constant rate.
+
+**Recommendation, not yet applied:** derive the discount rate from the factsheet
+instead of hardcoding it - `sp500_baseline.risk_free_rate` plus a configured equity
+risk premium. On AAPL's recording that is 4.25% + 4.5% = **8.75%**, within a
+quarter-point of today's constant, but it would move with rates instead of going
+stale. It changes ACME's pinned `reverse_dcf` numbers, so it needs a coordinator
+fixture change - hence a recommendation rather than a commit.
+
+---
+
 ## Changes to the flag and score constants
 
 | date | constant | from | to | why |
@@ -124,3 +174,7 @@ and `verdict.json` move with them - those are coordinator-owned, so that needs a
 | 2026-09-20 | `FLAG_SEVERITY_STEPS` | - | (1, 3, 6) | one threshold per flag plus one shared ladder, instead of nine separate constants, so the whole severity scheme is visible at once. |
 | 2026-09-20 | `SCORE_HORIZON_UNCERTAINTY` | - | 1.0 / 1.25 / 1.5 | the scenario model yields one annualized return, so without a horizon term all three scores are identical. Reproduces the pinned 3/3/4. |
 | 2026-09-20 | `DCF_MAX_ASSUMED_GROWTH` | - | 0.20 | NVDA's trailing FCF CAGR is 68%/yr; compounding it for ten years produces a number nobody should publish. Clamped and recorded, like a scenario weight. |
+| 2026-09-20 | `DCF_MAX_ASSUMED_GROWTH` | 0.20 | **0.15** | Tightened with the move to a fading growth path: year 1 at 15% decaying to 3% is already a strong claim over a decade. |
+| 2026-09-20 | `DCF_FCF_BASE_YEARS` | - | 3 | KO's FY2025 FCF sits 19.7% below its three-year average because of one tax deposit. A single-year base turns that payment into a permanent impairment and compounds it for ten years. |
+| 2026-09-20 | `DCF_GROWTH_FADE` | - | True | A flat decade followed by a step down to 3% is the standard shape and the wrong one. Year 1 grows at the assumed rate, year 10 at the terminal rate. |
+| 2026-09-20 | DCF growth basis | trailing FCF CAGR | **trailing revenue CAGR** | Revenue is the least manipulable line and the least distorted by one-offs: the same KO deposit makes its FCF CAGR -17%/yr while revenue grew 5.5%/yr. Floored at `TERMINAL_GROWTH` rather than allowed to go negative. |

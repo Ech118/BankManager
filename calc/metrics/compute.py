@@ -26,6 +26,7 @@ from calc.metrics import fcf as fcf_mod
 from calc.metrics import growth as growth_mod
 from calc.metrics import margins as margins_mod
 from calc.metrics import sbc_dilution, working_capital
+from calc.valuation.dcf import fcf_base
 from calc.valuation.multiples import multiples
 from calc.valuation.reverse_dcf import reverse_dcf_block
 from calc.value import unavailable
@@ -52,8 +53,10 @@ def compute_metrics(factsheet: dict, assumptions: dict | None = None) -> dict:
 
     fcf = fcf_mod.free_cash_flow(ledger, annual, partial_scope=partial)
     ebitda = fcf_mod.ebitda(ledger, annual, partial_scope=partial)
+    base = fcf_base(ledger, fcf)
     cash_flow = {
         "fcf": fcf,
+        "fcf_base": base,
         "fcf_conversion": fcf_mod.fcf_conversion(ledger, annual, fcf),
         "fcf_yield": fcf_mod.fcf_yield(ledger, annual, fcf),
         "capex_intensity": fcf_mod.capex_intensity(ledger, annual, partial_scope=partial),
@@ -93,7 +96,9 @@ def compute_metrics(factsheet: dict, assumptions: dict | None = None) -> dict:
         fcf=fcf,
         partial_scope=partial,
     )
-    reverse_dcf = reverse_dcf_block(ledger, fcf, period=annual, assumptions=assumptions)
+    reverse_dcf = reverse_dcf_block(
+        ledger, fcf, period=annual, assumptions=assumptions, smoothed_base=base
+    )
 
     if partial:
         ledger.note(

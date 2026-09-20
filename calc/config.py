@@ -22,10 +22,28 @@ from __future__ import annotations
 # Discounted cash flow
 # --------------------------------------------------------------------------
 DISCOUNT_RATE = 0.09
-"""Cost of capital used by the reverse DCF. ASSUMPTION."""
+"""Cost of capital used by both DCFs. ASSUMPTION, and a NOMINAL rate.
+
+Nominal because the cash flows are nominal: `op_cash_flow - capex` as filed, in
+the dollars of the year it was filed in. Nothing in calc/ adjusts for inflation,
+so the rate discounting those dollars must include it. At roughly 2-2.5%
+inflation, 9% nominal is about 6.5% real.
+
+Against the factsheet's own inputs this sits at the high end: AAPL's recording
+carries a 4.25% risk-free rate, so 9% implies a 4.75% equity risk premium for one
+of the least volatile companies in the index. See docs/p2/rubric.md for what
+changing it would do - the implied growth a reverse DCF reports is extremely
+sensitive to `DISCOUNT_RATE - TERMINAL_GROWTH`.
+"""
 
 TERMINAL_GROWTH = 0.03
-"""Perpetual growth after the horizon. ASSUMPTION. Must stay below DISCOUNT_RATE."""
+"""Perpetual growth after the horizon. ASSUMPTION, NOMINAL, and below DISCOUNT_RATE.
+
+3% nominal is roughly long-run inflation plus nothing: a company growing faster
+than the economy forever would eventually become the economy. The gap to
+DISCOUNT_RATE (6 points) is what the terminal value divides by, so this number
+matters more than its size suggests - at 4% the terminal value rises by 20%.
+"""
 
 DCF_HORIZON_YEARS = 10
 """Explicit forecast horizon before the terminal value."""
@@ -139,14 +157,32 @@ unless P1 published a `_split_adjusted` fact (P1 -> P2, 2026-09-19).
 # --------------------------------------------------------------------------
 # Reverse DCF solver
 # --------------------------------------------------------------------------
-DCF_MAX_ASSUMED_GROWTH = 0.20
-"""Cap on the growth rate a forward DCF may assume, in either direction.
+DCF_MAX_ASSUMED_GROWTH = 0.15
+"""Cap on the growth rate a forward DCF may assume.
 
-The growth input is the company's own trailing FCF CAGR, which for NVDA is 68%/yr.
-Compounding that for ten years produces a valuation no one should publish, so the
-rate is clamped and the clamp is RECORDED - the same rule that governs a scenario
-weight. A reader can see what the history implied and what code was willing to
-use.
+The growth input is the company's own trailing REVENUE CAGR, which for NVDA is
+68%/yr. Compounding that for ten years produces a valuation no one should
+publish, so the rate is clamped and the clamp is RECORDED - the same rule that
+governs a scenario weight. The floor is TERMINAL_GROWTH: a DCF that projects
+decline for a decade off one trailing window values the window, not the company.
+Both bounds are recorded as `was_clamped` / `was_floored`.
+"""
+
+DCF_FCF_BASE_YEARS = 3
+"""How many fiscal years of FCF the projection starts from, averaged.
+
+The latest year alone is one event away from meaningless: Coca-Cola's FY2024 IRS
+deposit cut its reported FCF nearly in half, which a single-year base turns into a
+permanent impairment of the company. Averaging three years does not remove the
+event, it stops it setting the level for a ten-year projection.
+"""
+
+DCF_GROWTH_FADE = True
+"""Fade the growth rate linearly from the assumed rate to TERMINAL_GROWTH.
+
+A flat rate for ten years followed by a step down to 3% is the standard shape and
+the wrong one: nothing decelerates like that. Year 1 grows at the assumed rate,
+year N at the terminal rate, and the years between interpolate.
 """
 
 DCF_SOLVE_LOW = -0.5

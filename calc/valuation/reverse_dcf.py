@@ -90,8 +90,18 @@ def reverse_dcf_block(
     *,
     period: str,
     assumptions: dict | None = None,
+    smoothed_base: dict | None = None,
 ) -> dict:
-    """The `reverse_dcf` block of Metrics: implied CAGR, assumptions, sensitivity."""
+    """The `reverse_dcf` block of Metrics: implied CAGR, assumptions, sensitivity.
+
+    The headline solves against the LATEST FULL YEAR's free cash flow, which is
+    what `fixtures/mock/metrics.json` pins. When a smoothed base is supplied it is
+    solved a second time and reported as `implied_fcf_cagr_smoothed_base`, because
+    a depressed base overstates the growth the price implies: Coca-Cola's FY2025
+    FCF is 20% below its three-year average, and the headline figure carries that
+    distortion. Both are published so a reader can see the difference rather than
+    having to trust one.
+    """
     assumptions = assumptions or {}
     discount_rate = float(assumptions.get("discount_rate", config.DISCOUNT_RATE))
     terminal_growth = float(assumptions.get("terminal_growth", config.TERMINAL_GROWTH))
@@ -147,7 +157,7 @@ def reverse_dcf_block(
         for growth in config.SENSITIVITY_TERMINAL_GROWTHS
     ]
 
-    return {
+    block = {
         "implied_fcf_cagr": cell(discount_rate, terminal_growth, "implied_fcf_cagr"),
         "assumptions": {
             "discount_rate": assumption_value(discount_rate, "fraction", config.CONFIG_SOURCE),
@@ -156,3 +166,29 @@ def reverse_dcf_block(
         },
         "sensitivity_grid": grid,
     }
+    smoothed = (smoothed_base or {}).get("value")
+    if smoothed and not reason:
+        solved = solve_implied_growth(ev, smoothed, discount_rate, terminal_growth, horizon_years)
+        block["implied_fcf_cagr_smoothed_base"] = ledger.emit(
+            solved,
+            metric="implied_fcf_cagr_smoothed_base",
+            period=period,
+            unit="fraction",
+            formula=(
+                f"solve g: pv(fcf_base, g, r={discount_rate}, tg={terminal_growth}, "
+                f"n={horizon_years}) == enterprise_value"
+            ),
+            inputs={k: v for k, v in inputs.items() if v is not None},
+            paths=["market.enterprise_value", "valuation.dcf.fcf_base"],
+            period_type="instant",
+            reason="no smoothed free cash flow base was available",
+            derivation_extra=NON_ARITHMETIC,
+        )
+        block["implied_fcf_cagr_smoothed_base"]["basis"] = smoothed_base.get("basis")
+        block["implied_fcf_cagr_smoothed_base"]["note"] = (
+            "solved against the "
+            f"{smoothed_base.get('basis')} free cash flow base "
+            f"({smoothed:,.0f} USD) instead of the latest year "
+            f"({fcf_value:,.0f} USD), so one unusual year does not set the level"
+        )
+    return block

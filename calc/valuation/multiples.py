@@ -18,6 +18,7 @@ from __future__ import annotations
 
 from calc import config
 from calc.facts import Ledger, missing_reason, nums, present
+from calc.metrics.ttm import TTM_PERIOD_LABEL, derived_ttm, flow_ref
 from calc.value import div, median, ratio_minus_one, sub
 
 EV_BANK_REASON = (
@@ -78,19 +79,24 @@ def multiples(
 
     out: dict = {}
 
-    inputs = {"price": price, "eps_diluted": ledger.ref(annual, "eps_diluted")}
+    basis: dict[str, str] = {}
+
+    eps_ref, eps_basis = flow_ref(ledger, annual, "eps_diluted")
+    basis["pe"] = eps_basis
+    inputs = {"price": price, "eps_diluted": eps_ref}
     values = nums(inputs)
     out["pe"] = ledger.emit(
         div(values["price"], values["eps_diluted"]),
         metric="pe",
-        period=annual,
+        period=_label(annual, eps_basis),
         unit="multiple",
         formula="price / eps_diluted",
         inputs=present(inputs),
-        paths=["market.price", f"financials.{annual}.eps_diluted"],
+        paths=["market.price", _path(annual, eps_basis, "eps_diluted")],
         period_type="instant",
         reason=missing_reason(inputs, annual),
     )
+    out["pe"]["basis"] = eps_basis
 
     inputs = {
         "price": price,
@@ -115,46 +121,77 @@ def multiples(
         ),
     )
 
-    inputs = {"enterprise_value": ev, "ebitda": ledger.derived_ref(ebitda, "ebitda")}
+    ebitda_ttm = (
+        None
+        if partial_scope
+        else derived_ttm(
+            ledger,
+            "ebitda_ttm",
+            {
+                "operating_income": "operating_income",
+                "depreciation_amortization": "depreciation_amortization",
+            },
+            annual,
+        )
+    )
+    ebitda_used = ebitda_ttm or ebitda
+    basis["ev_ebitda"] = "ttm" if ebitda_ttm else "latest_full_year"
+    inputs = {"enterprise_value": ev, "ebitda": ledger.derived_ref(ebitda_used, "ebitda")}
     values = nums(inputs)
     out["ev_ebitda"] = ledger.emit(
         None if partial_scope else div(values["enterprise_value"], values["ebitda"]),
         metric="ev_ebitda",
-        period=annual,
+        period=_label(annual, basis["ev_ebitda"]),
         unit="multiple",
         formula="enterprise_value / ebitda",
         inputs=present(inputs),
-        paths=["market.enterprise_value", "cash_flow.ebitda"],
+        paths=[
+            "market.enterprise_value",
+            "ttm.ebitda" if ebitda_ttm else "cash_flow.ebitda",
+        ],
         period_type="instant",
         reason=EV_BANK_REASON if partial_scope else missing_reason(inputs, annual),
         not_applicable=partial_scope,
     )
+    out["ev_ebitda"]["basis"] = basis["ev_ebitda"]
 
-    inputs = {"enterprise_value": ev, "revenue": ledger.ref(annual, "revenue")}
+    revenue_ref, revenue_basis = flow_ref(ledger, annual, "revenue")
+    basis["ev_revenue"] = basis["p_s"] = revenue_basis
+    inputs = {"enterprise_value": ev, "revenue": revenue_ref}
     values = nums(inputs)
     out["ev_revenue"] = ledger.emit(
         None if partial_scope else div(values["enterprise_value"], values["revenue"]),
         metric="ev_revenue",
-        period=annual,
+        period=_label(annual, revenue_basis),
         unit="multiple",
         formula="enterprise_value / revenue",
         inputs=present(inputs),
-        paths=["market.enterprise_value", f"financials.{annual}.revenue"],
+        paths=["market.enterprise_value", _path(annual, revenue_basis, "revenue")],
         period_type="instant",
         reason=EV_BANK_REASON if partial_scope else missing_reason(inputs, annual),
         not_applicable=partial_scope,
     )
+    out["ev_revenue"]["basis"] = revenue_basis
 
-    inputs = {"market_cap": market_cap, "fcf": ledger.derived_ref(fcf, "fcf")}
+    fcf_ttm = (
+        None
+        if partial_scope
+        else derived_ttm(
+            ledger, "fcf_ttm", {"op_cash_flow": "op_cash_flow", "capex": "capex"}, annual
+        )
+    )
+    fcf_used = fcf_ttm or fcf
+    basis["p_fcf"] = "ttm" if fcf_ttm else "latest_full_year"
+    inputs = {"market_cap": market_cap, "fcf": ledger.derived_ref(fcf_used, "fcf")}
     values = nums(inputs)
     out["p_fcf"] = ledger.emit(
         div(values["market_cap"], values["fcf"]),
         metric="p_fcf",
-        period=annual,
+        period=_label(annual, basis["p_fcf"]),
         unit="multiple",
         formula="market_cap / fcf",
         inputs=present(inputs),
-        paths=["market.market_cap", "cash_flow.fcf"],
+        paths=["market.market_cap", "ttm.fcf" if fcf_ttm else "cash_flow.fcf"],
         period_type="instant",
         reason=(
             fcf.get("unavailable_reason")
@@ -164,19 +201,22 @@ def multiples(
         not_applicable=bool(fcf.get("not_applicable")),
     )
 
-    inputs = {"market_cap": market_cap, "revenue": ledger.ref(annual, "revenue")}
+    out["p_fcf"]["basis"] = basis["p_fcf"]
+
+    inputs = {"market_cap": market_cap, "revenue": revenue_ref}
     values = nums(inputs)
     out["p_s"] = ledger.emit(
         div(values["market_cap"], values["revenue"]),
         metric="p_s",
-        period=annual,
+        period=_label(annual, revenue_basis),
         unit="multiple",
         formula="market_cap / revenue",
         inputs=present(inputs),
-        paths=["market.market_cap", f"financials.{annual}.revenue"],
+        paths=["market.market_cap", _path(annual, revenue_basis, "revenue")],
         period_type="instant",
         reason=missing_reason(inputs, annual),
     )
+    out["p_s"]["basis"] = revenue_basis
 
     inputs = {"market_cap": market_cap, "total_equity": ledger.ref(balance, "total_equity")}
     values = nums(inputs)
@@ -192,17 +232,32 @@ def multiples(
         reason=missing_reason(inputs, balance),
     )
     out["primary_multiple"] = "p_b" if partial_scope else "pe"
+    basis["p_b"] = "latest_balance_sheet"
+    out["p_b"]["basis"] = basis["p_b"]
+    trailing = sorted(name for name, how in basis.items() if how == "ttm")
+    full_year = sorted(name for name, how in basis.items() if how == "latest_full_year")
     out["basis"] = {
-        "earnings_period": annual,
+        "earnings_basis": "ttm" if trailing else "latest_full_year",
+        "by_multiple": dict(basis),
+        "ttm_multiples": trailing,
+        "full_year_multiples": full_year,
+        "earnings_period": TTM_PERIOD_LABEL if trailing else annual,
+        "latest_annual_period": annual,
         "balance_period": balance,
         "note": (
-            f"every multiple divides today's price by {annual}, the latest FULL YEAR "
-            "(CLAUDE.md: flow metrics use the latest full year). A data provider quotes a "
-            "TRAILING TWELVE MONTH multiple, so when a fiscal year is partly elapsed and "
-            "earnings are growing, the figure here is HIGHER than the one a reader sees on "
-            "a finance site - AAPL is 45x on FY2025 EPS of $7.46 against about 36x on TTM "
-            "EPS. calc/ cannot compute a TTM figure from a factsheet that carries annual "
-            "periods only; a quarterly series would fix it (asked of P1)."
+            f"{', '.join(trailing)} divide a TRAILING TWELVE MONTH figure, the basis a data "
+            f"provider quotes. {', '.join(full_year) or 'Nothing else'} divides the latest "
+            f"full year ({annual}). `by_multiple` labels each one."
+            if trailing
+            else (
+                f"every multiple divides today's price by {annual}, the latest FULL YEAR "
+                "(CLAUDE.md: flow metrics use the latest full year). A data provider quotes a "
+                "TRAILING TWELVE MONTH multiple, so when a fiscal year is partly elapsed and "
+                "earnings are growing, the figure here is HIGHER than the one a reader sees on "
+                "a finance site - AAPL is 45x on FY2025 EPS of $7.46 against about 36x on TTM "
+                "EPS. calc/ uses a TTM figure the moment the factsheet carries a "
+                "`<metric>_ttm` fact; this one does not (asked of P1)."
+            )
         ),
     }
 
@@ -292,3 +347,20 @@ def net_debt(ledger: Ledger, balance: str) -> float | None:
 
 def _num(ref) -> float | None:
     return None if ref is None else ref.value
+
+
+def _label(annual: str, basis: str) -> str:
+    """The fiscal_period a derived multiple is filed under.
+
+    Always a real fiscal period, even for a TTM multiple: `FinancialFact.fiscal_period`
+    must match FY followed by four digits, or a quarter label, so "TTM" is not a
+    legal value there. Which
+    basis was used is on the ValueObject (`basis`) and visible in the derived fact's
+    own `input_fact_ids`, which point at the `_ttm` facts.
+    """
+    return annual
+
+
+def _path(annual: str, basis: str, field: str) -> str:
+    """The dotted path a reader follows to the denominator."""
+    return f"ttm.{field}" if basis == "ttm" else f"financials.{annual}.{field}"

@@ -121,6 +121,14 @@ class Ledger:
         vo = container.get(field) if isinstance(container, dict) else None
         return self._mint(vo, f"{block}_{field}", f"{block}.{field}", kind)
 
+    def mint(self, vo: Any, metric: str, location: str, kind: str = "estimate") -> FactRef | None:
+        """Publish a fact id for a value the factsheet carries without one.
+
+        Used for market values and for trailing-twelve-month figures. The result
+        lands in `input_facts`, so the verifier can resolve what calc/ cited.
+        """
+        return self._mint(vo, metric, location, kind)
+
     def _mint(self, vo: Any, metric: str, location: str, kind: str) -> FactRef | None:
         if not isinstance(vo, dict) or vo.get("status") != "ok" or vo.get("value") is None:
             return None
