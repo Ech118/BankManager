@@ -235,6 +235,17 @@ class Ledger:
             source_id=source_id,
         )
 
+    def adopt(self, facts: list[dict]) -> None:
+        """Index facts an earlier ledger produced, without re-publishing them.
+
+        `calculate_valuation` builds its extra blocks on a second ledger, and those
+        blocks cite metrics the first one emitted (a peer premium cites this
+        company's P/E). Adopting the facts lets `derived_ref` find them, so the
+        lineage - and with it the filed_at chain - stays intact across the two.
+        """
+        for fact in facts:
+            self._by_id.setdefault(fact["fact_id"], fact)
+
     def derived_ref(self, vo: dict | None, metric: str = "") -> FactRef | None:
         """Turn a ValueObject calc/ already emitted back into an input reference.
 

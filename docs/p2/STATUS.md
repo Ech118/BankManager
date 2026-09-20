@@ -3,8 +3,8 @@
 Update whenever a capability moves from mock to real, or when blocked.
 A PR that changes behaviour must update this file.
 
-**Step:** roadmap Step 2 (metrics) complete. **Next:** valuation, then scenarios
-and scores, then `audit/`.
+**Step:** metrics and valuation complete. **Next:** scenarios and scores, then
+`audit/`.
 **Branch:** `p2-port`, based on P1's `p1-step2` (P1's PRs are not merged yet), so
 `scripts/check_ownership.sh p2` must be run as `BASE=HEAD scripts/check_ownership.sh p2`
 with the P2 paths staged. Against `origin/main` it reports P1's files.
@@ -20,7 +20,9 @@ with the P2 paths staged. Against `origin/main` it reports P1's files.
 | partial scope (banks) | **real** | FCF, gross margin and EV multiples `not_applicable`; P/B, BVPS and ROE computed |
 | quality flags | **real** | DSO, inventory days, buyback-flattered EPS, FCF conversion, SBC |
 | `reverse_dcf` | **real** | ported bisection solver plus the 9-cell sensitivity grid |
-| `calculate_valuation` | mock | the MCP-exposed entry point; Step 3 |
+| `calculate_valuation` | **real** | multiples, peers, forward and reverse DCF; a skipped method records why. P1's wrapper must pass `request["factsheet"]` (request filed) |
+| forward DCF | **real** | growth input is the trailing FCF CAGR, capped at 20% and floored to terminal growth when negative; both recorded |
+| historical multiples | **unavailable** | reason `"no price history source"`; the functions are complete and take a series |
 | peer multiples | **degraded** | real recordings carry peer market caps only, so the peer median is `unavailable` with a reason |
 | `evaluate_scenarios` | partial | **really** rejects weights not summing to 1; rest is fixture |
 | weight clamping | not started | algorithm specified in `docs/pipeline.md`; demonstrated by `fixtures/mock/scenario_weights_clamped.json` |
@@ -58,4 +60,14 @@ contract change: `derived_facts`, `input_facts`, `cagr`, `returns.roe`,
 `notes`. Every unavailable ValueObject also carries `unavailable_reason`, and a
 metric that does not describe the filer at all carries `not_applicable: true`.
 
-**Last updated:** 2026-09-20 (Step 1: metrics, lineage, derived facts)
+## Known gaps in Step 2
+
+- **Multiples divide the latest FULL YEAR**, per CLAUDE.md, while a data provider
+  quotes TTM. AAPL is 45.1x on FY2025 EPS against about 36x TTM. Recorded in
+  `valuation.basis`; a quarterly series from P1 would let us publish both.
+- **Peer medians are unavailable** on every real recording (0 of 6 peers carry a
+  multiple). `peer_table` computes them from raw peer fields the moment P1 sends
+  any.
+- **Historical multiples are unavailable by design**: no price history source.
+
+**Last updated:** 2026-09-20 (Step 2: valuation)

@@ -24,6 +24,7 @@ from pathlib import Path
 from typing import Any
 
 from calc.metrics.compute import compute_metrics as metrics_compute
+from calc.valuation.compute import calculate_valuation as valuation_compute
 
 _MOCK = Path(__file__).resolve().parents[1] / "fixtures" / "mock"
 
@@ -73,16 +74,12 @@ def calculate_valuation(request: dict) -> dict:
     mcp_server/tools/calculate_valuation.py is a thin wrapper over this function
     and holds no formulas of its own. That wrapper is the ONE sanctioned
     cross-partition import in the repo (docs/adr/0007).
+
+    calc/ is pure, so it cannot turn a ticker into a factsheet: the caller passes
+    one as `request["factsheet"]`. A request naming ACME without one falls back to
+    the mock fixture, which is how the contract suite calls it.
     """
-    _require_mock("calculate_valuation")
-    metrics = _load("metrics.json")
-    return {
-        "metrics": metrics,
-        "reverse_dcf": metrics["reverse_dcf"],
-        "notes": ["Mock valuation: ACME fixtures, no computation performed."],
-        "as_of": metrics["as_of"],
-        "truncated": False,
-    }
+    return valuation_compute(request)
 
 
 def evaluate_scenarios(

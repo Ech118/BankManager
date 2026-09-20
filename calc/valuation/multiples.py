@@ -164,6 +164,20 @@ def multiples(
         not_applicable=bool(fcf.get("not_applicable")),
     )
 
+    inputs = {"market_cap": market_cap, "revenue": ledger.ref(annual, "revenue")}
+    values = nums(inputs)
+    out["p_s"] = ledger.emit(
+        div(values["market_cap"], values["revenue"]),
+        metric="p_s",
+        period=annual,
+        unit="multiple",
+        formula="market_cap / revenue",
+        inputs=present(inputs),
+        paths=["market.market_cap", f"financials.{annual}.revenue"],
+        period_type="instant",
+        reason=missing_reason(inputs, annual),
+    )
+
     inputs = {"market_cap": market_cap, "total_equity": ledger.ref(balance, "total_equity")}
     values = nums(inputs)
     out["p_b"] = ledger.emit(
@@ -178,6 +192,19 @@ def multiples(
         reason=missing_reason(inputs, balance),
     )
     out["primary_multiple"] = "p_b" if partial_scope else "pe"
+    out["basis"] = {
+        "earnings_period": annual,
+        "balance_period": balance,
+        "note": (
+            f"every multiple divides today's price by {annual}, the latest FULL YEAR "
+            "(CLAUDE.md: flow metrics use the latest full year). A data provider quotes a "
+            "TRAILING TWELVE MONTH multiple, so when a fiscal year is partly elapsed and "
+            "earnings are growing, the figure here is HIGHER than the one a reader sees on "
+            "a finance site - AAPL is 45x on FY2025 EPS of $7.46 against about 36x on TTM "
+            "EPS. calc/ cannot compute a TTM figure from a factsheet that carries annual "
+            "periods only; a quarterly series would fix it (asked of P1)."
+        ),
+    }
 
     out["vs_peers"] = vs_peers(ledger, out)
     out["vs_sp500"] = vs_sp500(ledger, out)

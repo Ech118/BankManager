@@ -139,6 +139,16 @@ unless P1 published a `_split_adjusted` fact (P1 -> P2, 2026-09-19).
 # --------------------------------------------------------------------------
 # Reverse DCF solver
 # --------------------------------------------------------------------------
+DCF_MAX_ASSUMED_GROWTH = 0.20
+"""Cap on the growth rate a forward DCF may assume, in either direction.
+
+The growth input is the company's own trailing FCF CAGR, which for NVDA is 68%/yr.
+Compounding that for ten years produces a valuation no one should publish, so the
+rate is clamped and the clamp is RECORDED - the same rule that governs a scenario
+weight. A reader can see what the history implied and what code was willing to
+use.
+"""
+
 DCF_SOLVE_LOW = -0.5
 DCF_SOLVE_HIGH = 1.0
 DCF_SOLVE_ITERATIONS = 200
