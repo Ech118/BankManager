@@ -22,6 +22,7 @@ from functools import lru_cache
 
 from data.ingest import companyfacts as companyfacts_api
 from data.ingest import edgar_client, market_client
+from data.normalize import peers as peer_rules
 from data.normalize import scope as scope_rules
 from data.normalize import snapshot as snapshot_rules
 from data.normalize import to_facts
@@ -82,6 +83,32 @@ def clear_cache() -> None:
 def check_scope(ticker: Ticker, as_of: ISODate | None = None) -> dict:
     """Three-level scope decision (data/normalize/scope.py)."""
     return scope_rules.check_scope(ticker, as_of).model_dump(mode="json")
+
+
+def _latest_annual_revenue(data: CompanyData) -> float | None:
+    """The target's own newest reported revenue, for ranking peers by size."""
+    revenues = [
+        f
+        for f in data.facts
+        if f.metric == "revenue" and f.is_current and f.value is not None
+    ]
+    if not revenues:
+        return None
+    return float(max(revenues, key=lambda f: f.period_end).value or 0.0) or None
+
+
+def peer_companies(ticker: Ticker, as_of: ISODate | None = None, limit: int = 6) -> list[dict]:
+    """Comparables by SIC and size (data/normalize/peers.py)."""
+    data = load_facts(ticker, as_of)
+    result = peer_rules.select(
+        ticker,
+        as_of=as_of,
+        sic=str(data.submissions.get("sic") or "") or None,
+        target_cik=data.cik,
+        target_revenue=_latest_annual_revenue(data),
+        limit=limit,
+    )
+    return [peer.model_dump(mode="json") for peer in result.peers]
 
 
 def market_snapshot(ticker: Ticker, as_of: ISODate | None = None) -> dict:

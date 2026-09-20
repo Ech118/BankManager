@@ -260,10 +260,24 @@ def get_company_profile(ticker: str, as_of: str | None = None) -> dict:
 
 
 def get_peer_companies(ticker: str, as_of: str | None = None, limit: int = 6) -> list[dict]:
-    """Comparable companies (MCP tool: get_peer_companies). Deterministic where possible."""
+    """Comparable companies (MCP tool: get_peer_companies). Deterministic where possible.
+
+    LIVE: everyone filing 10-Ks under the same SIC (browse-edgar), ranked by log
+    distance in revenue (one XBRL frames request for the whole industry), keeping
+    the closest that pass check_scope. Widens to the two-digit SIC prefix when too
+    few qualify, then falls back to the market provider's own peer list.
+
+    The multiples come back `unavailable`: pe, ev_ebitda, ev_revenue and
+    fcf_yield are ratios, and P1 does not compute ratios (ADR 0001). The market
+    cap calc/ needs to compute them is filled.
+    """
     scope = check_scope(ticker, as_of)
     if not scope["in_scope"]:
         raise ValueError(scope["reason"])
+    if _mode() == "live":
+        from data import live
+
+        return live.peer_companies(ticker, as_of, limit)
     _require_mock("get_peer_companies")
     return _load("peers.json")[:limit]
 

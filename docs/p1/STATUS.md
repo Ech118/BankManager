@@ -5,7 +5,7 @@ A PR that changes behaviour must update this file.
 
 **Step:** 4 in progress. **Nine of eleven tools are served; XBRL normalization
 is real and runs against twelve recorded filers.**
-**Next:** `get_peer_companies` (SIC + XBRL frames), then `build_factsheet` live. Real 10-K section extraction is deferred and is
+**Next:** `build_factsheet` live plus recordings, then the last two tools. Real 10-K section extraction is deferred and is
 what `search_filing` needs to work in live mode.
 **Blockers:** `get_factsheet` is in the contracts but not yet in `main` -
 PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
@@ -16,7 +16,7 @@ PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
 | `get_financial_facts` | **served** | as_of + restatement filtering, `periods`, `include_superseded` |
 | `get_market_snapshot` | **served, live** | Finnhub price + filing share count; degrades to price unavailable |
 | `get_company_profile` | **served** | |
-| `get_peer_companies` | **served** | `limit` + `truncated` |
+| `get_peer_companies` | **served, live** | SIC + XBRL frames ranking; `limit` + `truncated` |
 | `resolve_fact` | **served** | flags `is_superseded` / `is_future` separately |
 | `search_filings` | **served** | newest first, `forms` filter, `limit` + `truncated` |
 | `get_filing_section` | **served** | verbatim; errors on unknown id AND on one filed after `as_of` |
@@ -38,6 +38,7 @@ PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
 | Restatement linking | **real** | `superseded_by` + `as_known_on()`; real splits exercise it |
 | Stock splits | **real** | discontinuity detector + split-adjusted derived facts when a ratio is tagged |
 | Derived-fact dating | **real** | `filed_at` = latest input's, never null; `data/normalize/derived.py` |
+| Peer selection | **real** | browse-edgar SIC (paged) + frames revenue ranking, log-distance cutoff, provider fallback |
 | `sp500_baseline` | **real** | SPY quote measured; forward P/E, earnings yield and risk-free rate are reviewed constants typed `assumption` |
 | Market client | **real** | `MarketClient` Protocol; Finnhub impl; 5-min quote cache; `NullMarketClient` for outages |
 | Shares outstanding | **real** | 5-candidate chain behind a public-float floor check (GOOGL, BRK-B) |
@@ -50,7 +51,7 @@ PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
 | Postgres store | not started | migration file lists the tables |
 | `fixtures/real/` demo tickers | not started | Step 6; coordinate the choice via `docs/requests/` |
 
-**Last updated:** 2026-09-20 (derived-fact dating, baseline, ranked `search_filing`)
+**Last updated:** 2026-09-20 (derived-fact dating, baseline, `search_filing`, live peers)
 
 ---
 
@@ -138,6 +139,26 @@ produced a confident wrong number rather than an error.
     accession so the two agree. Total debt already followed the rule
     implicitly; it now calls the same helper. Raised with P3 and P2 in
     `docs/requests/2026-09-19-p3-report-inputs-response.md`.
+
+11. **browse-edgar does not support a SIC prefix, and does not order by size.**
+    `SIC=35` returns ZERO rows - it is read as an unknown code, not a wildcard -
+    so the planned "widen to the two-digit prefix" step would have looked
+    correct, never fired, and quietly left every short peer set short. Widening
+    the SIZE tolerance replaces it. Separately, a SIC page caps at 100 rows
+    ordered by neither size nor relevance: SIC 6021 puts Bank of America on
+    page 1, Citigroup on page 2 and Wells Fargo on neither, and SIC 2080 has
+    PepsiCo on page 2. Peer selection pages four deep.
+
+12. **Three findings that each produced a plausible wrong peer set.**
+    (a) SIC alone is not enough: Apple's SIC 3571 holds Dell at 3.7x revenue and
+    then Socket Mobile at 27,600x. Without a distance cutoff a $200M company
+    lands in Apple's peer median. (b) Banks tag `RevenuesNetOfInterestExpense`
+    and nothing else - its CY2025 frame holds 42 companies - so without that
+    concept every bank has no revenue, every candidate is dropped, and JPM's
+    ranking silently returns nothing. (c) Inverting SEC's ticker -> CIK map
+    naively keeps whichever ticker the iteration ended on, which put `SMCIP`
+    (a preferred) and `BSQKZ` in peer sets instead of the common stock; a market
+    cap read off a thinly traded preferred is not the company's.
 
 ### Two earlier findings, still true
 

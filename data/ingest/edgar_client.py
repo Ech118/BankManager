@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import json
 import time
+import xml.etree.ElementTree as ET
 from typing import Any
 
 import httpx
@@ -37,9 +38,16 @@ from schema.contracts.common import ISODate, Ticker
 SUBMISSIONS_URL = "https://data.sec.gov/submissions/CIK{cik:0>10}.json"
 ARCHIVES_URL = "https://www.sec.gov/Archives/edgar/data/{cik}/{accession_nodash}/{document}"
 COMPANY_TICKERS_URL = "https://www.sec.gov/files/company_tickers.json"
+BROWSE_EDGAR_URL = "https://www.sec.gov/cgi-bin/browse-edgar"
+FRAMES_URL = "https://data.sec.gov/api/xbrl/frames/{taxonomy}/{concept}/{unit}/{period}.json"
 
 TICKER_MAP_TTL = cache.DAY_SECONDS
 SUBMISSIONS_TTL = cache.DAY_SECONDS
+SIC_LIST_TTL = cache.DAY_SECONDS
+FRAMES_TTL = cache.DAY_SECONDS
+"""A frame for a closed fiscal year barely moves, and the SIC roster moves
+only when a company registers or re-classifies. A day is generous either way,
+and it keeps a demo from re-fetching a megabyte per run."""
 
 _limiter = RateLimiter()
 _client: httpx.Client | None = None
@@ -222,6 +230,121 @@ def list_filings(
         )
 
     out.sort(key=lambda f: (f["filed_at"] or "", f["accession"]), reverse=True)
+    return out
+
+
+def _sic_page(sic: str, count: int, start: int) -> list[str]:
+    """One browse-edgar page of CIKs for a SIC code.
+
+    THE CIKs COME FROM THE ATOM MARKUP, NOT FROM THE TITLES
+        The feed's <title> is "COMPANY NAME (CIK 0000320193) (Filer)" for some
+        rows and a bare company name for others, and a title-parsing approach
+        silently drops whichever rows it cannot match. The <CIK> element is
+        present on every row, so that is what is read.
+    """
+    params = {
+        "action": "getcompany",
+        "SIC": str(sic).strip(),
+        "type": "10-K",
+        "dateb": "",
+        "owner": "include",
+        "count": str(count),
+        "start": str(start),
+        "output": "atom",
+    }
+    query = "&".join(f"{k}={v}" for k, v in params.items())
+    url = f"{BROWSE_EDGAR_URL}?{query}"
+    try:
+        raw = cached_fetch(url, f"sec/sic/{sic}-{count}-{start}.xml", SIC_LIST_TTL)
+        root = ET.fromstring(raw)
+    except Exception:
+        return []
+
+    # Namespaced XML, and the namespace has changed before. Matching on the
+    # local tag name survives that; a hard-coded namespace would not.
+    out: list[str] = []
+    for element in root.iter():
+        if element.tag.rsplit("}", 1)[-1].upper() != "CIK":
+            continue
+        cik = (element.text or "").strip()
+        if cik.isdigit():
+            out.append(cik.zfill(10))
+    return out
+
+
+def fetch_sic_companies(sic: str, count: int = 100, pages: int = 1) -> list[str]:
+    """Zero-padded CIKs of companies filing 10-Ks under `sic`, deduplicated.
+
+    PAGING IS NOT OPTIONAL FOR A CROWDED SIC
+        browse-edgar caps a page at 100 rows and orders them by neither size nor
+        relevance. SIC 6021 holds hundreds of banks, mostly small: Bank of
+        America is on page 1, Citigroup on page 2 and Wells Fargo on neither. A
+        single page therefore misses the very companies a peer set is for.
+
+    ONLY EXACT SIC CODES WORK
+        browse-edgar returns ZERO rows for a two- or three-digit SIC prefix -
+        `SIC=35` is not a wildcard, it is an unknown code. Anything that widens
+        an industry search has to do it some other way; see
+        data/normalize/peers.py.
+
+    Returns [] on any failure. Peer selection is the weakest data in the system
+    and must degrade to "no peers", never to an exception.
+    """
+    seen: list[str] = []
+    known: set[str] = set()
+    for page in range(max(1, pages)):
+        rows = _sic_page(sic, count, page * count)
+        if not rows:
+            break
+        for cik in rows:
+            if cik not in known:
+                known.add(cik)
+                seen.append(cik)
+        if len(rows) < count:
+            break
+    return seen
+
+
+def fetch_frame(
+    concept: str,
+    period: str,
+    *,
+    taxonomy: str = "us-gaap",
+    unit: str = "USD",
+) -> dict[str, float]:
+    """One XBRL frame as {zero-padded CIK: value}.
+
+    A frame is every filer's value for one concept in one period, in ONE
+    request - which is why peer ranking does not cost a request per candidate.
+
+    THE FRAME IS CALENDAR-ALIGNED, THE FILER'S YEAR MAY NOT BE
+        SEC assigns a fact to CY2024 only when its period is close enough to the
+        calendar year. A January or August year end can therefore be missing
+        from the frame entirely. That is a gap, not a zero: a caller that treats
+        a missing CIK as "no revenue" ranks NVDA as the smallest company in its
+        industry. Missing CIKs are simply absent from the returned mapping.
+
+    Returns {} on any failure, including the 404 SEC serves for a frame that
+    does not exist.
+    """
+    url = FRAMES_URL.format(taxonomy=taxonomy, concept=concept, unit=unit, period=period)
+    key = f"sec/frames/{taxonomy}-{concept}-{unit}-{period}.json"
+    try:
+        raw = cached_fetch(url, key, FRAMES_TTL)
+        payload = json.loads(raw)
+    except Exception:
+        return {}
+
+    out: dict[str, float] = {}
+    for entry in payload.get("data", []):
+        cik = str(entry.get("cik", "")).strip()
+        value = entry.get("val")
+        if not cik.isdigit() or value is None:
+            continue
+        try:
+            out[cik.zfill(10)] = float(value)
+        except (TypeError, ValueError):
+            continue
     return out
 
 
