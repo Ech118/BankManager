@@ -22,11 +22,14 @@ from functools import lru_cache
 
 from data.ingest import companyfacts as companyfacts_api
 from data.ingest import edgar_client, market_client
+from data.normalize import baseline as baseline_rules
+from data.normalize import factsheet as factsheet_rules
 from data.normalize import peers as peer_rules
 from data.normalize import scope as scope_rules
 from data.normalize import snapshot as snapshot_rules
 from data.normalize import to_facts
 from schema.contracts.common import ISODate, Ticker
+from schema.contracts.enums import Mode
 
 DEFAULT_YEARS = 5
 
@@ -83,6 +86,69 @@ def clear_cache() -> None:
 def check_scope(ticker: Ticker, as_of: ISODate | None = None) -> dict:
     """Three-level scope decision (data/normalize/scope.py)."""
     return scope_rules.check_scope(ticker, as_of).model_dump(mode="json")
+
+
+def build_factsheet(ticker: Ticker, as_of: ISODate | None = None) -> dict:
+    """The whole reported picture of one company at one date.
+
+    Every part is assembled from the SAME normalized facts and the SAME market
+    observation, so the factsheet an auditor checks is the one the tools answer
+    from. `mode` is `backtest` whenever `as_of` predates today - a run that
+    reconstructs the past is not a live run, and the report says so.
+    """
+    from data.normalize import scope as scope_rules
+
+    data = load_facts(ticker, as_of)
+    retrieved_at = to_facts.utc_now()
+    effective_as_of = as_of or retrieved_at[:10]
+
+    scope = scope_rules.check_scope(ticker, as_of)
+    gaps = list(data.gaps) + list(getattr(scope, "gaps", []) or [])
+
+    client = market_client.get_client()
+    snapshot = snapshot_rules.build(
+        ticker,
+        as_of=as_of,
+        quote=client.quote(ticker),
+        profile=client.profile(ticker),
+        companyfacts=data.companyfacts,
+        facts=data.facts,
+        retrieved_at=retrieved_at,
+    )
+    gaps.extend(snapshot.gaps)
+
+    baseline = baseline_rules.build(
+        as_of=effective_as_of,
+        quote=client.quote(baseline_rules.SPY),
+        retrieved_at=retrieved_at,
+    )
+    gaps.extend(baseline.gaps)
+
+    peer_result = peer_rules.select(
+        ticker,
+        as_of=as_of,
+        sic=str(data.submissions.get("sic") or "") or None,
+        target_cik=data.cik,
+        target_revenue=_latest_annual_revenue(data),
+        limit=peer_rules.DEFAULT_LIMIT,
+    )
+    gaps.extend(peer_result.gaps)
+
+    result = factsheet_rules.build(
+        ticker,
+        as_of=effective_as_of,
+        company_name=data.company_name,
+        cik=data.cik,
+        facts=data.facts,
+        scope=scope,
+        market=snapshot.snapshot,
+        peers=peer_result.peers,
+        baseline=baseline,
+        retrieved_at=retrieved_at,
+        gaps=gaps,
+        mode=Mode.BACKTEST if as_of and as_of < retrieved_at[:10] else Mode.LIVE,
+    )
+    return result.factsheet.model_dump(mode="json")
 
 
 def _latest_annual_revenue(data: CompanyData) -> float | None:

@@ -5,7 +5,8 @@ A PR that changes behaviour must update this file.
 
 **Step:** 4 in progress. **Nine of eleven tools are served; XBRL normalization
 is real and runs against twelve recorded filers.**
-**Next:** `build_factsheet` live plus recordings, then the last two tools. Real 10-K section extraction is deferred and is
+**Next:** real 10-K Item extraction (what `search_filing` needs in live mode),
+then `search_news` and `calculate_valuation`, then live backends over stdio. Real 10-K section extraction is deferred and is
 what `search_filing` needs to work in live mode.
 **Blockers:** `get_factsheet` is in the contracts but not yet in `main` -
 PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
@@ -29,8 +30,9 @@ PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
 | **on-disk cache** | **real** | by accession for filings; `get_fresh()` for the ticker map |
 | **`SEC_USER_AGENT` loading** | **real** | `data/ingest/env.py`; refuses a UA with no contact details |
 | `check_scope` | **real** | three levels: supported / partial / unsupported. Mock path unchanged |
-| `build_factsheet` | mock | returns the ACME fixture; **P3's auditor needs a real one** |
+| `build_factsheet` | **real** | assembled from the same facts and the same market observation the tools answer from |
 | `get_factsheet` | **served** | new tool (SCHEMA_VERSION 2.1.0); P3 can drop the injected factsheet |
+| `fixtures/real/<T>/factsheet.json` | **real** | AAPL, JPM, NVDA, KO, MSFT recorded; `data.record.factsheet` |
 | XBRL concept mapping | **real** | per-PERIOD chains, us-gaap; `ifrs-full` slot present and empty |
 | Annual normalization | **real** | 5 fiscal years of 10-K values -> `FinancialFact` |
 | Fiscal year labelling | **real** | from the filer's own numbering; Jan/Jun/Aug/Sep year ends tested |
@@ -51,7 +53,7 @@ PR #2 (`contracts/get-factsheet-tool`) needs coordinator approval.
 | Postgres store | not started | migration file lists the tables |
 | `fixtures/real/` demo tickers | not started | Step 6; coordinate the choice via `docs/requests/` |
 
-**Last updated:** 2026-09-20 (derived-fact dating, baseline, `search_filing`, live peers)
+**Last updated:** 2026-09-20 (derived-fact dating, baseline, `search_filing`, live peers, live `build_factsheet`)
 
 ---
 
@@ -159,6 +161,16 @@ produced a confident wrong number rather than an error.
     naively keeps whichever ticker the iteration ended on, which put `SMCIP`
     (a preferred) and `BSQKZ` in peer sets instead of the common stock; a market
     cap read off a thinly traded preferred is not the company's.
+
+13. **Five real factsheets, and what they say.** Market caps at recording
+    time: AAPL $4,905.5B, NVDA $5,356.7B, MSFT $3,666.6B, JPM $929.5B,
+    KO $379.7B - each equal to its own price times its own share count, which
+    is the check that catches a provider cap pasted beside an unrelated share
+    count. Period labels come out FY2026 for NVDA (January year end) and MSFT
+    (June), FY2025 for KO, from the filer's own numbering. Data quality reads
+    `ok` for KO, `partial` for AAPL/MSFT/NVDA and `degraded` for JPM with 47
+    gaps - a bank has no operating income, no capex, no gross profit and no
+    inventory, and every one of them is `unavailable` rather than zero.
 
 ### Two earlier findings, still true
 

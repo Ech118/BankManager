@@ -1,0 +1,1513 @@
+{
+ "as_of": "2026-09-19",
+ "built_at": "2026-09-20T04:13:50Z",
+ "company_name": "COCA COLA CO",
+ "consensus": null,
+ "data_quality": {
+  "gaps": [],
+  "overall": "ok"
+ },
+ "filing_sections": [],
+ "financials": [
+  {
+   "accession": "0001628280-26-010047",
+   "capex": {
+    "derived_from": [
+     "fact:KO:capex:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 2112000000.0
+   },
+   "cash": {
+    "derived_from": [
+     "fact:KO:cash:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 10270000000.0
+   },
+   "cost_of_revenue": {
+    "derived_from": [
+     "fact:KO:cost_of_revenue:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 18397000000.0
+   },
+   "current_assets": {
+    "derived_from": [
+     "fact:KO:current_assets:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 31044000000.0
+   },
+   "current_liabilities": {
+    "derived_from": [
+     "fact:KO:current_liabilities:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 21281000000.0
+   },
+   "depreciation_amortization": {
+    "derived_from": [
+     "fact:KO:depreciation_amortization:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 1050000000.0
+   },
+   "eps_diluted": {
+    "derived_from": [
+     "fact:KO:eps_diluted:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd_per_share",
+    "value": 3.04
+   },
+   "filed_date": "2026-02-20",
+   "form": "10-K",
+   "gross_profit": {
+    "derived_from": [
+     "fact:KO:gross_profit:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 29544000000.0
+   },
+   "interest_expense": {
+    "derived_from": [
+     "fact:KO:interest_expense:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 1654000000.0
+   },
+   "inventory": {
+    "derived_from": [
+     "fact:KO:inventory:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 4425000000.0
+   },
+   "net_income": {
+    "derived_from": [
+     "fact:KO:net_income:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 13107000000.0
+   },
+   "op_cash_flow": {
+    "derived_from": [
+     "fact:KO:op_cash_flow:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 7408000000.0
+   },
+   "operating_income": {
+    "derived_from": [
+     "fact:KO:operating_income:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 13762000000.0
+   },
+   "period": "FY2025",
+   "period_end": "2025-12-31",
+   "pretax_income": {
+    "derived_from": [
+     "fact:KO:pretax_income:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 15998000000.0
+   },
+   "receivables": {
+    "derived_from": [
+     "fact:KO:receivables:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 3038000000.0
+   },
+   "revenue": {
+    "derived_from": [
+     "fact:KO:revenue:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 47941000000.0
+   },
+   "sbc": {
+    "derived_from": [
+     "fact:KO:sbc:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 279000000.0
+   },
+   "shares_diluted": {
+    "derived_from": [
+     "fact:KO:shares_diluted:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "shares",
+    "value": 4313000000.0
+   },
+   "total_assets": {
+    "derived_from": [
+     "fact:KO:total_assets:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 104816000000.0
+   },
+   "total_debt": {
+    "derived_from": [
+     "fact:KO:total_debt_component:FY2025:LongTermDebtAndCapitalLeaseObligationsIncludingCurrentMaturities",
+     "fact:KO:total_debt_component:FY2025:CommercialPaper",
+     "fact:KO:total_debt_component:FY2025:OtherShortTermBorrowings"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 45492000000.0
+   },
+   "total_equity": {
+    "derived_from": [
+     "fact:KO:total_equity:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 32169000000.0
+   }
+  },
+  {
+   "accession": "0001628280-26-010047",
+   "capex": {
+    "derived_from": [
+     "fact:KO:capex:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 2064000000.0
+   },
+   "cash": {
+    "derived_from": [
+     "fact:KO:cash:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 10828000000.0
+   },
+   "cost_of_revenue": {
+    "derived_from": [
+     "fact:KO:cost_of_revenue:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 18324000000.0
+   },
+   "current_assets": {
+    "derived_from": [
+     "fact:KO:current_assets:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 25997000000.0
+   },
+   "current_liabilities": {
+    "derived_from": [
+     "fact:KO:current_liabilities:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 25249000000.0
+   },
+   "depreciation_amortization": {
+    "derived_from": [
+     "fact:KO:depreciation_amortization:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 1075000000.0
+   },
+   "eps_diluted": {
+    "derived_from": [
+     "fact:KO:eps_diluted:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd_per_share",
+    "value": 2.46
+   },
+   "filed_date": "2026-02-20",
+   "form": "10-K",
+   "gross_profit": {
+    "derived_from": [
+     "fact:KO:gross_profit:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 28737000000.0
+   },
+   "interest_expense": {
+    "derived_from": [
+     "fact:KO:interest_expense:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 1656000000.0
+   },
+   "inventory": {
+    "derived_from": [
+     "fact:KO:inventory:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 4728000000.0
+   },
+   "net_income": {
+    "derived_from": [
+     "fact:KO:net_income:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 10631000000.0
+   },
+   "op_cash_flow": {
+    "derived_from": [
+     "fact:KO:op_cash_flow:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 6805000000.0
+   },
+   "operating_income": {
+    "derived_from": [
+     "fact:KO:operating_income:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 9992000000.0
+   },
+   "period": "FY2024",
+   "period_end": "2024-12-31",
+   "pretax_income": {
+    "derived_from": [
+     "fact:KO:pretax_income:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 13086000000.0
+   },
+   "receivables": {
+    "derived_from": [
+     "fact:KO:receivables:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 3569000000.0
+   },
+   "revenue": {
+    "derived_from": [
+     "fact:KO:revenue:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 47061000000.0
+   },
+   "sbc": {
+    "derived_from": [
+     "fact:KO:sbc:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 286000000.0
+   },
+   "shares_diluted": {
+    "derived_from": [
+     "fact:KO:shares_diluted:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "shares",
+    "value": 4320000000.0
+   },
+   "total_assets": {
+    "derived_from": [
+     "fact:KO:total_assets:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 100549000000.0
+   },
+   "total_debt": {
+    "derived_from": [
+     "fact:KO:total_debt_component:FY2024:LongTermDebtAndCapitalLeaseObligationsIncludingCurrentMaturities",
+     "fact:KO:total_debt_component:FY2024:CommercialPaper",
+     "fact:KO:total_debt_component:FY2024:OtherShortTermBorrowings"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 44522000000.0
+   },
+   "total_equity": {
+    "derived_from": [
+     "fact:KO:total_equity:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 24856000000.0
+   }
+  },
+  {
+   "accession": "0001628280-26-010047",
+   "capex": {
+    "derived_from": [
+     "fact:KO:capex:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 1852000000.0
+   },
+   "cash": {
+    "derived_from": [
+     "fact:KO:cash:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 9366000000.0
+   },
+   "cost_of_revenue": {
+    "derived_from": [
+     "fact:KO:cost_of_revenue:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 18520000000.0
+   },
+   "current_assets": {
+    "derived_from": [
+     "fact:KO:current_assets:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-25-000011",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 26732000000.0
+   },
+   "current_liabilities": {
+    "derived_from": [
+     "fact:KO:current_liabilities:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-25-000011",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 23571000000.0
+   },
+   "depreciation_amortization": {
+    "derived_from": [
+     "fact:KO:depreciation_amortization:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 1128000000.0
+   },
+   "eps_diluted": {
+    "derived_from": [
+     "fact:KO:eps_diluted:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd_per_share",
+    "value": 2.47
+   },
+   "filed_date": "2026-02-20",
+   "form": "10-K",
+   "gross_profit": {
+    "derived_from": [
+     "fact:KO:gross_profit:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 27234000000.0
+   },
+   "interest_expense": {
+    "derived_from": [
+     "fact:KO:interest_expense:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 1527000000.0
+   },
+   "inventory": {
+    "derived_from": [
+     "fact:KO:inventory:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-25-000011",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 4424000000.0
+   },
+   "net_income": {
+    "derived_from": [
+     "fact:KO:net_income:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 10714000000.0
+   },
+   "op_cash_flow": {
+    "derived_from": [
+     "fact:KO:op_cash_flow:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 11599000000.0
+   },
+   "operating_income": {
+    "derived_from": [
+     "fact:KO:operating_income:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 11311000000.0
+   },
+   "period": "FY2023",
+   "period_end": "2023-12-31",
+   "pretax_income": {
+    "derived_from": [
+     "fact:KO:pretax_income:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 12952000000.0
+   },
+   "receivables": {
+    "derived_from": [
+     "fact:KO:receivables:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-25-000011",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 3410000000.0
+   },
+   "revenue": {
+    "derived_from": [
+     "fact:KO:revenue:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 45754000000.0
+   },
+   "sbc": {
+    "derived_from": [
+     "fact:KO:sbc:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 254000000.0
+   },
+   "shares_diluted": {
+    "derived_from": [
+     "fact:KO:shares_diluted:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0001628280-26-010047",
+    "status": "ok",
+    "type": "fact",
+    "unit": "shares",
+    "value": 4339000000.0
+   },
+   "total_assets": {
+    "derived_from": [
+     "fact:KO:total_assets:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-25-000011",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 97703000000.0
+   },
+   "total_debt": {
+    "derived_from": [
+     "fact:KO:total_debt_component:FY2023:LongTermDebt",
+     "fact:KO:total_debt_component:FY2023:CommercialPaper",
+     "fact:KO:total_debt_component:FY2023:OtherShortTermBorrowings"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-25-000011",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 42064000000.0
+   },
+   "total_equity": {
+    "derived_from": [
+     "fact:KO:total_equity:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-25-000011",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 25941000000.0
+   }
+  },
+  {
+   "accession": "0000021344-25-000011",
+   "capex": {
+    "derived_from": [
+     "fact:KO:capex:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-25-000011",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 1484000000.0
+   },
+   "cash": {
+    "derived_from": [
+     "fact:KO:cash:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-25-000011",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 9519000000.0
+   },
+   "cost_of_revenue": {
+    "derived_from": [
+     "fact:KO:cost_of_revenue:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-25-000011",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 18000000000.0
+   },
+   "current_assets": {
+    "derived_from": [
+     "fact:KO:current_assets:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-24-000009",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 22591000000.0
+   },
+   "current_liabilities": {
+    "derived_from": [
+     "fact:KO:current_liabilities:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-24-000009",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 19724000000.0
+   },
+   "depreciation_amortization": {
+    "derived_from": [
+     "fact:KO:depreciation_amortization:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-25-000011",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 1260000000.0
+   },
+   "eps_diluted": {
+    "derived_from": [
+     "fact:KO:eps_diluted:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-25-000011",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd_per_share",
+    "value": 2.19
+   },
+   "filed_date": "2025-02-20",
+   "form": "10-K",
+   "gross_profit": {
+    "derived_from": [
+     "fact:KO:gross_profit:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-25-000011",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 25004000000.0
+   },
+   "interest_expense": {
+    "derived_from": [
+     "fact:KO:interest_expense:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-25-000011",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 882000000.0
+   },
+   "inventory": {
+    "derived_from": [
+     "fact:KO:inventory:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-24-000009",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 4233000000.0
+   },
+   "net_income": {
+    "derived_from": [
+     "fact:KO:net_income:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-25-000011",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 9542000000.0
+   },
+   "op_cash_flow": {
+    "derived_from": [
+     "fact:KO:op_cash_flow:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-25-000011",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 11018000000.0
+   },
+   "operating_income": {
+    "derived_from": [
+     "fact:KO:operating_income:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-25-000011",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 10909000000.0
+   },
+   "period": "FY2022",
+   "period_end": "2022-12-31",
+   "pretax_income": {
+    "derived_from": [
+     "fact:KO:pretax_income:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-25-000011",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 11686000000.0
+   },
+   "receivables": {
+    "derived_from": [
+     "fact:KO:receivables:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-24-000009",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 3487000000.0
+   },
+   "revenue": {
+    "derived_from": [
+     "fact:KO:revenue:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-25-000011",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 43004000000.0
+   },
+   "sbc": {
+    "derived_from": [
+     "fact:KO:sbc:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-25-000011",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 356000000.0
+   },
+   "shares_diluted": {
+    "derived_from": [
+     "fact:KO:shares_diluted:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-25-000011",
+    "status": "ok",
+    "type": "fact",
+    "unit": "shares",
+    "value": 4350000000.0
+   },
+   "total_assets": {
+    "derived_from": [
+     "fact:KO:total_assets:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-24-000009",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 92763000000.0
+   },
+   "total_debt": {
+    "derived_from": [
+     "fact:KO:total_debt_component:FY2022:LongTermDebt",
+     "fact:KO:total_debt_component:FY2022:ShortTermBorrowings"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-24-000009",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 39149000000.0
+   },
+   "total_equity": {
+    "derived_from": [
+     "fact:KO:total_equity:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-24-000009",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 24105000000.0
+   }
+  },
+  {
+   "accession": "0000021344-24-000009",
+   "capex": {
+    "derived_from": [
+     "fact:KO:capex:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-24-000009",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 1367000000.0
+   },
+   "cash": {
+    "derived_from": [
+     "fact:KO:cash:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-24-000009",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 9684000000.0
+   },
+   "cost_of_revenue": {
+    "derived_from": [
+     "fact:KO:cost_of_revenue:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-24-000009",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 15357000000.0
+   },
+   "current_assets": {
+    "derived_from": [
+     "fact:KO:current_assets:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-23-000011",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 22545000000.0
+   },
+   "current_liabilities": {
+    "derived_from": [
+     "fact:KO:current_liabilities:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-23-000011",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 19950000000.0
+   },
+   "depreciation_amortization": {
+    "derived_from": [
+     "fact:KO:depreciation_amortization:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-24-000009",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 1452000000.0
+   },
+   "eps_diluted": {
+    "derived_from": [
+     "fact:KO:eps_diluted:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-24-000009",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd_per_share",
+    "value": 2.25
+   },
+   "filed_date": "2024-02-20",
+   "form": "10-K",
+   "gross_profit": {
+    "derived_from": [
+     "fact:KO:gross_profit:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-24-000009",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 23298000000.0
+   },
+   "interest_expense": {
+    "derived_from": [
+     "fact:KO:interest_expense:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-24-000009",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 1597000000.0
+   },
+   "inventory": {
+    "derived_from": [
+     "fact:KO:inventory:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-23-000011",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 3414000000.0
+   },
+   "net_income": {
+    "derived_from": [
+     "fact:KO:net_income:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-24-000009",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 9771000000.0
+   },
+   "op_cash_flow": {
+    "derived_from": [
+     "fact:KO:op_cash_flow:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-24-000009",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 12625000000.0
+   },
+   "operating_income": {
+    "derived_from": [
+     "fact:KO:operating_income:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-24-000009",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 10308000000.0
+   },
+   "period": "FY2021",
+   "period_end": "2021-12-31",
+   "pretax_income": {
+    "derived_from": [
+     "fact:KO:pretax_income:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-24-000009",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 12425000000.0
+   },
+   "receivables": {
+    "derived_from": [
+     "fact:KO:receivables:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-23-000011",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 3512000000.0
+   },
+   "revenue": {
+    "derived_from": [
+     "fact:KO:revenue:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-24-000009",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 38655000000.0
+   },
+   "sbc": {
+    "derived_from": [
+     "fact:KO:sbc:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-24-000009",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 337000000.0
+   },
+   "shares_diluted": {
+    "derived_from": [
+     "fact:KO:shares_diluted:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-24-000009",
+    "status": "ok",
+    "type": "fact",
+    "unit": "shares",
+    "value": 4340000000.0
+   },
+   "total_assets": {
+    "derived_from": [
+     "fact:KO:total_assets:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-23-000011",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 94354000000.0
+   },
+   "total_debt": {
+    "derived_from": [
+     "fact:KO:total_debt_component:FY2021:LongTermDebt",
+     "fact:KO:total_debt_component:FY2021:ShortTermBorrowings"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-23-000011",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 42761000000.0
+   },
+   "total_equity": {
+    "derived_from": [
+     "fact:KO:total_equity:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000021344-23-000011",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 22999000000.0
+   }
+  }
+ ],
+ "market": {
+  "as_of": "2026-09-18T20:00:00Z",
+  "cash": {
+   "derived_from": [
+    "fact:KO:cash:FY2025"
+   ],
+   "fiscal_period": "FY2025",
+   "source_id": null,
+   "source_url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026010047/0001628280-26-010047-index.htm",
+   "status": "ok",
+   "type": "fact",
+   "unit": "usd",
+   "value": 10270000000.0
+  },
+  "currency": "USD",
+  "enterprise_value": {
+   "derived_from": [
+    "market.market_cap",
+    "market.total_debt",
+    "market.cash"
+   ],
+   "source_id": null,
+   "status": "ok",
+   "type": "fact",
+   "unit": "usd",
+   "value": 414916073388.5
+  },
+  "market_cap": {
+   "derived_from": [
+    "market.price",
+    "market.shares_outstanding"
+   ],
+   "source_id": null,
+   "status": "ok",
+   "type": "fact",
+   "unit": "usd",
+   "value": 379694073388.5
+  },
+  "price": {
+   "derived_from": [],
+   "source_id": "src:market:KO:20260918T200000Z",
+   "status": "ok",
+   "type": "fact",
+   "unit": "usd_per_share",
+   "value": 88.25
+  },
+  "retrieved_at": "2026-09-20T04:13:50Z",
+  "shares_outstanding": {
+   "accession": "0001628280-26-028802",
+   "derived_from": [
+    "dei:EntityCommonStockSharesOutstanding"
+   ],
+   "note": "cover page share count",
+   "source_id": null,
+   "source_url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026028802/0001628280-26-028802-index.htm",
+   "status": "ok",
+   "type": "fact",
+   "unit": "shares",
+   "value": 4302482418.0,
+   "xbrl_concept": "dei:EntityCommonStockSharesOutstanding"
+  },
+  "source_id": "src:market:KO:20260918T200000Z",
+  "ticker": "KO",
+  "total_debt": {
+   "derived_from": [
+    "fact:KO:total_debt:FY2025"
+   ],
+   "fiscal_period": "FY2025",
+   "source_id": null,
+   "source_url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026010047/0001628280-26-010047-index.htm",
+   "status": "ok",
+   "type": "fact",
+   "unit": "usd",
+   "value": 45492000000.0
+  }
+ },
+ "mode": "backtest",
+ "news": [],
+ "peers": [
+  {
+   "company_name": null,
+   "ev_ebitda": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "ev_revenue": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "fcf_yield": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "fraction",
+    "value": null
+   },
+   "market_cap": {
+    "derived_from": [],
+    "source_id": "src:market:PEP:profile",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 177094674315.97522
+   },
+   "pe": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "selection_reason": "SIC 2080; 2.0x apart on CY2025 revenue",
+   "sic": "2080",
+   "ticker": "PEP"
+  },
+  {
+   "company_name": null,
+   "ev_ebitda": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "ev_revenue": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "fcf_yield": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "fraction",
+    "value": null
+   },
+   "market_cap": {
+    "derived_from": [],
+    "source_id": "src:market:KDP:profile",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 42131174911.376396
+   },
+   "pe": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "selection_reason": "SIC 2080; 2.9x apart on CY2025 revenue",
+   "sic": "2080",
+   "ticker": "KDP"
+  },
+  {
+   "company_name": null,
+   "ev_ebitda": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "ev_revenue": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "fcf_yield": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "fraction",
+    "value": null
+   },
+   "market_cap": {
+    "derived_from": [],
+    "source_id": "src:market:STZ:profile",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 20317202177.391182
+   },
+   "pe": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "selection_reason": "SIC 2080; 5.2x apart on CY2025 revenue",
+   "sic": "2080",
+   "ticker": "STZ"
+  },
+  {
+   "company_name": null,
+   "ev_ebitda": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "ev_revenue": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "fcf_yield": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "fraction",
+    "value": null
+   },
+   "market_cap": {
+    "derived_from": [],
+    "source_id": "src:market:PRMB:profile",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 7427085544.022727
+   },
+   "pe": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "selection_reason": "SIC 2080; 7.2x apart on CY2025 revenue",
+   "sic": "2080",
+   "ticker": "PRMB"
+  },
+  {
+   "company_name": null,
+   "ev_ebitda": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "ev_revenue": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "fcf_yield": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "fraction",
+    "value": null
+   },
+   "market_cap": {
+    "derived_from": [],
+    "source_id": "src:market:BF-B:profile",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 11960660690.286795
+   },
+   "pe": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "selection_reason": "SIC 2080; 12.2x apart on CY2025 revenue",
+   "sic": "2080",
+   "ticker": "BF-B"
+  }
+ ],
+ "schema_version": "2.1.0",
+ "scope": {
+  "gaps": [],
+  "in_scope": true,
+  "level": "supported",
+  "reason": null
+ },
+ "sources": {
+  "src:config:sp500_baseline:2026.09": {
+   "accession": null,
+   "fetched_at": "2026-09-20T04:13:50Z",
+   "kind": "config",
+   "url": null
+  },
+  "src:edgar_xbrl:0000021344-23-000011": {
+   "accession": "0000021344-23-000011",
+   "fetched_at": "2026-09-20T04:13:50Z",
+   "kind": "edgar_xbrl",
+   "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134423000011/0000021344-23-000011-index.htm"
+  },
+  "src:edgar_xbrl:0000021344-24-000009": {
+   "accession": "0000021344-24-000009",
+   "fetched_at": "2026-09-20T04:13:50Z",
+   "kind": "edgar_xbrl",
+   "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134424000009/0000021344-24-000009-index.htm"
+  },
+  "src:edgar_xbrl:0000021344-25-000011": {
+   "accession": "0000021344-25-000011",
+   "fetched_at": "2026-09-20T04:13:50Z",
+   "kind": "edgar_xbrl",
+   "url": "https://www.sec.gov/Archives/edgar/data/21344/000002134425000011/0000021344-25-000011-index.htm"
+  },
+  "src:edgar_xbrl:0001628280-26-010047": {
+   "accession": "0001628280-26-010047",
+   "fetched_at": "2026-09-20T04:13:50Z",
+   "kind": "edgar_xbrl",
+   "url": "https://www.sec.gov/Archives/edgar/data/21344/000162828026010047/0001628280-26-010047-index.htm"
+  },
+  "src:market:KO:20260918T200000Z": {
+   "accession": null,
+   "fetched_at": "2026-09-20T04:13:50Z",
+   "kind": "market",
+   "url": null
+  },
+  "src:market:SPY:20260918T200000Z": {
+   "accession": null,
+   "fetched_at": "2026-09-18T20:00:00Z",
+   "kind": "market",
+   "url": "https://finnhub.io/api/v1/quote?symbol=SPY"
+  }
+ },
+ "sp500_baseline": {
+  "as_of": "2026-09-19",
+  "assumptions_reviewed": "2026-09-20",
+  "assumptions_version": "2026.09",
+  "earnings_yield": {
+   "derived_from": [],
+   "source_id": "src:config:sp500_baseline:2026.09",
+   "status": "ok",
+   "type": "assumption",
+   "unit": "fraction",
+   "value": 0.0455
+  },
+  "forward_pe": {
+   "derived_from": [],
+   "source_id": "src:config:sp500_baseline:2026.09",
+   "status": "ok",
+   "type": "assumption",
+   "unit": "multiple",
+   "value": 22.0
+  },
+  "risk_free_rate": {
+   "derived_from": [],
+   "source_id": "src:config:sp500_baseline:2026.09",
+   "status": "ok",
+   "type": "assumption",
+   "unit": "fraction",
+   "value": 0.0425
+  },
+  "spy_previous_close": {
+   "derived_from": [],
+   "source_id": "src:market:SPY:20260918T200000Z",
+   "status": "ok",
+   "type": "fact",
+   "unit": "usd_per_share",
+   "value": 762.6
+  },
+  "spy_price": {
+   "derived_from": [],
+   "source_id": "src:market:SPY:20260918T200000Z",
+   "status": "ok",
+   "type": "fact",
+   "unit": "usd_per_share",
+   "value": 761.69
+  }
+ },
+ "ticker": "KO"
+}

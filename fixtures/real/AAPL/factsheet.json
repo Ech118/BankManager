@@ -1,0 +1,1559 @@
+{
+ "as_of": "2026-09-19",
+ "built_at": "2026-09-20T04:13:47Z",
+ "company_name": "Apple Inc.",
+ "consensus": null,
+ "data_quality": {
+  "gaps": [
+   "AAPL FY2025: no concept matched interest_expense",
+   "AAPL FY2024: no concept matched interest_expense",
+   "AAPL: only 2 in-scope companies file under SIC 3571 within 20x of its revenue, so the size cutoff was relaxed to 100x. Peer multiples across that spread compare different businesses.",
+   "FY2025: no us-gaap concept resolved for interest_expense. Reported as unavailable; any metric built on them is unavailable too.",
+   "FY2024: no us-gaap concept resolved for interest_expense. Reported as unavailable; any metric built on them is unavailable too."
+  ],
+  "overall": "partial"
+ },
+ "filing_sections": [],
+ "financials": [
+  {
+   "accession": "0000320193-25-000079",
+   "capex": {
+    "derived_from": [
+     "fact:AAPL:capex:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 12715000000.0
+   },
+   "cash": {
+    "derived_from": [
+     "fact:AAPL:cash:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 35934000000.0
+   },
+   "cost_of_revenue": {
+    "derived_from": [
+     "fact:AAPL:cost_of_revenue:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 220960000000.0
+   },
+   "current_assets": {
+    "derived_from": [
+     "fact:AAPL:current_assets:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 147957000000.0
+   },
+   "current_liabilities": {
+    "derived_from": [
+     "fact:AAPL:current_liabilities:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 165631000000.0
+   },
+   "depreciation_amortization": {
+    "derived_from": [
+     "fact:AAPL:depreciation_amortization:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 11698000000.0
+   },
+   "eps_diluted": {
+    "derived_from": [
+     "fact:AAPL:eps_diluted:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd_per_share",
+    "value": 7.46
+   },
+   "filed_date": "2025-10-31",
+   "form": "10-K",
+   "gross_profit": {
+    "derived_from": [
+     "fact:AAPL:gross_profit:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 195201000000.0
+   },
+   "interest_expense": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "usd",
+    "value": null
+   },
+   "inventory": {
+    "derived_from": [
+     "fact:AAPL:inventory:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 5718000000.0
+   },
+   "net_income": {
+    "derived_from": [
+     "fact:AAPL:net_income:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 112010000000.0
+   },
+   "op_cash_flow": {
+    "derived_from": [
+     "fact:AAPL:op_cash_flow:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 111482000000.0
+   },
+   "operating_income": {
+    "derived_from": [
+     "fact:AAPL:operating_income:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 133050000000.0
+   },
+   "period": "FY2025",
+   "period_end": "2025-09-27",
+   "pretax_income": {
+    "derived_from": [
+     "fact:AAPL:pretax_income:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 132729000000.0
+   },
+   "receivables": {
+    "derived_from": [
+     "fact:AAPL:receivables:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 39777000000.0
+   },
+   "revenue": {
+    "derived_from": [
+     "fact:AAPL:revenue:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 416161000000.0
+   },
+   "sbc": {
+    "derived_from": [
+     "fact:AAPL:sbc:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 12863000000.0
+   },
+   "shares_diluted": {
+    "derived_from": [
+     "fact:AAPL:shares_diluted:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "shares",
+    "value": 15004697000.0
+   },
+   "total_assets": {
+    "derived_from": [
+     "fact:AAPL:total_assets:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 359241000000.0
+   },
+   "total_debt": {
+    "derived_from": [
+     "fact:AAPL:total_debt_component:FY2025:LongTermDebt",
+     "fact:AAPL:total_debt_component:FY2025:CommercialPaper"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 98657000000.0
+   },
+   "total_equity": {
+    "derived_from": [
+     "fact:AAPL:total_equity:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 73733000000.0
+   }
+  },
+  {
+   "accession": "0000320193-25-000079",
+   "capex": {
+    "derived_from": [
+     "fact:AAPL:capex:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 9447000000.0
+   },
+   "cash": {
+    "derived_from": [
+     "fact:AAPL:cash:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 29943000000.0
+   },
+   "cost_of_revenue": {
+    "derived_from": [
+     "fact:AAPL:cost_of_revenue:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 210352000000.0
+   },
+   "current_assets": {
+    "derived_from": [
+     "fact:AAPL:current_assets:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 152987000000.0
+   },
+   "current_liabilities": {
+    "derived_from": [
+     "fact:AAPL:current_liabilities:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 176392000000.0
+   },
+   "depreciation_amortization": {
+    "derived_from": [
+     "fact:AAPL:depreciation_amortization:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 11445000000.0
+   },
+   "eps_diluted": {
+    "derived_from": [
+     "fact:AAPL:eps_diluted:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd_per_share",
+    "value": 6.08
+   },
+   "filed_date": "2025-10-31",
+   "form": "10-K",
+   "gross_profit": {
+    "derived_from": [
+     "fact:AAPL:gross_profit:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 180683000000.0
+   },
+   "interest_expense": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "usd",
+    "value": null
+   },
+   "inventory": {
+    "derived_from": [
+     "fact:AAPL:inventory:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 7286000000.0
+   },
+   "net_income": {
+    "derived_from": [
+     "fact:AAPL:net_income:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 93736000000.0
+   },
+   "op_cash_flow": {
+    "derived_from": [
+     "fact:AAPL:op_cash_flow:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 118254000000.0
+   },
+   "operating_income": {
+    "derived_from": [
+     "fact:AAPL:operating_income:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 123216000000.0
+   },
+   "period": "FY2024",
+   "period_end": "2024-09-28",
+   "pretax_income": {
+    "derived_from": [
+     "fact:AAPL:pretax_income:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 123485000000.0
+   },
+   "receivables": {
+    "derived_from": [
+     "fact:AAPL:receivables:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 33410000000.0
+   },
+   "revenue": {
+    "derived_from": [
+     "fact:AAPL:revenue:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 391035000000.0
+   },
+   "sbc": {
+    "derived_from": [
+     "fact:AAPL:sbc:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 11688000000.0
+   },
+   "shares_diluted": {
+    "derived_from": [
+     "fact:AAPL:shares_diluted:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "shares",
+    "value": 15408095000.0
+   },
+   "total_assets": {
+    "derived_from": [
+     "fact:AAPL:total_assets:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 364980000000.0
+   },
+   "total_debt": {
+    "derived_from": [
+     "fact:AAPL:total_debt_component:FY2024:LongTermDebt",
+     "fact:AAPL:total_debt_component:FY2024:CommercialPaper"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 106629000000.0
+   },
+   "total_equity": {
+    "derived_from": [
+     "fact:AAPL:total_equity:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 56950000000.0
+   }
+  },
+  {
+   "accession": "0000320193-25-000079",
+   "capex": {
+    "derived_from": [
+     "fact:AAPL:capex:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 10959000000.0
+   },
+   "cash": {
+    "derived_from": [
+     "fact:AAPL:cash:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-24-000123",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 29965000000.0
+   },
+   "cost_of_revenue": {
+    "derived_from": [
+     "fact:AAPL:cost_of_revenue:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 214137000000.0
+   },
+   "current_assets": {
+    "derived_from": [
+     "fact:AAPL:current_assets:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-24-000123",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 143566000000.0
+   },
+   "current_liabilities": {
+    "derived_from": [
+     "fact:AAPL:current_liabilities:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-24-000123",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 145308000000.0
+   },
+   "depreciation_amortization": {
+    "derived_from": [
+     "fact:AAPL:depreciation_amortization:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 11519000000.0
+   },
+   "eps_diluted": {
+    "derived_from": [
+     "fact:AAPL:eps_diluted:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd_per_share",
+    "value": 6.13
+   },
+   "filed_date": "2025-10-31",
+   "form": "10-K",
+   "gross_profit": {
+    "derived_from": [
+     "fact:AAPL:gross_profit:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 169148000000.0
+   },
+   "interest_expense": {
+    "derived_from": [
+     "fact:AAPL:interest_expense:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-23-000106",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 3933000000.0
+   },
+   "inventory": {
+    "derived_from": [
+     "fact:AAPL:inventory:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-24-000123",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 6331000000.0
+   },
+   "net_income": {
+    "derived_from": [
+     "fact:AAPL:net_income:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 96995000000.0
+   },
+   "op_cash_flow": {
+    "derived_from": [
+     "fact:AAPL:op_cash_flow:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 110543000000.0
+   },
+   "operating_income": {
+    "derived_from": [
+     "fact:AAPL:operating_income:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 114301000000.0
+   },
+   "period": "FY2023",
+   "period_end": "2023-09-30",
+   "pretax_income": {
+    "derived_from": [
+     "fact:AAPL:pretax_income:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 113736000000.0
+   },
+   "receivables": {
+    "derived_from": [
+     "fact:AAPL:receivables:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-24-000123",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 29508000000.0
+   },
+   "revenue": {
+    "derived_from": [
+     "fact:AAPL:revenue:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 383285000000.0
+   },
+   "sbc": {
+    "derived_from": [
+     "fact:AAPL:sbc:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 10833000000.0
+   },
+   "shares_diluted": {
+    "derived_from": [
+     "fact:AAPL:shares_diluted:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "shares",
+    "value": 15812547000.0
+   },
+   "total_assets": {
+    "derived_from": [
+     "fact:AAPL:total_assets:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-24-000123",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 352583000000.0
+   },
+   "total_debt": {
+    "derived_from": [
+     "fact:AAPL:total_debt_component:FY2023:LongTermDebt",
+     "fact:AAPL:total_debt_component:FY2023:CommercialPaper"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-24-000123",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 111088000000.0
+   },
+   "total_equity": {
+    "derived_from": [
+     "fact:AAPL:total_equity:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 62146000000.0
+   }
+  },
+  {
+   "accession": "0000320193-25-000079",
+   "capex": {
+    "derived_from": [
+     "fact:AAPL:capex:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-24-000123",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 10708000000.0
+   },
+   "cash": {
+    "derived_from": [
+     "fact:AAPL:cash:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-23-000106",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 23646000000.0
+   },
+   "cost_of_revenue": {
+    "derived_from": [
+     "fact:AAPL:cost_of_revenue:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-24-000123",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 223546000000.0
+   },
+   "current_assets": {
+    "derived_from": [
+     "fact:AAPL:current_assets:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-23-000106",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 135405000000.0
+   },
+   "current_liabilities": {
+    "derived_from": [
+     "fact:AAPL:current_liabilities:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-23-000106",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 153982000000.0
+   },
+   "depreciation_amortization": {
+    "derived_from": [
+     "fact:AAPL:depreciation_amortization:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-24-000123",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 11104000000.0
+   },
+   "eps_diluted": {
+    "derived_from": [
+     "fact:AAPL:eps_diluted:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-24-000123",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd_per_share",
+    "value": 6.11
+   },
+   "filed_date": "2025-10-31",
+   "form": "10-K",
+   "gross_profit": {
+    "derived_from": [
+     "fact:AAPL:gross_profit:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-24-000123",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 170782000000.0
+   },
+   "interest_expense": {
+    "derived_from": [
+     "fact:AAPL:interest_expense:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-23-000106",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 2931000000.0
+   },
+   "inventory": {
+    "derived_from": [
+     "fact:AAPL:inventory:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-23-000106",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 4946000000.0
+   },
+   "net_income": {
+    "derived_from": [
+     "fact:AAPL:net_income:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-24-000123",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 99803000000.0
+   },
+   "op_cash_flow": {
+    "derived_from": [
+     "fact:AAPL:op_cash_flow:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-24-000123",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 122151000000.0
+   },
+   "operating_income": {
+    "derived_from": [
+     "fact:AAPL:operating_income:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-24-000123",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 119437000000.0
+   },
+   "period": "FY2022",
+   "period_end": "2022-09-24",
+   "pretax_income": {
+    "derived_from": [
+     "fact:AAPL:pretax_income:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-24-000123",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 119103000000.0
+   },
+   "receivables": {
+    "derived_from": [
+     "fact:AAPL:receivables:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-23-000106",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 28184000000.0
+   },
+   "revenue": {
+    "derived_from": [
+     "fact:AAPL:revenue:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-24-000123",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 394328000000.0
+   },
+   "sbc": {
+    "derived_from": [
+     "fact:AAPL:sbc:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-24-000123",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 9038000000.0
+   },
+   "shares_diluted": {
+    "derived_from": [
+     "fact:AAPL:shares_diluted:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-24-000123",
+    "status": "ok",
+    "type": "fact",
+    "unit": "shares",
+    "value": 16325819000.0
+   },
+   "total_assets": {
+    "derived_from": [
+     "fact:AAPL:total_assets:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-23-000106",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 352755000000.0
+   },
+   "total_debt": {
+    "derived_from": [
+     "fact:AAPL:total_debt_component:FY2022:LongTermDebt",
+     "fact:AAPL:total_debt_component:FY2022:CommercialPaper"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-23-000106",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 120069000000.0
+   },
+   "total_equity": {
+    "derived_from": [
+     "fact:AAPL:total_equity:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-25-000079",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 50672000000.0
+   }
+  },
+  {
+   "accession": "0000320193-24-000123",
+   "capex": {
+    "derived_from": [
+     "fact:AAPL:capex:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-23-000106",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 11085000000.0
+   },
+   "cash": {
+    "derived_from": [
+     "fact:AAPL:cash:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-22-000108",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 34940000000.0
+   },
+   "cost_of_revenue": {
+    "derived_from": [
+     "fact:AAPL:cost_of_revenue:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-23-000106",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 212981000000.0
+   },
+   "current_assets": {
+    "derived_from": [
+     "fact:AAPL:current_assets:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-22-000108",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 134836000000.0
+   },
+   "current_liabilities": {
+    "derived_from": [
+     "fact:AAPL:current_liabilities:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-22-000108",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 125481000000.0
+   },
+   "depreciation_amortization": {
+    "derived_from": [
+     "fact:AAPL:depreciation_amortization:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-23-000106",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 11284000000.0
+   },
+   "eps_diluted": {
+    "derived_from": [
+     "fact:AAPL:eps_diluted:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-23-000106",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd_per_share",
+    "value": 5.61
+   },
+   "filed_date": "2024-11-01",
+   "form": "10-K",
+   "gross_profit": {
+    "derived_from": [
+     "fact:AAPL:gross_profit:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-23-000106",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 152836000000.0
+   },
+   "interest_expense": {
+    "derived_from": [
+     "fact:AAPL:interest_expense:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-23-000106",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 2645000000.0
+   },
+   "inventory": {
+    "derived_from": [
+     "fact:AAPL:inventory:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-22-000108",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 6580000000.0
+   },
+   "net_income": {
+    "derived_from": [
+     "fact:AAPL:net_income:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-23-000106",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 94680000000.0
+   },
+   "op_cash_flow": {
+    "derived_from": [
+     "fact:AAPL:op_cash_flow:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-23-000106",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 104038000000.0
+   },
+   "operating_income": {
+    "derived_from": [
+     "fact:AAPL:operating_income:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-23-000106",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 108949000000.0
+   },
+   "period": "FY2021",
+   "period_end": "2021-09-25",
+   "pretax_income": {
+    "derived_from": [
+     "fact:AAPL:pretax_income:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-23-000106",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 109207000000.0
+   },
+   "receivables": {
+    "derived_from": [
+     "fact:AAPL:receivables:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-22-000108",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 26278000000.0
+   },
+   "revenue": {
+    "derived_from": [
+     "fact:AAPL:revenue:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-23-000106",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 365817000000.0
+   },
+   "sbc": {
+    "derived_from": [
+     "fact:AAPL:sbc:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-23-000106",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 7906000000.0
+   },
+   "shares_diluted": {
+    "derived_from": [
+     "fact:AAPL:shares_diluted:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-23-000106",
+    "status": "ok",
+    "type": "fact",
+    "unit": "shares",
+    "value": 16864919000.0
+   },
+   "total_assets": {
+    "derived_from": [
+     "fact:AAPL:total_assets:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-22-000108",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 351002000000.0
+   },
+   "total_debt": {
+    "derived_from": [
+     "fact:AAPL:total_debt_component:FY2021:LongTermDebtNoncurrent",
+     "fact:AAPL:total_debt_component:FY2021:LongTermDebtCurrent",
+     "fact:AAPL:total_debt_component:FY2021:CommercialPaper"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-22-000108",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 124719000000.0
+   },
+   "total_equity": {
+    "derived_from": [
+     "fact:AAPL:total_equity:FY2021"
+    ],
+    "source_id": "src:edgar_xbrl:0000320193-24-000123",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 63090000000.0
+   }
+  }
+ ],
+ "market": {
+  "as_of": "2026-09-18T20:00:00Z",
+  "cash": {
+   "derived_from": [
+    "fact:AAPL:cash:FY2025"
+   ],
+   "fiscal_period": "FY2025",
+   "source_id": null,
+   "source_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+   "status": "ok",
+   "type": "fact",
+   "unit": "usd",
+   "value": 35934000000.0
+  },
+  "currency": "USD",
+  "enterprise_value": {
+   "derived_from": [
+    "market.market_cap",
+    "market.total_debt",
+    "market.cash"
+   ],
+   "source_id": null,
+   "status": "ok",
+   "type": "fact",
+   "unit": "usd",
+   "value": 4968264723400.0
+  },
+  "market_cap": {
+   "derived_from": [
+    "market.price",
+    "market.shares_outstanding"
+   ],
+   "source_id": null,
+   "status": "ok",
+   "type": "fact",
+   "unit": "usd",
+   "value": 4905541723400.0
+  },
+  "price": {
+   "derived_from": [],
+   "source_id": "src:market:AAPL:20260918T200000Z",
+   "status": "ok",
+   "type": "fact",
+   "unit": "usd_per_share",
+   "value": 336.13
+  },
+  "retrieved_at": "2026-09-20T04:13:47Z",
+  "shares_outstanding": {
+   "accession": "0000320193-26-000020",
+   "derived_from": [
+    "dei:EntityCommonStockSharesOutstanding"
+   ],
+   "note": "cover page share count",
+   "source_id": null,
+   "source_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000020/0000320193-26-000020-index.htm",
+   "status": "ok",
+   "type": "fact",
+   "unit": "shares",
+   "value": 14594180000.0,
+   "xbrl_concept": "dei:EntityCommonStockSharesOutstanding"
+  },
+  "source_id": "src:market:AAPL:20260918T200000Z",
+  "ticker": "AAPL",
+  "total_debt": {
+   "derived_from": [
+    "fact:AAPL:total_debt:FY2025"
+   ],
+   "fiscal_period": "FY2025",
+   "source_id": null,
+   "source_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+   "status": "ok",
+   "type": "fact",
+   "unit": "usd",
+   "value": 98657000000.0
+  }
+ },
+ "mode": "backtest",
+ "news": [],
+ "peers": [
+  {
+   "company_name": null,
+   "ev_ebitda": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "ev_revenue": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "fcf_yield": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "fraction",
+    "value": null
+   },
+   "market_cap": {
+    "derived_from": [],
+    "source_id": "src:market:DELL:profile",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 361179810875.90735
+   },
+   "pe": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "selection_reason": "SIC 3571; 3.7x apart on CY2025 revenue",
+   "sic": "3571",
+   "ticker": "DELL"
+  },
+  {
+   "company_name": null,
+   "ev_ebitda": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "ev_revenue": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "fcf_yield": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "fraction",
+    "value": null
+   },
+   "market_cap": {
+    "derived_from": [],
+    "source_id": "src:market:SMCI:profile",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 25680776244.032715
+   },
+   "pe": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "selection_reason": "SIC 3571; 18.9x apart on CY2025 revenue",
+   "sic": "3571",
+   "ticker": "SMCI"
+  },
+  {
+   "company_name": null,
+   "ev_ebitda": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "ev_revenue": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "fcf_yield": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "fraction",
+    "value": null
+   },
+   "market_cap": {
+    "derived_from": [],
+    "source_id": "src:market:SNDK:profile",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 262356506333.94632
+   },
+   "pe": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "selection_reason": "Market data provider's peer list; too few in-scope companies share this SIC code to rank by size.",
+   "sic": null,
+   "ticker": "SNDK"
+  },
+  {
+   "company_name": null,
+   "ev_ebitda": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "ev_revenue": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "fcf_yield": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "fraction",
+    "value": null
+   },
+   "market_cap": {
+    "derived_from": [],
+    "source_id": "src:market:WDC:profile",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 183729360000.0
+   },
+   "pe": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "selection_reason": "Market data provider's peer list; too few in-scope companies share this SIC code to rank by size.",
+   "sic": null,
+   "ticker": "WDC"
+  },
+  {
+   "company_name": null,
+   "ev_ebitda": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "ev_revenue": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "fcf_yield": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "fraction",
+    "value": null
+   },
+   "market_cap": {
+    "derived_from": [],
+    "source_id": "src:market:HPE:profile",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 80656757699.35321
+   },
+   "pe": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "selection_reason": "Market data provider's peer list; too few in-scope companies share this SIC code to rank by size.",
+   "sic": null,
+   "ticker": "HPE"
+  },
+  {
+   "company_name": null,
+   "ev_ebitda": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "ev_revenue": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "fcf_yield": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "fraction",
+    "value": null
+   },
+   "market_cap": {
+    "derived_from": [],
+    "source_id": "src:market:NTAP:profile",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 38849714903.93205
+   },
+   "pe": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "selection_reason": "Market data provider's peer list; too few in-scope companies share this SIC code to rank by size.",
+   "sic": null,
+   "ticker": "NTAP"
+  }
+ ],
+ "schema_version": "2.1.0",
+ "scope": {
+  "gaps": [],
+  "in_scope": true,
+  "level": "supported",
+  "reason": null
+ },
+ "sources": {
+  "src:config:sp500_baseline:2026.09": {
+   "accession": null,
+   "fetched_at": "2026-09-20T04:13:47Z",
+   "kind": "config",
+   "url": null
+  },
+  "src:edgar_xbrl:0000320193-22-000108": {
+   "accession": "0000320193-22-000108",
+   "fetched_at": "2026-09-20T04:13:47Z",
+   "kind": "edgar_xbrl",
+   "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019322000108/0000320193-22-000108-index.htm"
+  },
+  "src:edgar_xbrl:0000320193-23-000106": {
+   "accession": "0000320193-23-000106",
+   "fetched_at": "2026-09-20T04:13:47Z",
+   "kind": "edgar_xbrl",
+   "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/0000320193-23-000106-index.htm"
+  },
+  "src:edgar_xbrl:0000320193-24-000123": {
+   "accession": "0000320193-24-000123",
+   "fetched_at": "2026-09-20T04:13:47Z",
+   "kind": "edgar_xbrl",
+   "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/0000320193-24-000123-index.htm"
+  },
+  "src:edgar_xbrl:0000320193-25-000079": {
+   "accession": "0000320193-25-000079",
+   "fetched_at": "2026-09-20T04:13:47Z",
+   "kind": "edgar_xbrl",
+   "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm"
+  },
+  "src:market:AAPL:20260918T200000Z": {
+   "accession": null,
+   "fetched_at": "2026-09-20T04:13:47Z",
+   "kind": "market",
+   "url": null
+  },
+  "src:market:SPY:20260918T200000Z": {
+   "accession": null,
+   "fetched_at": "2026-09-18T20:00:00Z",
+   "kind": "market",
+   "url": "https://finnhub.io/api/v1/quote?symbol=SPY"
+  }
+ },
+ "sp500_baseline": {
+  "as_of": "2026-09-19",
+  "assumptions_reviewed": "2026-09-20",
+  "assumptions_version": "2026.09",
+  "earnings_yield": {
+   "derived_from": [],
+   "source_id": "src:config:sp500_baseline:2026.09",
+   "status": "ok",
+   "type": "assumption",
+   "unit": "fraction",
+   "value": 0.0455
+  },
+  "forward_pe": {
+   "derived_from": [],
+   "source_id": "src:config:sp500_baseline:2026.09",
+   "status": "ok",
+   "type": "assumption",
+   "unit": "multiple",
+   "value": 22.0
+  },
+  "risk_free_rate": {
+   "derived_from": [],
+   "source_id": "src:config:sp500_baseline:2026.09",
+   "status": "ok",
+   "type": "assumption",
+   "unit": "fraction",
+   "value": 0.0425
+  },
+  "spy_previous_close": {
+   "derived_from": [],
+   "source_id": "src:market:SPY:20260918T200000Z",
+   "status": "ok",
+   "type": "fact",
+   "unit": "usd_per_share",
+   "value": 762.6
+  },
+  "spy_price": {
+   "derived_from": [],
+   "source_id": "src:market:SPY:20260918T200000Z",
+   "status": "ok",
+   "type": "fact",
+   "unit": "usd_per_share",
+   "value": 761.69
+  }
+ },
+ "ticker": "AAPL"
+}

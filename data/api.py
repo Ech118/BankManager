@@ -104,6 +104,10 @@ def build_factsheet(ticker: str, as_of: str | None = None) -> dict:
     scope = check_scope(ticker, as_of)
     if not scope["in_scope"]:
         raise ValueError(scope["reason"])
+    if _mode() == "live":
+        from data import live
+
+        return live.build_factsheet(ticker, as_of)
     _require_mock("build_factsheet")
     fs = _load("factsheet.json")
     if as_of:

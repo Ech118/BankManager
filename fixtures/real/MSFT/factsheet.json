@@ -1,0 +1,1556 @@
+{
+ "as_of": "2026-09-19",
+ "built_at": "2026-09-20T04:13:50Z",
+ "company_name": "MICROSOFT CORP",
+ "consensus": null,
+ "data_quality": {
+  "gaps": [
+   "MSFT: only 2 in-scope companies file under SIC 7372 within 20x of its revenue, so the size cutoff was relaxed to 100x. Peer multiples across that spread compare different businesses."
+  ],
+  "overall": "partial"
+ },
+ "filing_sections": [],
+ "financials": [
+  {
+   "accession": "0001193125-26-323660",
+   "capex": {
+    "derived_from": [
+     "fact:MSFT:capex:FY2026"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 115948000000.0
+   },
+   "cash": {
+    "derived_from": [
+     "fact:MSFT:cash:FY2026"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 20935000000.0
+   },
+   "cost_of_revenue": {
+    "derived_from": [
+     "fact:MSFT:cost_of_revenue:FY2026"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 106374000000.0
+   },
+   "current_assets": {
+    "derived_from": [
+     "fact:MSFT:current_assets:FY2026"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 207710000000.0
+   },
+   "current_liabilities": {
+    "derived_from": [
+     "fact:MSFT:current_liabilities:FY2026"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 168825000000.0
+   },
+   "depreciation_amortization": {
+    "derived_from": [
+     "fact:MSFT:depreciation_amortization:FY2026"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 34300000000.0
+   },
+   "eps_diluted": {
+    "derived_from": [
+     "fact:MSFT:eps_diluted:FY2026"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd_per_share",
+    "value": 17.95
+   },
+   "filed_date": "2026-07-29",
+   "form": "10-K",
+   "gross_profit": {
+    "derived_from": [
+     "fact:MSFT:gross_profit:FY2026"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 225465000000.0
+   },
+   "interest_expense": {
+    "derived_from": [
+     "fact:MSFT:interest_expense:FY2026"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 3051000000.0
+   },
+   "inventory": {
+    "derived_from": [
+     "fact:MSFT:inventory:FY2026"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 1397000000.0
+   },
+   "net_income": {
+    "derived_from": [
+     "fact:MSFT:net_income:FY2026"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 133749000000.0
+   },
+   "op_cash_flow": {
+    "derived_from": [
+     "fact:MSFT:op_cash_flow:FY2026"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 182935000000.0
+   },
+   "operating_income": {
+    "derived_from": [
+     "fact:MSFT:operating_income:FY2026"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 155237000000.0
+   },
+   "period": "FY2026",
+   "period_end": "2026-06-30",
+   "pretax_income": {
+    "derived_from": [
+     "fact:MSFT:pretax_income:FY2026"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 165934000000.0
+   },
+   "receivables": {
+    "derived_from": [
+     "fact:MSFT:receivables:FY2026"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 80876000000.0
+   },
+   "revenue": {
+    "derived_from": [
+     "fact:MSFT:revenue:FY2026"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 331839000000.0
+   },
+   "sbc": {
+    "derived_from": [
+     "fact:MSFT:sbc:FY2026"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 12405000000.0
+   },
+   "shares_diluted": {
+    "derived_from": [
+     "fact:MSFT:shares_diluted:FY2026"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "shares",
+    "value": 7453000000.0
+   },
+   "total_assets": {
+    "derived_from": [
+     "fact:MSFT:total_assets:FY2026"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 758376000000.0
+   },
+   "total_debt": {
+    "derived_from": [
+     "fact:MSFT:total_debt:FY2026"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 40294000000.0
+   },
+   "total_equity": {
+    "derived_from": [
+     "fact:MSFT:total_equity:FY2026"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 442387000000.0
+   }
+  },
+  {
+   "accession": "0001193125-26-323660",
+   "capex": {
+    "derived_from": [
+     "fact:MSFT:capex:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 64551000000.0
+   },
+   "cash": {
+    "derived_from": [
+     "fact:MSFT:cash:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 30242000000.0
+   },
+   "cost_of_revenue": {
+    "derived_from": [
+     "fact:MSFT:cost_of_revenue:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 87831000000.0
+   },
+   "current_assets": {
+    "derived_from": [
+     "fact:MSFT:current_assets:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 191131000000.0
+   },
+   "current_liabilities": {
+    "derived_from": [
+     "fact:MSFT:current_liabilities:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 141218000000.0
+   },
+   "depreciation_amortization": {
+    "derived_from": [
+     "fact:MSFT:depreciation_amortization:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 22000000000.0
+   },
+   "eps_diluted": {
+    "derived_from": [
+     "fact:MSFT:eps_diluted:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd_per_share",
+    "value": 13.64
+   },
+   "filed_date": "2026-07-29",
+   "form": "10-K",
+   "gross_profit": {
+    "derived_from": [
+     "fact:MSFT:gross_profit:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 193893000000.0
+   },
+   "interest_expense": {
+    "derived_from": [
+     "fact:MSFT:interest_expense:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 2385000000.0
+   },
+   "inventory": {
+    "derived_from": [
+     "fact:MSFT:inventory:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 938000000.0
+   },
+   "net_income": {
+    "derived_from": [
+     "fact:MSFT:net_income:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 101832000000.0
+   },
+   "op_cash_flow": {
+    "derived_from": [
+     "fact:MSFT:op_cash_flow:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 136162000000.0
+   },
+   "operating_income": {
+    "derived_from": [
+     "fact:MSFT:operating_income:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 128528000000.0
+   },
+   "period": "FY2025",
+   "period_end": "2025-06-30",
+   "pretax_income": {
+    "derived_from": [
+     "fact:MSFT:pretax_income:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 123627000000.0
+   },
+   "receivables": {
+    "derived_from": [
+     "fact:MSFT:receivables:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 69905000000.0
+   },
+   "revenue": {
+    "derived_from": [
+     "fact:MSFT:revenue:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 281724000000.0
+   },
+   "sbc": {
+    "derived_from": [
+     "fact:MSFT:sbc:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 11974000000.0
+   },
+   "shares_diluted": {
+    "derived_from": [
+     "fact:MSFT:shares_diluted:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "shares",
+    "value": 7465000000.0
+   },
+   "total_assets": {
+    "derived_from": [
+     "fact:MSFT:total_assets:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 619003000000.0
+   },
+   "total_debt": {
+    "derived_from": [
+     "fact:MSFT:total_debt_component:FY2025:LongTermDebt",
+     "fact:MSFT:total_debt_component:FY2025:CommercialPaper"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 43151000000.0
+   },
+   "total_equity": {
+    "derived_from": [
+     "fact:MSFT:total_equity:FY2025"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 343479000000.0
+   }
+  },
+  {
+   "accession": "0001193125-26-323660",
+   "capex": {
+    "derived_from": [
+     "fact:MSFT:capex:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 44477000000.0
+   },
+   "cash": {
+    "derived_from": [
+     "fact:MSFT:cash:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-25-100235",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 18315000000.0
+   },
+   "cost_of_revenue": {
+    "derived_from": [
+     "fact:MSFT:cost_of_revenue:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 74114000000.0
+   },
+   "current_assets": {
+    "derived_from": [
+     "fact:MSFT:current_assets:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-25-100235",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 159734000000.0
+   },
+   "current_liabilities": {
+    "derived_from": [
+     "fact:MSFT:current_liabilities:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-25-100235",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 125286000000.0
+   },
+   "depreciation_amortization": {
+    "derived_from": [
+     "fact:MSFT:depreciation_amortization:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 15200000000.0
+   },
+   "eps_diluted": {
+    "derived_from": [
+     "fact:MSFT:eps_diluted:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd_per_share",
+    "value": 11.8
+   },
+   "filed_date": "2026-07-29",
+   "form": "10-K",
+   "gross_profit": {
+    "derived_from": [
+     "fact:MSFT:gross_profit:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 171008000000.0
+   },
+   "interest_expense": {
+    "derived_from": [
+     "fact:MSFT:interest_expense:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-24-087843",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 2935000000.0
+   },
+   "inventory": {
+    "derived_from": [
+     "fact:MSFT:inventory:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-25-100235",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 1246000000.0
+   },
+   "net_income": {
+    "derived_from": [
+     "fact:MSFT:net_income:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 88136000000.0
+   },
+   "op_cash_flow": {
+    "derived_from": [
+     "fact:MSFT:op_cash_flow:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 118548000000.0
+   },
+   "operating_income": {
+    "derived_from": [
+     "fact:MSFT:operating_income:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 109433000000.0
+   },
+   "period": "FY2024",
+   "period_end": "2024-06-30",
+   "pretax_income": {
+    "derived_from": [
+     "fact:MSFT:pretax_income:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 107787000000.0
+   },
+   "receivables": {
+    "derived_from": [
+     "fact:MSFT:receivables:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-25-100235",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 56924000000.0
+   },
+   "revenue": {
+    "derived_from": [
+     "fact:MSFT:revenue:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 245122000000.0
+   },
+   "sbc": {
+    "derived_from": [
+     "fact:MSFT:sbc:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 10734000000.0
+   },
+   "shares_diluted": {
+    "derived_from": [
+     "fact:MSFT:shares_diluted:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "shares",
+    "value": 7469000000.0
+   },
+   "total_assets": {
+    "derived_from": [
+     "fact:MSFT:total_assets:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-25-100235",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 512163000000.0
+   },
+   "total_debt": {
+    "derived_from": [
+     "fact:MSFT:total_debt_component:FY2024:LongTermDebt",
+     "fact:MSFT:total_debt_component:FY2024:CommercialPaper"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-25-100235",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 51630000000.0
+   },
+   "total_equity": {
+    "derived_from": [
+     "fact:MSFT:total_equity:FY2024"
+    ],
+    "source_id": "src:edgar_xbrl:0001193125-26-323660",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 268477000000.0
+   }
+  },
+  {
+   "accession": "0000950170-25-100235",
+   "capex": {
+    "derived_from": [
+     "fact:MSFT:capex:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-25-100235",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 28107000000.0
+   },
+   "cash": {
+    "derived_from": [
+     "fact:MSFT:cash:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-24-087843",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 34704000000.0
+   },
+   "cost_of_revenue": {
+    "derived_from": [
+     "fact:MSFT:cost_of_revenue:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-25-100235",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 65863000000.0
+   },
+   "current_assets": {
+    "derived_from": [
+     "fact:MSFT:current_assets:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-24-087843",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 184257000000.0
+   },
+   "current_liabilities": {
+    "derived_from": [
+     "fact:MSFT:current_liabilities:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-24-087843",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 104149000000.0
+   },
+   "depreciation_amortization": {
+    "derived_from": [
+     "fact:MSFT:depreciation_amortization:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-25-100235",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 11000000000.0
+   },
+   "eps_diluted": {
+    "derived_from": [
+     "fact:MSFT:eps_diluted:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-25-100235",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd_per_share",
+    "value": 9.68
+   },
+   "filed_date": "2025-07-30",
+   "form": "10-K",
+   "gross_profit": {
+    "derived_from": [
+     "fact:MSFT:gross_profit:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-25-100235",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 146052000000.0
+   },
+   "interest_expense": {
+    "derived_from": [
+     "fact:MSFT:interest_expense:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-24-087843",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 1968000000.0
+   },
+   "inventory": {
+    "derived_from": [
+     "fact:MSFT:inventory:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-24-087843",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 2500000000.0
+   },
+   "net_income": {
+    "derived_from": [
+     "fact:MSFT:net_income:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-25-100235",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 72361000000.0
+   },
+   "op_cash_flow": {
+    "derived_from": [
+     "fact:MSFT:op_cash_flow:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-25-100235",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 87582000000.0
+   },
+   "operating_income": {
+    "derived_from": [
+     "fact:MSFT:operating_income:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-25-100235",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 88523000000.0
+   },
+   "period": "FY2023",
+   "period_end": "2023-06-30",
+   "pretax_income": {
+    "derived_from": [
+     "fact:MSFT:pretax_income:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-25-100235",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 89311000000.0
+   },
+   "receivables": {
+    "derived_from": [
+     "fact:MSFT:receivables:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-24-087843",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 48688000000.0
+   },
+   "revenue": {
+    "derived_from": [
+     "fact:MSFT:revenue:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-25-100235",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 211915000000.0
+   },
+   "sbc": {
+    "derived_from": [
+     "fact:MSFT:sbc:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-25-100235",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 9611000000.0
+   },
+   "shares_diluted": {
+    "derived_from": [
+     "fact:MSFT:shares_diluted:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-25-100235",
+    "status": "ok",
+    "type": "fact",
+    "unit": "shares",
+    "value": 7472000000.0
+   },
+   "total_assets": {
+    "derived_from": [
+     "fact:MSFT:total_assets:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-24-087843",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 411976000000.0
+   },
+   "total_debt": {
+    "derived_from": [
+     "fact:MSFT:total_debt_component:FY2023:LongTermDebt",
+     "fact:MSFT:total_debt_component:FY2023:CommercialPaper"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-24-087843",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 47237000000.0
+   },
+   "total_equity": {
+    "derived_from": [
+     "fact:MSFT:total_equity:FY2023"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-25-100235",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 206223000000.0
+   }
+  },
+  {
+   "accession": "0000950170-24-087843",
+   "capex": {
+    "derived_from": [
+     "fact:MSFT:capex:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-24-087843",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 23886000000.0
+   },
+   "cash": {
+    "derived_from": [
+     "fact:MSFT:cash:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-23-035122",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 13931000000.0
+   },
+   "cost_of_revenue": {
+    "derived_from": [
+     "fact:MSFT:cost_of_revenue:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-24-087843",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 62650000000.0
+   },
+   "current_assets": {
+    "derived_from": [
+     "fact:MSFT:current_assets:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-23-035122",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 169684000000.0
+   },
+   "current_liabilities": {
+    "derived_from": [
+     "fact:MSFT:current_liabilities:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-23-035122",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 95082000000.0
+   },
+   "depreciation_amortization": {
+    "derived_from": [
+     "fact:MSFT:depreciation_amortization:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-24-087843",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 12600000000.0
+   },
+   "eps_diluted": {
+    "derived_from": [
+     "fact:MSFT:eps_diluted:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-24-087843",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd_per_share",
+    "value": 9.65
+   },
+   "filed_date": "2024-07-30",
+   "form": "10-K",
+   "gross_profit": {
+    "derived_from": [
+     "fact:MSFT:gross_profit:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-24-087843",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 135620000000.0
+   },
+   "interest_expense": {
+    "derived_from": [
+     "fact:MSFT:interest_expense:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-24-087843",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 2063000000.0
+   },
+   "inventory": {
+    "derived_from": [
+     "fact:MSFT:inventory:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-23-035122",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 3742000000.0
+   },
+   "net_income": {
+    "derived_from": [
+     "fact:MSFT:net_income:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-24-087843",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 72738000000.0
+   },
+   "op_cash_flow": {
+    "derived_from": [
+     "fact:MSFT:op_cash_flow:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-24-087843",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 89035000000.0
+   },
+   "operating_income": {
+    "derived_from": [
+     "fact:MSFT:operating_income:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-24-087843",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 83383000000.0
+   },
+   "period": "FY2022",
+   "period_end": "2022-06-30",
+   "pretax_income": {
+    "derived_from": [
+     "fact:MSFT:pretax_income:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-24-087843",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 83716000000.0
+   },
+   "receivables": {
+    "derived_from": [
+     "fact:MSFT:receivables:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-23-035122",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 44261000000.0
+   },
+   "revenue": {
+    "derived_from": [
+     "fact:MSFT:revenue:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-24-087843",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 198270000000.0
+   },
+   "sbc": {
+    "derived_from": [
+     "fact:MSFT:sbc:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-24-087843",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 7502000000.0
+   },
+   "shares_diluted": {
+    "derived_from": [
+     "fact:MSFT:shares_diluted:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-24-087843",
+    "status": "ok",
+    "type": "fact",
+    "unit": "shares",
+    "value": 7540000000.0
+   },
+   "total_assets": {
+    "derived_from": [
+     "fact:MSFT:total_assets:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-23-035122",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 364840000000.0
+   },
+   "total_debt": {
+    "derived_from": [
+     "fact:MSFT:total_debt:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-23-035122",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 49781000000.0
+   },
+   "total_equity": {
+    "derived_from": [
+     "fact:MSFT:total_equity:FY2022"
+    ],
+    "source_id": "src:edgar_xbrl:0000950170-24-087843",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 166542000000.0
+   }
+  }
+ ],
+ "market": {
+  "as_of": "2026-09-18T20:00:00Z",
+  "cash": {
+   "derived_from": [
+    "fact:MSFT:cash:FY2026"
+   ],
+   "fiscal_period": "FY2026",
+   "source_id": null,
+   "source_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/0001193125-26-323660-index.htm",
+   "status": "ok",
+   "type": "fact",
+   "unit": "usd",
+   "value": 20935000000.0
+  },
+  "currency": "USD",
+  "enterprise_value": {
+   "derived_from": [
+    "market.market_cap",
+    "market.total_debt",
+    "market.cash"
+   ],
+   "source_id": null,
+   "status": "ok",
+   "type": "fact",
+   "unit": "usd",
+   "value": 3685944852545.98
+  },
+  "market_cap": {
+   "derived_from": [
+    "market.price",
+    "market.shares_outstanding"
+   ],
+   "source_id": null,
+   "status": "ok",
+   "type": "fact",
+   "unit": "usd",
+   "value": 3666585852545.98
+  },
+  "price": {
+   "derived_from": [],
+   "source_id": "src:market:MSFT:20260918T200000Z",
+   "status": "ok",
+   "type": "fact",
+   "unit": "usd_per_share",
+   "value": 493.78
+  },
+  "retrieved_at": "2026-09-20T04:13:50Z",
+  "shares_outstanding": {
+   "accession": "0001193125-26-323660",
+   "derived_from": [
+    "dei:EntityCommonStockSharesOutstanding"
+   ],
+   "note": "cover page share count",
+   "source_id": null,
+   "source_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/0001193125-26-323660-index.htm",
+   "status": "ok",
+   "type": "fact",
+   "unit": "shares",
+   "value": 7425545491.0,
+   "xbrl_concept": "dei:EntityCommonStockSharesOutstanding"
+  },
+  "source_id": "src:market:MSFT:20260918T200000Z",
+  "ticker": "MSFT",
+  "total_debt": {
+   "derived_from": [
+    "fact:MSFT:total_debt:FY2026"
+   ],
+   "fiscal_period": "FY2026",
+   "source_id": null,
+   "source_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/0001193125-26-323660-index.htm",
+   "status": "ok",
+   "type": "fact",
+   "unit": "usd",
+   "value": 40294000000.0
+  }
+ },
+ "mode": "backtest",
+ "news": [],
+ "peers": [
+  {
+   "company_name": null,
+   "ev_ebitda": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "ev_revenue": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "fcf_yield": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "fraction",
+    "value": null
+   },
+   "market_cap": {
+    "derived_from": [],
+    "source_id": "src:market:XYZ:profile",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 49156000000.0
+   },
+   "pe": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "selection_reason": "SIC 7372; 13.7x apart on CY2025 revenue",
+   "sic": "7372",
+   "ticker": "XYZ"
+  },
+  {
+   "company_name": null,
+   "ev_ebitda": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "ev_revenue": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "fcf_yield": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "fraction",
+    "value": null
+   },
+   "market_cap": {
+    "derived_from": [],
+    "source_id": "src:market:ADBE:profile",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 98945699282.80461
+   },
+   "pe": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "selection_reason": "SIC 7372; 14.0x apart on CY2025 revenue",
+   "sic": "7372",
+   "ticker": "ADBE"
+  },
+  {
+   "company_name": null,
+   "ev_ebitda": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "ev_revenue": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "fcf_yield": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "fraction",
+    "value": null
+   },
+   "market_cap": {
+    "derived_from": [],
+    "source_id": "src:market:ADSK:profile",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 45342549872.989395
+   },
+   "pe": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "selection_reason": "SIC 7372; 46.1x apart on CY2025 revenue; size cutoff relaxed for lack of closer matches",
+   "sic": "7372",
+   "ticker": "ADSK"
+  },
+  {
+   "company_name": null,
+   "ev_ebitda": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "ev_revenue": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "fcf_yield": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "fraction",
+    "value": null
+   },
+   "market_cap": {
+    "derived_from": [],
+    "source_id": "src:market:CDNS:profile",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 77908683928.99025
+   },
+   "pe": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "selection_reason": "SIC 7372; 62.6x apart on CY2025 revenue; size cutoff relaxed for lack of closer matches",
+   "sic": "7372",
+   "ticker": "CDNS"
+  },
+  {
+   "company_name": null,
+   "ev_ebitda": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "ev_revenue": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "fcf_yield": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "fraction",
+    "value": null
+   },
+   "market_cap": {
+    "derived_from": [],
+    "source_id": "src:market:TEAM:profile",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 48607715955.492966
+   },
+   "pe": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "selection_reason": "SIC 7372; 63.6x apart on CY2025 revenue; size cutoff relaxed for lack of closer matches",
+   "sic": "7372",
+   "ticker": "TEAM"
+  },
+  {
+   "company_name": null,
+   "ev_ebitda": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "ev_revenue": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "fcf_yield": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "fraction",
+    "value": null
+   },
+   "market_cap": {
+    "derived_from": [],
+    "source_id": "src:market:CRWV:profile",
+    "status": "ok",
+    "type": "fact",
+    "unit": "usd",
+    "value": 44873015060.604904
+   },
+   "pe": {
+    "derived_from": [],
+    "source_id": null,
+    "status": "unavailable",
+    "type": "fact",
+    "unit": "multiple",
+    "value": null
+   },
+   "selection_reason": "SIC 7372; 64.7x apart on CY2025 revenue; size cutoff relaxed for lack of closer matches",
+   "sic": "7372",
+   "ticker": "CRWV"
+  }
+ ],
+ "schema_version": "2.1.0",
+ "scope": {
+  "gaps": [],
+  "in_scope": true,
+  "level": "supported",
+  "reason": null
+ },
+ "sources": {
+  "src:config:sp500_baseline:2026.09": {
+   "accession": null,
+   "fetched_at": "2026-09-20T04:13:50Z",
+   "kind": "config",
+   "url": null
+  },
+  "src:edgar_xbrl:0000950170-23-035122": {
+   "accession": "0000950170-23-035122",
+   "fetched_at": "2026-09-20T04:13:50Z",
+   "kind": "edgar_xbrl",
+   "url": "https://www.sec.gov/Archives/edgar/data/789019/000095017023035122/0000950170-23-035122-index.htm"
+  },
+  "src:edgar_xbrl:0000950170-24-087843": {
+   "accession": "0000950170-24-087843",
+   "fetched_at": "2026-09-20T04:13:50Z",
+   "kind": "edgar_xbrl",
+   "url": "https://www.sec.gov/Archives/edgar/data/789019/000095017024087843/0000950170-24-087843-index.htm"
+  },
+  "src:edgar_xbrl:0000950170-25-100235": {
+   "accession": "0000950170-25-100235",
+   "fetched_at": "2026-09-20T04:13:50Z",
+   "kind": "edgar_xbrl",
+   "url": "https://www.sec.gov/Archives/edgar/data/789019/000095017025100235/0000950170-25-100235-index.htm"
+  },
+  "src:edgar_xbrl:0001193125-26-323660": {
+   "accession": "0001193125-26-323660",
+   "fetched_at": "2026-09-20T04:13:50Z",
+   "kind": "edgar_xbrl",
+   "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/0001193125-26-323660-index.htm"
+  },
+  "src:market:MSFT:20260918T200000Z": {
+   "accession": null,
+   "fetched_at": "2026-09-20T04:13:50Z",
+   "kind": "market",
+   "url": null
+  },
+  "src:market:SPY:20260918T200000Z": {
+   "accession": null,
+   "fetched_at": "2026-09-18T20:00:00Z",
+   "kind": "market",
+   "url": "https://finnhub.io/api/v1/quote?symbol=SPY"
+  }
+ },
+ "sp500_baseline": {
+  "as_of": "2026-09-19",
+  "assumptions_reviewed": "2026-09-20",
+  "assumptions_version": "2026.09",
+  "earnings_yield": {
+   "derived_from": [],
+   "source_id": "src:config:sp500_baseline:2026.09",
+   "status": "ok",
+   "type": "assumption",
+   "unit": "fraction",
+   "value": 0.0455
+  },
+  "forward_pe": {
+   "derived_from": [],
+   "source_id": "src:config:sp500_baseline:2026.09",
+   "status": "ok",
+   "type": "assumption",
+   "unit": "multiple",
+   "value": 22.0
+  },
+  "risk_free_rate": {
+   "derived_from": [],
+   "source_id": "src:config:sp500_baseline:2026.09",
+   "status": "ok",
+   "type": "assumption",
+   "unit": "fraction",
+   "value": 0.0425
+  },
+  "spy_previous_close": {
+   "derived_from": [],
+   "source_id": "src:market:SPY:20260918T200000Z",
+   "status": "ok",
+   "type": "fact",
+   "unit": "usd_per_share",
+   "value": 762.6
+  },
+  "spy_price": {
+   "derived_from": [],
+   "source_id": "src:market:SPY:20260918T200000Z",
+   "status": "ok",
+   "type": "fact",
+   "unit": "usd_per_share",
+   "value": 761.69
+  }
+ },
+ "ticker": "MSFT"
+}
